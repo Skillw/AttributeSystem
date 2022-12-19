@@ -120,7 +120,7 @@ jobs:
       - name: Retrieve Release Name
         id: return_name
         run: |
-          echo "::set-output name=RELEASE_NAME::$(./gradlew -q releaseName"
+          echo ./gradlew -q releaseName
       - name: Get Release Name
         run: |
           echo "release_name=${{steps.return_name.outputs.RELEASE_NAME}}" >> $GITHUB_ENV
