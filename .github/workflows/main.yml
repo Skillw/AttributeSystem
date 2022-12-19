@@ -106,10 +106,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: Artifacts
-      - name: Archive content
-        uses: thedoctor0/zip-release@master
-        with:
-          filename: Artifacts.zip
       - name: Display structure of downloaded files
         run: ls -R
       - name: Get Project name
