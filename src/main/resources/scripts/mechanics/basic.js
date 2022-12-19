@@ -1,6 +1,7 @@
 Coerce = static("Coerce");
 Plus = operation("Plus")
 Scalar = operation("Scalar")
+
 //@Mechanic(damage)
 function damage(data, context, damageType) {
     const enable = data.handle(context.get("enable"));

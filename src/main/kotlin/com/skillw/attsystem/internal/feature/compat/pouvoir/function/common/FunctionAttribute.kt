@@ -18,7 +18,7 @@ import taboolib.module.nms.ItemTagData
 import taboolib.module.nms.getItemTag
 
 @AutoRegister
-object FunctionAttribute : PouFunction<Any?>("attr", namespace = "common") {
+internal object FunctionAttribute : PouFunction<Any?>("attr", namespace = "common") {
 
     override fun execute(parser: Parser): Any? {
         with(parser) {

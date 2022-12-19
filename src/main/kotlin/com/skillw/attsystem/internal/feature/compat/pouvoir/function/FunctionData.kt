@@ -9,7 +9,7 @@ import com.skillw.pouvoir.api.function.PouFunction
 import com.skillw.pouvoir.api.function.parser.Parser
 
 @AutoRegister
-object FunctionData : PouFunction<Any?>("data", namespace = "attsystem") {
+internal object FunctionData : PouFunction<Any?>("data", namespace = "attsystem") {
 
     override fun execute(parser: Parser): Any? {
         with(parser) {
@@ -91,6 +91,7 @@ object FunctionData : PouFunction<Any?>("data", namespace = "attsystem") {
                     val value = parseDouble()
                     data.damageSources[key] = operation.element(value)
                 }
+
                 "remove" -> data.damageSources.remove(parseString())
                 "has" -> data.damageSources.containsKey(parseString())
                 "get" -> data.damageSources[parseString()]

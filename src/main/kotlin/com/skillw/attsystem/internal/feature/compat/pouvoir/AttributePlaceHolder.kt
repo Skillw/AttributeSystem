@@ -1,7 +1,6 @@
 package com.skillw.attsystem.internal.feature.compat.pouvoir
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
 import com.skillw.attsystem.AttributeSystem.formulaManager
@@ -23,24 +22,28 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
     fun get(
         data: AttributeDataCompound,
         attribute: Attribute,
-        params: List<String>
+        params: List<String>,
     ): String {
         return when (params.size) {
             0 ->
                 data.getAttrValue<Any>(attribute)?.toString()
+
             1 -> {
                 data.getAttrValue<Any>(attribute, params[0])?.toString()
             }
-            2->{
+
+            2 -> {
                 val read = attribute.readPattern
-                if(read !is ReadGroup<*>) return "0.0"
+                if (read !is ReadGroup<*>) return "0.0"
                 (data.getStatus(attribute) as GroupStatus<*>).get(params[1])?.toString()
             }
+
             else ->
                 "0.0"
         } ?: "0.0"
     }
-    fun placeholder(params: String, entity: LivingEntity, attrData:AttributeDataCompound): String {
+
+    fun placeholder(params: String, entity: LivingEntity, attrData: AttributeDataCompound): String {
         val lower = params.lowercase().replace(":", "_")
         val uuid = entity.uniqueId
         val strings = if (lower.contains("_")) lower.split("_").toMutableList() else mutableListOf(lower)
