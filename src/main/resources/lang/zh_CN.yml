@@ -1,0 +1,95 @@
+prefix: '&d[&9AttributeSystem&d] '
+equipment-type-error: '&d[&9AttributeSystem&d] &6{0} &c不是槽位类型!'
+
+command-reload: '&d[&9AttributeSystem&d] &a插件已重载成功!'
+command-info:
+  - '&f&m─&6&m──────────────────────────────────&6&f&m─'
+  - ' &9指令列表:'
+  - '  &6/as'
+  - '    &d- &ehelp &5—— &a插件帮助.'
+  - '    &d- &einfo &5—— &a显示插件信息.'
+  - '    &d- &estats (玩家名) &5—— &a显示属性统计.'
+  - '    &d- &eitemstats [玩家名] [key] [slot] &5—— &a显示物品的属性统计&e.'
+  - '    &d- &eentitystats &5—— &a显示你所看向的实体的属性统计'
+  - '    &d- &epersonal [类型] [子类型] &5—— &a配置信息显示位置'
+  - '    &d- &ereport &5—— &a查看耗时数据'
+  - '    &d- &eclear &5—— &a清除耗时数据'
+  - '    &d- &ereload &5—— &a重载插件'
+  - '&f&m─&6&m──────────────────────────────────&6&f&m─'
+command-personal: '&d[&9AttributeSystem&d] &e你的 &6{0} &e已更改为 &b{1} &e!'
+command-valid-player: '&d[&9AttributeSystem&d] &c玩家 &6{0} &c不存在!'
+command-valid-item: '&d[&9AttributeSystem&d] &c物品不存在!'
+command-valid-entity: '&d[&9AttributeSystem&d] &c你必须看向一个实体!'
+command-disable-warning: '&d[&9AttributeSystem&d] &c你确定要关闭 &9AttributeSystem &c吗？ 这将导致其所有属性实现失效！如果你确定要关闭，请输入 &6/as disable confirm &c! &4:('
+command-disable: '&d[&9AttributeSystem&d] &c你关闭了 &9AttributeSystem &c！请重启服务器并删除插件！ &4:('
+
+fight-in: '&d[&9AttributeSystem&d] &e你已进入战斗状态!'
+fight-out: '&d[&9AttributeSystem&d] &e你已离开战斗状态!'
+
+
+disable-damage-type: '&d[&9AttributeSystem&d] &6{0} &c已被禁止普攻!'
+wrong-command: '&d[&9AttributeSystem&d] &c你是不是输错指令啦!'
+wrong-sender: '&d[&9AttributeSystem&d] &c控制台不能发送此指令!'
+command-clear: '&d[&9AttributeSystem&d] &a耗时数据已清楚!'
+
+group-reader-register: '&d[&9AttributeSystem&d] &a读取组 &6{0} &7[&f{1}&7] &a注册成功!'
+group-reader-unregister: '&d[&9AttributeSystem&d] &c读取组 &6{0} &7[&f{1}&7] &c注销成功!'
+attribute-register: '&d[&9AttributeSystem&d] &a属性 &6{0} &7[&f{1}&7] &a注册成功!'
+attribute-unregister: '&d[&9AttributeSystem&d] &c属性 &6{0} &7[&f{1}&7] &c注销成功!'
+
+annotation-mechanic-register: '&d[&9AttributeSystem&d] &a机制 &6{0} &a注册成功!'
+annotation-mechanic-unregister: '&d[&9AttributeSystem&d] &c机制 &6{0} &c注销成功!'
+annotation-condition-register: '&d[&9AttributeSystem&d] &a条件 &6{0} &a注册成功!'
+annotation-condition-unregister: '&d[&9AttributeSystem&d] &c条件 &6{0} &c注销成功!'
+annotation-string-operation-register: '&d[&9AttributeSystem&d] &a字符串运算操作 &6{0} &a注册成功!'
+annotation-string-operation-unregister: '&d[&9AttributeSystem&d] &c字符串运算操作 &6{0} &c注销成功!'
+annotation-number-operation-register: '&d[&9AttributeSystem&d] &a字符串运算操作 &6{0} &a注册成功!'
+annotation-number-operation-unregister: '&d[&9AttributeSystem&d] &c字符串运算操作 &6{0} &c注销成功!'
+annotation-read-pattern-register: '&d[&9AttributeSystem&d] &a读取模式 &6{0} &a注册成功!'
+annotation-read-pattern-unregister: '&d[&9AttributeSystem&d] &c读取模式 &6{0} &c注销成功!'
+annotation-message-type-register: '&d[&9AttributeSystem&d] &a消息类型 &6{0} &a注册成功!'
+annotation-message-type-unregister: '&d[&9AttributeSystem&d] &c消息类型 &6{0} &c注销成功!'
+
+stats-title: '  &f&m─&7&m─────────&f&m─&f属性统计&f&m─&7&m─────────&f&m─'
+stats-attribute-format: '&7        &7{name} &f>&7>&8> &c{value} &7点'
+stats-status: '属性(捕获组)状态:'
+stats-status-value: '{key} = {value}'
+stats-status-none: '无'
+stats-status-placeholder: '占位符:'
+stats-status-placeholder-value: '{key} = {value}'
+stats-end: '  &f&m─&7&m───────────────────────────&7&f&m─'
+
+
+fight-info: "&b&l战斗信息:"
+fight-info-key: "&6战斗组: &4{0}"
+fight-info-attacker: "&7攻击者: &c{0}"
+fight-info-defender: "&7防御者: &c{0}"
+fight-info-damage-type: " &8-> &e伤害类型: &6{0}"
+fight-info-mechanic: "   &7- &5机制: &c{0}"
+fight-info-mechanic-return: "     &5结果: &6{0}"
+fight-info-usable-vars: "  &7- &d可用变量:"
+fight-info-message: "  &7- &d战斗消息:"
+fight-info-result: "&7结果: &c{0}"
+
+error-read-group: '&d[&9AttributeSystem&d] &c加载读取组 &6{0} &c时发生了错误!'
+error-read-group-cause: '&d[&9AttributeSystem&d] &c原因: &f{0}'
+invalid-read-pattern: '&d[&9AttributeSystem&d] &c属性 &6{0} &c的读取格式 &b{1} &c不存在!!'
+invalid-damage-type: '&d[&9AttributeSystem&d] &c伤害类型不存在! &6{0} '
+invalid-mechanic: '&d[&9AttributeSystem&d] &c机制不存在! &6{0}'
+invalid-attribute: '&d[&9AttributeSystem&d] &c属性不存在! &6{0}'
+
+read-restrict-numeric: "&d[&9AttributeSystem&d] &c在 &6{1} &c中的值 &d{0} &c必须是一个数字!"
+
+type-TITLE: '中间标题'
+type-ACTION-BAR: '动作栏'
+type-CHAT: '聊天框'
+type-HOLO: '全息文本'
+type-DISABLE: '关闭'
+
+type-true: '开启'
+type-false: '关闭'
+
+attacking-message-type: '攻击信息'
+defensive-message-type: '防御信息'
+regain-holo-type: '回血信息'
+

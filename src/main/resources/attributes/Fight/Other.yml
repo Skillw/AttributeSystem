@@ -1,0 +1,23 @@
+RealDamage:
+  names: ["真实伤害"]
+
+AttackDistance:
+  names: ["攻击距离"]
+AttackSpeed:
+  names: ["攻击速度"]
+Resistance:
+  names: ["击退抗性"]
+
+PVEDamage:
+  names: ["PVE伤害"]
+PVPDamage:
+  names: ["PVP伤害"]
+PVEDefense:
+  names: ["PVE防御"]
+PVPDefense:
+  names: ["PVP防御"]
+
+ProjectileDamage:
+  names: ["远程伤害"]
+ProjectileDefense:
+  names: ["远程护甲"]

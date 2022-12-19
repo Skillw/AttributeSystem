@@ -1,0 +1,50 @@
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+replay_pid*
+/.gradle/
+/build/
+/gradle/
+.idea/runConfigurations.xml
+.idea/palantir-java-format.xml
+.idea/kotlinc.xml
+.idea/inspectionProfiles/Project_Default.xml
+.gradle/checksums/sha1-checksums.bin
+.gradle/checksums/md5-checksums.bin
+.gradle/checksums/checksums.lock
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/buildOutputCleanup.lock
+.gradle/7.0.2/fileHashes/resourceHashesCache.bin
+.gradle/7.0.2/fileHashes/fileHashes.lock
+.gradle/7.0.2/fileHashes/fileHashes.bin
+.gradle/7.0.2/executionHistory/executionHistory.lock
+.gradle/7.0.2/executionHistory/executionHistory.bin
+.gradle/7.0.2/executionHistory/executionHistory.bin
+.gradle/7.0.2/executionHistory/executionHistory.lock
+.gradle/7.0.2/fileHashes/fileHashes.bin
+.gradle/7.0.2/fileHashes/fileHashes.lock
+.gradle/7.0.2/fileHashes/resourceHashesCache.bin
+.gradle/buildOutputCleanup/outputFiles.bin
+.gradle/buildOutputCleanup/buildOutputCleanup.lock
+.gradle/7.0.2/fileHashes/resourceHashesCache.bin
+.gradle/7.0.2/fileHashes/resourceHashesCache.bin

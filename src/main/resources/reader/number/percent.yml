@@ -1,0 +1,17 @@
+Percent:
+  type: number
+  matchers:
+    percentMax: plus
+    percentMin: plus
+    percent: plus
+  patterns:
+    # 暴击率: 10-60(%)
+    - '{name}(:|：)?\s?<percentMin>-<percentMax>\(%\)'
+    # 暴击率: 50(%)
+    - '{name}(:|：)?\s?<percent>\(%\)'
+  placeholders:
+    total: "(<percent>/100 + {random <percentMin> to <percentMax> }/100)"
+    percent: <percent>/100
+    percentMin: <percentMin>/100
+    percentMax: <percentMax>/100
+    percentRandom: (<percent>/100 + {random <percentMin> to <percentMax>}/100)

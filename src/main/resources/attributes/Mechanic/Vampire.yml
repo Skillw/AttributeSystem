@@ -1,0 +1,9 @@
+VampireChance:
+  names: ["吸血几率"]
+  read-pattern: Percent
+VampireMultiple:
+  names: ["吸血倍率"]
+  read-pattern: Percent
+VampireDefense:
+  names: ["吸血抵抗"]
+  read-pattern: Percent

@@ -1,0 +1,39 @@
+MaxHealth:
+  names:
+    - "生命值"
+    - "生命力"
+    - "最大生命值"
+HealthRegain:
+  names:
+    - "生命恢复"
+    - "回血"
+MovementSpeed:
+  names:
+    - "移动速度"
+    - "移速"
+Luck:
+  names: ["幸运"]
+
+ExpAddition:
+  names: ["经验加成"]
+
+ArrowSpeed:
+  names: ["箭矢速度"]
+ArrowAccurate:
+  names: ["箭矢精准"]
+ArrowPierceChance:
+  names: ["箭矢穿透率"]
+  read-pattern: percent
+ArrowPierceAmount:
+  names: ["箭矢穿透数"]
+
+#自行实现Mana
+MaxMana:
+  names: ["法力值"]
+
+ManaRegain:
+  names: ["法力恢复"]
+SkillSpeed:
+  names:
+    - "技能极速"
+    - "冷却缩减"

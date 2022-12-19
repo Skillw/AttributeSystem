@@ -1,0 +1,22 @@
+#左ID 右槽位
+player:
+  #左AS内部槽位key 右原版槽位
+  "头盔": "HEAD"
+  #可节点形式/字符串形式
+  "胸甲": "CHEST"
+  "护腿": "LEGS"
+  "靴子": "FEET"
+  "主手": "HAND"
+  "副手": "OFFHAND"
+  #读取槽位20的装备 以20th为id存入装备栏
+  "20th": "20"
+entity:
+  "头盔": "HEAD"
+  "胸甲": "CHEST"
+  "护腿": "LEGS"
+  "靴子": "FEET"
+  "主手": "HAND"
+  "副手": "OFFHAND"
+# 萌芽槽位
+germ-slots:
+  - "example"

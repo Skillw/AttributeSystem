@@ -1,0 +1,79 @@
+#战斗机制组ID
+# attack-damage 普通攻击
+# skill-api-技能id-标识符 SkillAPI技能
+# damage-cause-id小写 伤害事件（会覆盖）
+# https://bukkit.windit.net/javadoc/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
+# 这3个是固定的
+attack-damage:
+  #伤害类型
+  Physical:
+    #是否启用
+    enable: true
+    mechanics:
+      #机制id
+      - mechanic: damage
+        #战斗数据
+        #攻击者变量: {a.PAPI变量/PouPAPI变量}
+        #防御者变量: {d.PAPI变量/PouPAPI变量}
+        #PouPAPI支持存活实体
+        #AS提供的变量
+        # origin AS处理前的伤害 一般是原版伤害 (全局)
+        # force 蓄力程度  弓箭蓄力程度 或 普攻蓄力程度 (仅attack-damage)
+        # type 攻击类型 PVP PVE EVE (全局)
+        # projectile 是否是远程攻击 true / false (全局)
+        enable: |-
+          check random 0 to 1 < calculate '{a.as_att:PhysicalHitChance}-{d.as_att:PhysicalDodgeChance}'
+        value: |-
+          set pvpDamage to if check {type} == 'PVP' then '{a.as_att:PVPDamage} - {d.as_att:PVPDefense}' else '0'
+          set pveDamage to if check {type} == 'PVE' then '{a.as_att:PVEDamage} - {d.as_att:PVEDefense}' else '0'
+          set projectile to if check {projectile} == true then '{a.as_att:ProjectileDamage} - {d.as_att:ProjectileDefense}' else '0'
+          set damage to '{a.as_att:PhysicalDamage} + {origin}'
+          set defense to if check random 0 to 1 < {a.as_att:PhysicalDefenseIgnore} then 0 else '{d.as_att:PhysicalDefense} - {a.as_att:PhysicalPenetration}'
+          calculate '( {&damage} + {&pvpDamage} + {&pveDamage} + {&projectile} - {&defense} ) * {force}'
+      #机制从上到下按顺序执行
+      - mechanic: crit
+        enable: "check random 0 to 1 < {a.as_att:PhysicalCriticalChance}"
+        #下面的机制数据可以调用上面已执行机制的执行结果 格式为{id}
+        multiplier: |-
+          calculate '{a.as_att:PhysicalCriticalMultiple} - {d.as_att:PhysicalCriticalDefense}'
+
+      - mechanic: vampire
+        enable: "check random 0 to 1 < calculate {a.as_att:VampireChance}"
+        value: |-
+          calculate '{a.as_att:VampireMultiple} - {d.as_att:VampireDefense}'
+
+      - mechanic: flame
+        enable: "check random 0 1 < {a.as_att:燃烧几率}"
+        damage: |-
+          max 1 {a.as_att:燃烧伤害}
+        duration: |-
+          max 20 calculate '{a.as_att:燃烧伤害}*3'
+
+      - mechanic: frozen
+        enable: "check random 0 1 < {a.as_att:冰冻几率}"
+        value: |-
+          max 1 {a.as_att:冰冻强度}
+        duration: |-
+          max 20 calculate '{a.as_att:冰冻强度}*3'
+
+      - mechanic: thunder
+        enable: "check random 0 1 < {a.as_att:雷击几率}"
+        damage: "max 1 {a.as_att:雷击伤害}"
+
+      - mechanic: rebound
+        enable: "check random 0 1 < {d.as_att:反弹几率}"
+        multiplier: "max 0.1 {d.as_att:反弹倍率}"
+
+      - mechanic: shield
+        enable: "check random 0 1 < calculate '1-{a.as_att:BlockingIgnore}'"
+        reduce: "{d.as_att:Blocking}"
+        #tick
+        # {reduced}是实际减伤
+        cooldown: "calculate '({reduced}/4)*20'"
+  Real:
+    enable: 'check {a.as_att:RealDamage} != 0.0'
+    mechanics:
+      - mechanic: damage
+        enable: |-
+          check random 0 to 1 < calculate '{a.as_att:PhysicalHitChance}-{d.as_att:PhysicalDodgeChance}'
+        value: '{a.as_att:RealDamage}'
