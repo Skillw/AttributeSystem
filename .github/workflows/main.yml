@@ -96,6 +96,7 @@ jobs:
         with:
           filename: Artifacts.zip
       - name: Get Project name
+        id: get-name
         run: |
           output=$(./gradlew properties)
           name=$(echo "$output" | grep "^rootProject.name:" | cut -d' ' -f2)
@@ -104,6 +105,7 @@ jobs:
           output: ${{ steps.get-name.output }}
           name: ${{ steps.get-name.outputs.name }}
       - name: Get Project version
+        id: get-version
         run: |
           output=$(./gradlew properties)
           version=$(echo "$output" | grep "^version:" | cut -d' ' -f2)
