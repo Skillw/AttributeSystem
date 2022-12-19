@@ -120,16 +120,10 @@ jobs:
           echo "::set-output name=project_version::$version-$GITHUB_RUN_NUMBER"
         env:
           project_version: ${{ steps.get_version.outputs.project_version }}
-      - name: Print name and version
-        run: |
-          echo "Name: ${{ steps.get_name.outputs.project_name }}"
-          echo "Version: ${{ steps.get_version.outputs.project_version }}"
       - name: Download Content
         uses: actions/download-artifact@v2
         with:
           name: Artifacts
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Create release
         id: create-new-release
         uses: actions/create-release@v1
