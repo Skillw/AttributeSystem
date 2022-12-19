@@ -132,7 +132,7 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           filename: Artifacts.zip
-          exclusion: "*.jar"
+          exclusions: "*.jar"
       - name: Display structure of downloaded files
         run: ls -R
       - name: Create release
