@@ -102,12 +102,6 @@ jobs:
           java-version: 8.0
       - name: make gradle wrapper executable
         run: chmod +x ./gradlew
-      - name: Download Content
-        uses: actions/download-artifact@v2
-        with:
-          name: Artifacts
-      - name: Display structure of downloaded files
-        run: ls -R
       - name: Get Project name
         id: get_name
         run: |
@@ -122,14 +116,25 @@ jobs:
         run: |
           output=$(./gradlew properties)
           version=$(echo "$output" | grep "^version:" | cut -d' ' -f2)
-          echo "Project version: $version"
-          echo "::set-output name=project_version::$version"
+          echo "Project version: $version-$GITHUB_RUN_NUMBER"
+          echo "::set-output name=project_version::$version-$GITHUB_RUN_NUMBER"
         env:
           project_version: ${{ steps.get_version.outputs.project_version }}
       - name: Print name and version
         run: |
           echo "Name: ${{ steps.get_name.outputs.project_name }}"
           echo "Version: ${{ steps.get_version.outputs.project_version }}"
+      - name: Download Content
+        uses: actions/download-artifact@v2
+        with:
+          name: Artifacts
+      - name: Archive content
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: Artifacts.zip
+          exclusion: "${{ steps.get_name.outputs.project_name }}*"
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Create release
         id: create-new-release
         uses: actions/create-release@v1
