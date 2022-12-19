@@ -119,8 +119,7 @@ jobs:
           filename: Artifacts.zip
       - name: Retrieve Release Name
         id: return_name
-        run: |
-          echo ./gradlew -q releaseName
+        run: ./gradlew -q releaseName
       - name: Get Release Name
         run: |
           echo "release_name=${{steps.return_name.outputs.RELEASE_NAME}}" >> $GITHUB_ENV
