@@ -47,3 +47,105 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
+  build-api:
+    name: Build API Jar
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk 8.0
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 8.0
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: build
+        continue-on-error: true
+        id: build_api_1
+        run: ./gradlew build -Papi=true -Porder=$GITHUB_RUN_NUMBER
+      - name: build (retry 1)
+        continue-on-error: true
+        id: build_api_2
+        if: steps.build_api_1.outcome == 'failure'
+        run: ./gradlew build -Papi=true -Porder=$GITHUB_RUN_NUMBER
+      - name: build (retry 2)
+        continue-on-error: true
+        id: build_api_3
+        if: steps.build_api_2.outcome == 'failure'
+        run: ./gradlew build -Papi=true -Porder=$GITHUB_RUN_NUMBER
+      - name: build (retry 3)
+        id: build_api_4
+        if: steps.build_api_3.outcome == 'failure'
+        run: ./gradlew build -Papi=true -Porder=$GITHUB_RUN_NUMBER
+      # 上传构建文件
+      - name: capture build api artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifacts
+          path: build/libs
+  release:
+    name: Release Jar
+    needs: [ build , build-api ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk 8.0
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 8.0
+      - name: make gradle wrapper executable
+        run: chmod +x ./gradlew
+      - name: Download Content
+        uses: actions/download-artifact@v2
+        with:
+          name: Artifacts
+      - name: Archive content
+        uses: thedoctor0/zip-release@master
+        with:
+          filename: Artifacts.zip
+      - name: Get Project name
+        id: get-name
+        run: |
+          output=$(./gradlew properties)
+          name=$(echo "$output" | grep "^name:" | cut -d' ' -f2)
+          echo "Project name: $name"
+        env:
+          output: ${{ steps.get-name.output }}
+          name: ${{ steps.get-name.outputs.name }}
+      - name: Get Project version
+        id: get-version
+        run: |
+          output=$(./gradlew properties)
+          version=$(echo "$output" | grep "^version:" | cut -d' ' -f2)
+          echo "Project version: $version"
+        env:
+          output: ${{ steps.get-version.output }}
+          version: ${{ steps.get-version.outputs.version }}
+      - name: Print name and version
+        run: |
+          echo "Name: ${{ steps.get-name.outputs.name }}"
+          echo "Version: ${{ steps.get-version.outputs.version }}"
+      - name: Create release
+        id: create-new-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get-version.outputs.version }}
+          release_name: Release ${{ steps.get-version.outputs.version }}
+      - name: Upload asset to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
+          asset_path: ./Artifacts.zip
+          asset_name: ${{ steps.get-name.outputs.name }}.zip
+          asset_content_type: application/zip
