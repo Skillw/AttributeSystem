@@ -88,7 +88,7 @@ jobs:
           path: build/libs
   release:
     name: Release Jar
-    needs: [ build , build-api ]
+    needs: [build, build-api]
     runs-on: ubuntu-latest
     steps:
       - name: checkout repository
@@ -111,35 +111,33 @@ jobs:
         with:
           filename: Artifacts.zip
       - name: Get Project name
-        id: get-name
+        id: get_name
         run: |
           output=$(./gradlew properties)
           name=$(echo "$output" | grep "^name:" | cut -d' ' -f2)
           echo "Project name: $name"
         env:
-          output: ${{ steps.get-name.output }}
-          name: ${{ steps.get-name.outputs.name }}
+          name: ${{ steps.get_name.outputs.name }}
       - name: Get Project version
-        id: get-version
+        id: get_version
         run: |
           output=$(./gradlew properties)
           version=$(echo "$output" | grep "^version:" | cut -d' ' -f2)
           echo "Project version: $version"
         env:
-          output: ${{ steps.get-version.output }}
-          version: ${{ steps.get-version.outputs.version }}
+          version: ${{ steps.get_version.outputs.version }}
       - name: Print name and version
         run: |
-          echo "Name: ${{ steps.get-name.outputs.name }}"
-          echo "Version: ${{ steps.get-version.outputs.version }}"
+          echo "Name: ${{ name }}"
+          echo "Version: ${{ version }}"
       - name: Create release
         id: create-new-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.get-version.outputs.version }}
-          release_name: Release ${{ steps.get-version.outputs.version }}
+          tag_name: ${{ name }}
+          release_name: Release ${{ version }}
       - name: Upload asset to Release
         uses: actions/upload-release-asset@v1
         env:
