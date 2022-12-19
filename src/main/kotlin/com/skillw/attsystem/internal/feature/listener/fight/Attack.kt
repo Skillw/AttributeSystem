@@ -41,6 +41,10 @@ internal object Attack {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     fun attack(event: EntityDamageByEntityEvent) {
+        val isAttack = event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
+        val isProjectile = event.cause == EntityDamageEvent.DamageCause.PROJECTILE
+        if (!isAttack && !isProjectile) return
+
         val attacker = event.attacker ?: return
         val defender = event.entity
         if (!attacker.isAlive() || !defender.isAlive() || defender is ArmorStand) {
@@ -58,9 +62,6 @@ internal object Attack {
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0.0)
         }
         val originDamage = event.finalDamage
-        val isAttack = event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
-        val isProjectile = event.cause == EntityDamageEvent.DamageCause.PROJECTILE
-        if (!isAttack && !isProjectile) return
         var force = 1.0
         if (attacker is Player) {
             val main = attacker.inventory.itemInMainHand
