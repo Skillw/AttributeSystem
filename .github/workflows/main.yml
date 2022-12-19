@@ -116,28 +116,30 @@ jobs:
           output=$(./gradlew properties)
           name=$(echo "$output" | grep "^name:" | cut -d' ' -f2)
           echo "Project name: $name"
+          echo "::set-output name=project_name::$name"
         env:
-          name: ${{ steps.get_name.outputs.name }}
+          project_name: ${{ steps.get_name.outputs.project_name }}
       - name: Get Project version
         id: get_version
         run: |
           output=$(./gradlew properties)
           version=$(echo "$output" | grep "^version:" | cut -d' ' -f2)
           echo "Project version: $version"
+          echo "::set-output name=project_version::$version"
         env:
-          version: ${{ steps.get_version.outputs.version }}
+          project_version: ${{ steps.get_version.outputs.project_version }}
       - name: Print name and version
         run: |
-          echo "Name: ${{ name }}"
-          echo "Version: ${{ version }}"
+          echo "Name: ${{ project_name }}"
+          echo "Version: ${{ project_version }}"
       - name: Create release
         id: create-new-release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ name }}
-          release_name: Release ${{ version }}
+          tag_name: ${{ steps.get_version.outputs.project_version }}
+          release_name: Release ${{ steps.get_name.outputs.project_name }}
       - name: Upload asset to Release
         uses: actions/upload-release-asset@v1
         env:
@@ -145,5 +147,5 @@ jobs:
         with:
           upload_url: ${{ steps.create-new-release.outputs.upload_url }}
           asset_path: ./Artifacts.zip
-          asset_name: ${{ steps.get-name.outputs.name }}.zip
+          asset_name: ${{ project_name }}.zip
           asset_content_type: application/zip
