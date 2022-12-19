@@ -27,18 +27,6 @@ task("releaseName") {
 task("version") {
     println(project.version.toString())
 }
-
-tasks.dokkaJavadoc.configure {
-    outputDirectory.set(File("C:\\Users\\Administrator\\Desktop\\Doc\\attsystem"))
-    dokkaSourceSets {
-        configureEach {
-            externalDocumentationLink {
-                url.set(URL("https://doc.skillw.com/pouvoir/"))
-            }
-        }
-    }
-
-}
 taboolib {
     if (project.version.toString().contains("-api")) {
         options("skip-kotlin-relocate")
@@ -81,6 +69,18 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     }
 }
 
+
+tasks.dokkaJavadoc.configure {
+    outputDirectory.set(File("C:\\Users\\Administrator\\Desktop\\Doc\\attsystem"))
+    dokkaSourceSets {
+        configureEach {
+            externalDocumentationLink {
+                url.set(URL("https://doc.skillw.com/pouvoir/"))
+            }
+        }
+    }
+
+}
 repositories {
     maven { url = uri("https://repo.janmm14.de/repository/public/") }
     maven { url = uri("https://jitpack.io") }

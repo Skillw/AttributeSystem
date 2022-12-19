@@ -7,8 +7,6 @@ options:
     eve-fight-cal: false
     #战斗时间禁生命恢复系统
     disable-regain-on-fight: false
-    #忽视枪械插件的伤害计算
-    skip-crash-shot: true
     attack-speed:
       #cooldown 物品冷却
       #vanilla 原版攻击速度机制

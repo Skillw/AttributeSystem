@@ -375,8 +375,23 @@ object AttrAPI {
         return AttributeSystem.equipmentDataManager.addEquipment(this, key, equipmentData)
     }
 
+    /**
+     * 判断实体是否有属性数据
+     *
+     * @return Boolean 是否有属性数据
+     * @receiver LivingEntity 实体
+     */
     @JvmStatic
     fun LivingEntity.hasData(): Boolean = AttributeSystem.attributeDataManager.containsKey(uniqueId)
 
+    /**
+     * 让AS重新计算并给予实体的原版属性
+     *
+     * @receiver LivingEntity 实体
+     */
+    @JvmStatic
+    fun LivingEntity.realize() {
+        AttributeSystem.realizeManager.realize(this)
+    }
 
 }

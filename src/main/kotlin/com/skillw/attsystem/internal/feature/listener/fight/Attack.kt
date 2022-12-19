@@ -34,45 +34,54 @@ internal object Attack {
 
 
     @JvmStatic
-    var skipCal = false
-    private fun Entity.force() =
-        if (hasMetadata("ATTRIBUTE_SYSTEM_FORCE")) getMetadata("ATTRIBUTE_SYSTEM_FORCE")[0].asDouble() else -1.0
+    var nextAttackCal = false
+    private fun Entity.force(): Double? =
+        if (hasMetadata("ATTRIBUTE_SYSTEM_FORCE")) getMetadata("ATTRIBUTE_SYSTEM_FORCE")[0].asDouble() else null
 
 
     @SubscribeEvent(priority = EventPriority.LOW)
     fun attack(event: EntityDamageByEntityEvent) {
+        //如果攻击原因不是 ENTITY_ATTACK 和 PROJECTILE 则跳过计算
         val isAttack = event.cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK
         val isProjectile = event.cause == EntityDamageEvent.DamageCause.PROJECTILE
         if (!isAttack && !isProjectile) return
 
         val attacker = event.attacker ?: return
         val defender = event.entity
-        if (!attacker.isAlive() || !defender.isAlive() || defender is ArmorStand) {
-            return
-        }
+        //判断是否都是存活实体                                防御方为盔甲架则跳过计算
+        if (!attacker.isAlive() || !defender.isAlive() || defender is ArmorStand) return
         defender as LivingEntity
+
+        //是否是EVE (非玩家 打 非玩家)                       如果关闭EVE计算则跳过计算
         if (attacker !is Player && defender !is Player && !eveFightCal) return
-        if (skipCal) {
-            skipCal = false
+
+        //是否跳过这次计算
+        if (nextAttackCal) {
+            nextAttackCal = false
             return
         }
+
+        //事件取消则跳过计算
         if (event.isCancelled) return
+
+        //是 SkillAPI 的伤害则跳过计算
         if (isSkillAPIDamage) return
+
+        //处理原版护甲
         if (!ASConfig.isVanillaArmor) {
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0.0)
         }
+        //如果不是原版弓/弩攻击 则跳过计算
+        if (event.damager.force() == null) return
+        //原伤害
         val originDamage = event.finalDamage
+
+        //蓄力程度
         var force = 1.0
         if (attacker is Player) {
             val main = attacker.inventory.itemInMainHand
-            //CrashShot
-            if (isProjectile && event.damager.hasMetadata("projParentNode") && ASConfig.skipCrashShot) return
-
-            val isCooldown = cooldownManager.isItemCoolDown(
-                attacker,
-                main
-            )
-            //攻击距离
+            val isCooldown = cooldownManager.isItemCoolDown(attacker, main)
+            //不满足攻击距离，则取消伤害并跳过计算
             if (isAttack && defender.location.distance(attacker.location) > formulaManager[attacker, ATTACK_DISTANCE]) {
                 event.isCancelled = true
                 return
@@ -84,43 +93,55 @@ internal object Attack {
                 return
             }
 
-            force = event.damager.force().let {
-                if (it != -1.0) it
-                else when {
-                    isAttackAnyTime -> when {
-                        isAttackForce -> if (forceBasedCooldown) {
-                            cooldownManager.pull(attacker, main.type)
-                        } else {
-                            attacker.getAttribute(BukkitAttribute.ATTACK_DAMAGE)?.value?.let { attackDamage ->
-                                event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) / attackDamage
-                            } ?: return@let 1.0
-                        }
-
-                        else -> 1.0
+            //计算蓄力程度
+            //  这个函数是获取弓/弩的蓄力程度，若返回null则代表不是抛射物攻击，进而进行近战时的蓄力计算
+            force = event.damager.force() ?: when {
+                //如果无视攻击速度，可以随时攻击，并开启近战蓄力
+                isAttackAnyTime && isAttackForce -> when {
+                    //基于AS的冷却系统计算蓄力
+                    forceBasedCooldown -> {
+                        cooldownManager.pull(attacker, main.type)
                     }
 
-                    !isAttackAnyTime && isAttackForce -> 1.0
-
-                    else -> 1.0
+                    //基于原版伤害计算蓄力
+                    else -> {
+                        attacker.getAttribute(BukkitAttribute.ATTACK_DAMAGE)?.value?.let { attackDamage ->
+                            event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) / attackDamage
+                        } ?: 1.0
+                    }
                 }
+                //如果无视攻击速度，可以随时攻击，并关闭近战蓄力
+                !isAttackAnyTime && isAttackForce -> 1.0
+
+                else -> 1.0
             }
+            //如果小于阈值。则跳过计算（防连点器
             if (isAttackForce && force < ASConfig.minForce) {
                 event.isCancelled = true
                 return
             }
         }
+        //处理战斗组id
         val fightKey =
-            if (attacker.isOp) "attack-damage" else attackFightKeyMap.filterKeys { attacker.hasPermission(it) }.values.firstOrNull()
-                ?: "attack-damage"
+            when {
+                //是op的话就直接"attack-damage"，不参与权限计算
+                attacker.isOp -> "attack-damage"
+                else -> attackFightKeyMap.filterKeys { attacker.hasPermission(it) }.values.firstOrNull()
+                    ?: "attack-damage"
+            }
+        //运行战斗组并返回结果
         val result = AttributeSystem.attributeSystemAPI.runFight(fightKey, FightData(attacker, defender) {
+            //往里塞参数
             it["origin"] = originDamage
             it["force"] = force
             it["event"] = event
             it["projectile"] = isProjectile.toString()
         })
+        //结果小于等于零，代表MISS 未命中
         if (result <= 0.0) {
             event.isCancelled = true
             if (attacker !is Player || isProjectile) return
+            //还是要让玩家的武器冷却的
             cooldownManager.setItemCoolDown(
                 attacker,
                 attacker.inventory.itemInMainHand,
@@ -128,15 +149,19 @@ internal object Attack {
             )
             return
         }
+        //设置伤害
         event.damage = result
+        //让双方都进入战斗状态
         attacker.intoFighting()
         defender.intoFighting()
         if (attacker !is Player || isProjectile) return
+        //让玩家的武器冷却的
         cooldownManager.setItemCoolDown(
             attacker,
             attacker.inventory.itemInMainHand,
             formulaManager[attacker.uniqueId, ATTACK_SPEED]
         )
+        //无伤帧
         submit {
             defender.noDamageTicks = ASConfig.noDamageTicks
         }

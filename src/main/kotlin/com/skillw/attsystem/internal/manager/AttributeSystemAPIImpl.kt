@@ -8,7 +8,7 @@ import com.skillw.attsystem.api.event.StringsReadEvent
 import com.skillw.attsystem.api.fight.FightData
 import com.skillw.attsystem.api.fight.message.MessageData
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.attsystem.internal.feature.listener.fight.Attack.skipCal
+import com.skillw.attsystem.internal.feature.listener.fight.Attack.nextAttackCal
 import com.skillw.attsystem.internal.manager.ASConfig.ignores
 import com.skillw.pouvoir.util.EntityUtils.isAlive
 import org.bukkit.Bukkit
@@ -55,7 +55,7 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
     }
 
     override fun skipNextDamageCal() {
-        skipCal = true
+        nextAttackCal = true
     }
 
     @Deprecated("请使用 [runFight] 方法")

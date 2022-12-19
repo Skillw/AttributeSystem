@@ -11,7 +11,7 @@ import taboolib.platform.util.sendLang
 
 private object DisableDamage {
     @SubscribeEvent(priority = EventPriority.MONITOR)
-    fun disableMaterialDamage(event: FightEvent.Post) {
+    fun disableMaterialAttack(event: FightEvent.Post) {
         val attacker = event.fightData.attacker ?: return
         if (attacker !is Player || event.fightData["projectile"] == "true" || event.key != "attack-damage") return
         val material = attacker.inventory.itemInMainHand.type.name.material() ?: return

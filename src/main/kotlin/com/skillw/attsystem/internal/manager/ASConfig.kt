@@ -81,7 +81,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
         )
         //兼容1.4.3及之前的脚本
         mapOf(
-            "com.skillw.attsystem.internal.operation" to "com.skillw.attsystem.internal.core.operation",
+            "com.skillw.attsystem.internal.operation.num." to "com.skillw.attsystem.internal.core.operation.num.Operation",
             "com.skillw.attsystem.internal.attribute" to "com.skillw.attsystem.internal.core.attribute",
             "com.skillw.attsystem.internal.fight" to "com.skillw.attsystem.internal.core.fight",
             "com.skillw.attsystem.internal.read" to "com.skillw.attsystem.internal.core.read"
@@ -220,8 +220,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     val enableCooldown: Boolean
         get() = this["config"].getString("options.fight.attack-speed.type")?.lowercase().equals("cooldown")
-    val skipCrashShot: Boolean
-        get() = (this["config"].getString("options.fight.skip-crash-shot") ?: "true").toBoolean()
+
 
     val isAttackAnyTime: Boolean
         get() = this["config"].getBoolean("options.fight.attack-speed.damage-any-time")

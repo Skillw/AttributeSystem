@@ -51,12 +51,10 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
                 attackerData = attacker?.getAttrData() ?: AttributeDataCompound()
             }
             field = value
-            if (value != null) {
-                this["attacker-name"] =
-                    (value as? Player)?.displayName
-                        ?: (if (value.customName == null) value.getI18nName() else value.customName)
-                                ?: ASConfig.defaultAttackerName
-            }
+            this["attacker-name"] =
+                (value as? Player)?.displayName
+                    ?: value?.getI18nName()
+                            ?: ASConfig.defaultAttackerName
         }
 
     /** Attacker data */
@@ -68,12 +66,10 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
         set(value) {
             if (defenderData == null) defenderData = defender?.getAttrData() ?: AttributeDataCompound()
             field = value
-            if (value != null) {
-                this["defender-name"] =
-                    (value as? Player)?.displayName
-                        ?: (if (value.customName == null) value.getI18nName() else value.customName)
-                                ?: ASConfig.defaultDefenderName
-            }
+            this["defender-name"] =
+                (value as? Player)?.displayName
+                    ?: value?.getI18nName()
+                            ?: ASConfig.defaultDefenderName
         }
     private var defenderData: AttributeDataCompound? = null
 
