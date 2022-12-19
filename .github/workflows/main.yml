@@ -110,6 +110,8 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           filename: Artifacts.zip
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Get Project name
         id: get_name
         run: |
