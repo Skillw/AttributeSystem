@@ -98,14 +98,14 @@ jobs:
     #    needs: [ build, build-api ]
     runs-on: ubuntu-latest
     steps:
-      - name: Download Content
-        uses: actions/download-artifact@v2
-        with:
-          name: Artifacts
-      - name: Archive content
-        uses: thedoctor0/zip-release@master
-        with:
-          filename: Artifacts.zip
+#      - name: Download Content
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: Artifacts
+#      - name: Archive content
+#        uses: thedoctor0/zip-release@master
+#        with:
+#          filename: Artifacts.zip
       - name: Get Gradle project version
         run: |
           output=$(./gradlew properties)
