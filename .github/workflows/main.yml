@@ -111,6 +111,10 @@ jobs:
         env:
           output: ${{ steps.get-version.output }}
           version: ${{ steps.get-version.outputs.version }}
+      - name: Print name and version
+        run: |
+          echo "Name: ${{ env.name }}"
+          echo "Version: ${{ env.version }}"
       - name: Create release
         id: create-new-release
         uses: actions/create-release@v1
