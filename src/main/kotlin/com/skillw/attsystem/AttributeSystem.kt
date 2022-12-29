@@ -6,6 +6,8 @@ import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.api.annotation.PouManager
 import com.skillw.pouvoir.api.manager.ManagerData
 import com.skillw.pouvoir.api.plugin.SubPouvoir
+import com.skillw.pouvoir.api.thread.BasicThreadFactory
+import com.skillw.pouvoir.internal.manager.PouConfig
 import com.skillw.pouvoir.util.MessageUtils.info
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.console
@@ -14,14 +16,21 @@ import taboolib.module.configuration.Config
 import taboolib.module.configuration.ConfigFile
 import taboolib.module.lang.sendLang
 import taboolib.platform.BukkitPlugin
+import java.util.concurrent.ScheduledThreadPoolExecutor
 
 object AttributeSystem : Plugin(), SubPouvoir {
 
     override val key = "AttributeSystem"
-
     override lateinit var managerData: ManagerData
     override val plugin by lazy {
         BukkitPlugin.getInstance()
+    }
+
+    val poolExecutor by lazy {
+        ScheduledThreadPoolExecutor(
+            PouConfig.threadPoolSize,
+            BasicThreadFactory.Builder().daemon(true).namingPattern("attribute-system-schedule-pool-%d").build()
+        )
     }
 
     /** Configs */
