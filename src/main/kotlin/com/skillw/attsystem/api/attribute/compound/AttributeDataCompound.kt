@@ -31,13 +31,16 @@ class AttributeDataCompound : LowerMap<AttributeData> {
         this.entity = entity
     }
 
-    constructor(attributeDataCompound: AttributeDataCompound) {
-        this.entity = attributeDataCompound.entity
-        for (attKey in attributeDataCompound.keys) {
-            val attributeData = attributeDataCompound[attKey] ?: continue
-            if (attributeData.release) continue
+    constructor(compound: AttributeDataCompound) {
+        this.entity = compound.entity
+        for (attKey in compound.keys) {
+            val attributeData = compound[attKey] ?: continue
             this[attKey] = attributeData.clone()
         }
+    }
+
+    fun release() {
+        filterValues { it.release }.keys.forEach(::remove)
     }
 
     /**

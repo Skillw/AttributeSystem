@@ -62,4 +62,8 @@ abstract class GroupStatus<A : Any>(val readGroup: ReadGroup<A>) : Status<A>, Lo
      * @return 复制结果
      */
     abstract override fun clone(): GroupStatus<A>
+
+    override fun toString(): String {
+        return map.toString()
+    }
 }

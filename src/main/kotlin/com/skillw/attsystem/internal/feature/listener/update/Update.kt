@@ -10,48 +10,46 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
-import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 
-private object EntityUpdate {
-    private fun LivingEntity.updateAsync() {
-        submitAsync { updateAttr() }
+private object Update {
+    private fun LivingEntity.updateAsync(delay: Long = 0) {
+        submitAsync(delay = delay) { updateAttr() }
     }
 
     @SubscribeEvent
     fun onPlayerRespawn(event: PlayerJoinEvent) {
-        event.player.updateAttr()
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent
     fun onPlayerRespawn(event: PlayerRespawnEvent) {
-        event.player.updateAttr()
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent
     fun onPlayerSpawnLocation(event: PlayerSpawnLocationEvent) {
-        event.player.updateAttr()
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerPickupItem(event: PlayerPickupItemEvent) {
-        event.player.updateAttr()
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerItemHeld(event: PlayerItemHeldEvent) {
-        submit(delay = 1) { event.player.updateAttr() }
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerDropItem(event: PlayerDropItemEvent) {
-        event.player.updateAttr()
+        event.player.updateAsync(2)
     }
-
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerSwapHandItems(event: PlayerSwapHandItemsEvent) {
-        submit(delay = 1) { event.player.updateAttr() }
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent(ignoreCancelled = true)

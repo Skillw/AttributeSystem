@@ -7,13 +7,13 @@ import io.lumine.xikage.mythicmobs.MythicMobs
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent
 import org.bukkit.entity.LivingEntity
-import taboolib.common.platform.event.OptionalEvent
+import taboolib.common.platform.Ghost
 import taboolib.common.platform.event.SubscribeEvent
 
 internal object MMIVListener {
-    @SubscribeEvent(bind = "io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent")
-    fun onMythicMechanicLoad(optionalEvent: OptionalEvent) {
-        val event = optionalEvent.get<MythicMechanicLoadEvent>()
+    @Ghost
+    @SubscribeEvent
+    fun onMythicMechanicLoad(event: MythicMechanicLoadEvent) {
         when (event.mechanicName.lowercase()) {
             in listOf("att-damage", "attdamage") -> {
                 event.register(AttributeDamageIV(event.config.line, event.config))
@@ -25,28 +25,25 @@ internal object MMIVListener {
         }
     }
 
-    @SubscribeEvent(bind = "io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent")
-    fun onMythicMobsSpawn(optionalEvent: OptionalEvent) {
-        val event = optionalEvent.get<MythicMobSpawnEvent>()
-        val uuid = event.entity.uniqueId
+    @Ghost
+    @SubscribeEvent
+    fun onMythicMobsSpawn(event: MythicMobSpawnEvent) {
         val entity = event.entity as? LivingEntity ?: return
         AttributeSystem.attributeSystemAPI.update(entity)
     }
 
-    @SubscribeEvent(bind = "io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent")
+    @SubscribeEvent
     fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Post) {
         if (!ASConfig.mythicMobsIV) return
-        val uuid = event.entity.uniqueId
-        MythicMobs.inst().mobManager.getActiveMob(uuid).run {
-            if (isPresent) {
-                val mob = this.get()
-                if (mob.type.config.getStringList("Attributes").isNullOrEmpty()) return
-                val entity = mob.entity as? LivingEntity ?: return
-                event.compound.register(
-                    "MYTHIC-BASE-ATTRIBUTE",
-                    AttributeSystem.attributeSystemAPI.read(mob.type.config.getStringList("Attributes"), entity)
-                )
-            }
+        val entity = event.entity
+        if (entity !is LivingEntity) return
+        MythicMobs.inst().mobManager.getMythicMobInstance(entity).let { mob ->
+            val attributes = mob.type.config.getStringList("Attributes")
+            if (attributes.isEmpty()) return
+            event.compound.register(
+                "MYTHIC-BASE-ATTRIBUTE",
+                AttributeSystem.attributeSystemAPI.read(mob.type.config.getStringList("Attributes"), entity)
+            )
         }
     }
 }

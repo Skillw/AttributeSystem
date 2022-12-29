@@ -3,6 +3,8 @@ options:
   #生命值缩放
   health-scale: 20
   fight:
+    #原版弓弩伤害会按攻击者射箭时的属性计算 而非射中时的
+    arrow-cache-data: true
     #实体与实体间的战斗
     eve-fight-cal: false
     #战斗时间禁生命恢复系统
@@ -54,7 +56,7 @@ options:
       #距离攻击的声音
       sound: true
     #默认攻击距离
-    #这里填原版的数值
+    #这里填原版的数值 建议不要改动
     #如果有偏差会导致 “二次伤害” 的触发
     vanilla-distance:
       default: 3

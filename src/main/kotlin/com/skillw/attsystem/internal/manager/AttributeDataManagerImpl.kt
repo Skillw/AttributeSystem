@@ -72,6 +72,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
             AttributeUpdateEvent.Post(entity, attrData)
         preEvent.call()
         attrData = preEvent.compound
+        attrData.release()
         //PROCESS
         val equipAtt = AttributeDataCompound(entity)
         equipData.forEach { (_, equip) ->

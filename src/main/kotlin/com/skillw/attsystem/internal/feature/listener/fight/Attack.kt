@@ -6,6 +6,7 @@ import com.skillw.attsystem.AttributeSystem.formulaManager
 import com.skillw.attsystem.api.AttrAPI.intoFighting
 import com.skillw.attsystem.api.fight.FightData
 import com.skillw.attsystem.internal.manager.ASConfig
+import com.skillw.attsystem.internal.manager.ASConfig.arrowCache
 import com.skillw.attsystem.internal.manager.ASConfig.attackFightKeyMap
 import com.skillw.attsystem.internal.manager.ASConfig.eveFightCal
 import com.skillw.attsystem.internal.manager.ASConfig.forceBasedCooldown
@@ -38,6 +39,8 @@ internal object Attack {
     private fun Entity.force(): Double? =
         if (hasMetadata("ATTRIBUTE_SYSTEM_FORCE")) getMetadata("ATTRIBUTE_SYSTEM_FORCE")[0].asDouble() else null
 
+    private fun Entity.cacheData(): FightData? =
+        if (hasMetadata("ATTRIBUTE_SYSTEM_DATA")) getMetadata("ATTRIBUTE_SYSTEM_DATA")[0].value() as? FightData else null
 
     @SubscribeEvent(priority = EventPriority.LOW)
     fun attack(event: EntityDamageByEntityEvent) {
@@ -129,8 +132,13 @@ internal object Attack {
                 else -> attackFightKeyMap.filterKeys { attacker.hasPermission(it) }.values.firstOrNull()
                     ?: "attack-damage"
             }
+        val cacheData = event.damager.cacheData()
+        val data = if (arrowCache && cacheData != null) cacheData.also { it.defender = defender } else FightData(
+            attacker,
+            defender
+        )
         //运行战斗组并返回结果
-        val result = AttributeSystem.attributeSystemAPI.runFight(fightKey, FightData(attacker, defender) {
+        val result = AttributeSystem.attributeSystemAPI.runFight(fightKey, data.also {
             //往里塞参数
             it["origin"] = originDamage
             it["force"] = force

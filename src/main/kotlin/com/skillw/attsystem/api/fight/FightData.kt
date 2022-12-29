@@ -35,26 +35,22 @@ import java.util.function.Consumer
  * @property defender 防御者
  */
 class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by SimpleContext(ConcurrentHashMap()) {
-
-
-    constructor(attacker: LivingEntity?, defender: LivingEntity?, run: Consumer<FightData>) : this(
-        attacker,
-        defender
-    ) {
+    constructor(attacker: LivingEntity?, defender: LivingEntity?, run: Consumer<FightData>) : this(attacker, defender) {
         run.accept(this)
     }
 
     /** Attacker */
     var attacker: LivingEntity? = null
         set(value) {
-            if (attackerData == null) {
-                attackerData = attacker?.getAttrData()?.clone() ?: AttributeDataCompound()
-            }
             field = value
             this["attacker-name"] =
                 (value as? Player)?.displayName
                     ?: value?.getI18nName()
                             ?: ASConfig.defaultAttackerName
+            this["attacker"] = value ?: return
+            if (!value.hasData())
+                AttributeSystem.attributeSystemAPI.update(value)
+            attackerData = value.getAttrData()?.clone() ?: AttributeDataCompound()
         }
 
     /** Attacker data */
@@ -64,24 +60,21 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
     /** Defender */
     var defender: LivingEntity? = null
         set(value) {
-            if (defenderData == null) defenderData = defender?.getAttrData()?.clone() ?: AttributeDataCompound()
             field = value
             this["defender-name"] =
                 (value as? Player)?.displayName
                     ?: value?.getI18nName()
                             ?: ASConfig.defaultDefenderName
+            this["defender"] = value ?: return
+            if (!value.hasData())
+                AttributeSystem.attributeSystemAPI.update(value)
+            defenderData = value.getAttrData()?.clone() ?: AttributeDataCompound()
         }
     private var defenderData: AttributeDataCompound? = null
 
     init {
         this.attacker = attacker
         this.defender = defender
-        if (attacker != null && !attacker.hasData())
-            AttributeSystem.attributeSystemAPI.update(attacker)
-        if (defender != null && !defender.hasData())
-            AttributeSystem.attributeSystemAPI.update(defender)
-        attacker?.let { this["attacker"] = it }
-        defender?.let { this["defender"] = it }
     }
 
     /** MessageType data */
@@ -113,6 +106,8 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
 
 
     constructor(fightData: FightData) : this(fightData.attacker, fightData.defender) {
+        this.attackerData = fightData.attackerData?.clone()
+        this.defenderData = fightData.defenderData?.clone()
         putAll(fightData)
     }
 
@@ -187,7 +182,7 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
         log: Boolean = true,
     ): String {
         val placeholder = str.substring(2)
-        val value = if (placeholder.startsWith("as.")) placeholder.attValue(
+        val value = if (placeholder.startsWith("as_")) placeholder.attValue(
             entity,
             data
         ) else Pouvoir.pouPlaceHolderAPI.replace(entity, "%${placeholder}%")
@@ -218,12 +213,12 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
         val list = formula.parse('{', '}')
         for (str in list) {
             when {
-                attacker != null && str.startsWith("a.") -> {
+                attackerData != null && str.startsWith("a.") -> {
                     formula = formula.placeholder(str, attacker!!, attackerData!!, log)
                     continue
                 }
 
-                defender != null && str.startsWith("d.") -> {
+                defenderData != null && str.startsWith("d.") -> {
                     formula = formula.placeholder(str, defender!!, defenderData!!, log)
                 }
 

@@ -11,7 +11,6 @@ import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.operation.Operation
 import com.skillw.attsystem.internal.manager.EquipmentDataManagerImpl
-import com.skillw.pouvoir.api.annotation.ScriptTopLevel
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -23,7 +22,7 @@ import java.util.*
  *
  * @constructor Create empty Attr a p i
  */
-@ScriptTopLevel
+
 object AttrAPI {
     /**
      * EntityUpdate
@@ -35,7 +34,6 @@ object AttrAPI {
      * @param entity 实体
      */
     @JvmStatic
-    @ScriptTopLevel
     fun LivingEntity.updateAttr() {
         attributeSystemAPI.update(this)
     }
@@ -47,7 +45,6 @@ object AttrAPI {
      * @return Operation<*>?
      */
     @JvmStatic
-    @ScriptTopLevel
     fun operation(key: String): Operation<*>? {
         return operationManager[key]
     }

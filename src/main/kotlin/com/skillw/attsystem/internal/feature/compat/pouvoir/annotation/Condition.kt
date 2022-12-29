@@ -5,12 +5,12 @@ import com.skillw.attsystem.api.condition.BaseCondition
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.annotation.AutoRegister
-import com.skillw.pouvoir.api.script.ScriptTool.toObject
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotation
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotationData
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.function.console
 import taboolib.common5.Coerce
+import taboolib.module.configuration.util.asMap
 import taboolib.module.lang.sendLang
 import java.util.regex.Matcher
 import javax.script.ScriptContext.ENGINE_SCOPE
@@ -36,8 +36,7 @@ object Condition : ScriptAnnotation("Condition", fileAnnotation = true) {
             BaseCondition.ConditionType.ALL
         )
         val names = HashSet<String>().apply {
-            addAll((vars["names"]?.toObject() as? Array<Any>?)?.map { it.toString() }
-                ?: error("Condition names in ${script.key} is null"))
+            addAll(vars["names"].asMap().values.map { it.toString() })
         }
         object : BaseCondition(key, names, type) {
             override fun condition(slot: String?, entity: LivingEntity?, matcher: Matcher, text: String): Boolean {

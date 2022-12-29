@@ -4,7 +4,6 @@ import com.skillw.attsystem.api.AttributeSystemAPI
 import com.skillw.attsystem.api.manager.*
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.api.annotation.PouManager
-import com.skillw.pouvoir.api.annotation.ScriptTopLevel
 import com.skillw.pouvoir.api.manager.ManagerData
 import com.skillw.pouvoir.api.plugin.SubPouvoir
 import com.skillw.pouvoir.util.MessageUtils.info
@@ -16,7 +15,6 @@ import taboolib.module.configuration.ConfigFile
 import taboolib.module.lang.sendLang
 import taboolib.platform.BukkitPlugin
 
-@ScriptTopLevel
 object AttributeSystem : Plugin(), SubPouvoir {
 
     override val key = "AttributeSystem"
@@ -46,7 +44,6 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @PouManager
     lateinit var configManager: ASConfig
 
-    @ScriptTopLevel("AttributeSystemAPI")
     @JvmStatic
     @PouManager
     lateinit var attributeSystemAPI: AttributeSystemAPI
@@ -55,17 +52,14 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @PouManager
     lateinit var readPatternManager: ReadPatternManager
 
-    @ScriptTopLevel("AttributeManager")
     @JvmStatic
     @PouManager
     lateinit var attributeManager: AttributeManager
 
-    @ScriptTopLevel("AttributeDataManager")
     @JvmStatic
     @PouManager
     lateinit var attributeDataManager: AttributeDataManager
 
-    @ScriptTopLevel("EquipmentDataManager")
     @JvmStatic
     @PouManager
     lateinit var equipmentDataManager: EquipmentDataManager
@@ -110,7 +104,6 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @PouManager
     lateinit var personalManager: PersonalManager
 
-    @ScriptTopLevel("FightStatusManager")
     @JvmStatic
     @PouManager
     lateinit var fightStatusManager: FightStatusManager

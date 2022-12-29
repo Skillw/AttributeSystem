@@ -1,10 +1,13 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.api.AttrAPI
+import com.skillw.attsystem.api.operation.Operation
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.manager.ConfigManager
 import com.skillw.pouvoir.api.map.BaseMap
 import com.skillw.pouvoir.util.ClassUtils.existClass
+import com.skillw.pouvoir.util.ClassUtils.static
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -18,6 +21,7 @@ import taboolib.module.lang.asLangText
 import taboolib.module.metrics.charts.SingleLineChart
 import java.io.File
 import java.util.*
+import java.util.function.Function
 import java.util.regex.Pattern
 
 object ASConfig : ConfigManager(AttributeSystem) {
@@ -88,6 +92,13 @@ object ASConfig : ConfigManager(AttributeSystem) {
             "com.skillw.attsystem.internal.read" to "com.skillw.attsystem.internal.core.read"
         ).forEach(Pouvoir.scriptEngineManager::relocate)
 
+        Pouvoir.scriptEngineManager.globalVariables.let {
+            it["AttrAPI"] = AttrAPI::class.java.static()
+            it["AttributeSystem"] = AttributeSystem::class.java.static()
+            it["operation"] = Function<String, Operation<*>> { name ->
+                AttrAPI.operation(name)
+            }
+        }
     }
 
     override fun onEnable() {
@@ -299,6 +310,9 @@ object ASConfig : ConfigManager(AttributeSystem) {
         get() = this["config"].getString("fight-message.default-name.attacker") ?: "大自然"
     val defaultDefenderName: String
         get() = this["config"].getString("fight-message.default-name.defender") ?: "未知"
+
+    val arrowCache
+        get() = this["config"].getBoolean("options.fight.arrow-cache-data", true)
 
     @JvmStatic
     fun debug(debug: () -> Unit) {
