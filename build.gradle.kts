@@ -82,9 +82,8 @@ tasks.dokkaJavadoc.configure {
 
 }
 repositories {
-    maven { url = uri("https://repo.janmm14.de/repository/public/") }
-    maven { url = uri("https://jitpack.io") }
     maven { url = uri("https://mvn.lumine.io/repository/maven-public/") }
+    maven { url = uri("https://jitpack.io") }
 
     mavenCentral()
 }
@@ -94,7 +93,6 @@ dependencies {
     compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
     compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("de.janmm14:aac-api:5.0.0")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.0.0")
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
     compileOnly(fileTree("libs"))
