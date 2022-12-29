@@ -34,15 +34,14 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
 
 
     override fun get(key: UUID): EquipmentDataCompound? {
-        val entity = key.livingEntity() ?: return null
-        return super.get(key) ?: kotlin.run { entity.updateAttr(); super.get(key) }
+        return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) }
     }
 
     override fun update(entity: LivingEntity): EquipmentDataCompound? {
         if (!entity.isAlive()) return null
         val uuid = entity.uniqueId
         var dataCompound =
-            if (containsKey(uuid)) EquipmentDataCompound(get(uuid)!!) else EquipmentDataCompound()
+            if (containsKey(uuid)) EquipmentDataCompound(this.map[uuid]!!) else EquipmentDataCompound()
         val post = EquipmentUpdateEvent.Post(entity, dataCompound)
         post.call()
         if (post.isCancelled) {
