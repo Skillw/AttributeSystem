@@ -48,7 +48,7 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
     var attacker: LivingEntity? = null
         set(value) {
             if (attackerData == null) {
-                attackerData = attacker?.getAttrData() ?: AttributeDataCompound()
+                attackerData = attacker?.getAttrData()?.clone() ?: AttributeDataCompound()
             }
             field = value
             this["attacker-name"] =
@@ -64,7 +64,7 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
     /** Defender */
     var defender: LivingEntity? = null
         set(value) {
-            if (defenderData == null) defenderData = defender?.getAttrData() ?: AttributeDataCompound()
+            if (defenderData == null) defenderData = defender?.getAttrData()?.clone() ?: AttributeDataCompound()
             field = value
             this["defender-name"] =
                 (value as? Player)?.displayName

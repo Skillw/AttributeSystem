@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 
 private object EntityUpdate {
@@ -39,7 +40,7 @@ private object EntityUpdate {
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerItemHeld(event: PlayerItemHeldEvent) {
-        event.player.updateAttr()
+        submit(delay = 1) { event.player.updateAttr() }
     }
 
     @SubscribeEvent(ignoreCancelled = true)
@@ -50,7 +51,7 @@ private object EntityUpdate {
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onPlayerSwapHandItems(event: PlayerSwapHandItemsEvent) {
-        event.player.updateAttr()
+        submit(delay = 1) { event.player.updateAttr() }
     }
 
     @SubscribeEvent(ignoreCancelled = true)

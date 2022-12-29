@@ -8,7 +8,6 @@ import com.skillw.pouvoir.api.annotation.AutoRegister
 import com.skillw.pouvoir.api.script.ScriptTool.toObject
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotation
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotationData
-import com.skillw.pouvoir.util.StringUtils.toArgs
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.function.console
 import taboolib.common5.Coerce
@@ -27,7 +26,6 @@ import javax.script.ScriptContext.ENGINE_SCOPE
 object Condition : ScriptAnnotation("Condition", fileAnnotation = true) {
     override fun handle(data: ScriptAnnotationData) {
         val script = data.script
-        val args = data.args.toArgs()
         val function = data.function
         if (function != "null") return
         val vars = script.script.engine.getBindings(ENGINE_SCOPE)

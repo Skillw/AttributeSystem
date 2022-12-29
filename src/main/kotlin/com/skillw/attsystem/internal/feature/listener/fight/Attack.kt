@@ -72,7 +72,7 @@ internal object Attack {
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0.0)
         }
         //如果不是原版弓/弩攻击 则跳过计算
-        if (event.damager.force() == null) return
+        if (isProjectile && event.damager.force() == null) return
         //原伤害
         val originDamage = event.finalDamage
 

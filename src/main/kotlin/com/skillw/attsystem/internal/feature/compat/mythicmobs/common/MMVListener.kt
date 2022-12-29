@@ -45,6 +45,7 @@ private object MMVListener {
                 event.compound.register(
                     "MYTHIC-BASE-ATTRIBUTE",
                     AttributeSystem.attributeSystemAPI.read(mob.type.config.getStringList("Attributes"), entity)
+                        
                 )
             }
         }

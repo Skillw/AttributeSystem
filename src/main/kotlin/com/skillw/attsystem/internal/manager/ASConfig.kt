@@ -4,6 +4,7 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.manager.ConfigManager
 import com.skillw.pouvoir.api.map.BaseMap
+import com.skillw.pouvoir.util.ClassUtils.existClass
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -167,16 +168,9 @@ object ASConfig : ConfigManager(AttributeSystem) {
     val aac by lazy {
         Bukkit.getPluginManager().isPluginEnabled("AAC5")
     }
-    val vulcan by lazy {
-        Bukkit.getPluginManager().isPluginEnabled("Vulcan")
-    }
     val skillAPI by lazy {
         Bukkit.getPluginManager().isPluginEnabled("SkillAPI") || Bukkit.getPluginManager()
             .isPluginEnabled("ProSkillAPI")
-    }
-
-    val itemsAdder by lazy {
-        Bukkit.getPluginManager().isPluginEnabled("ItemsAdder")
     }
 
     val mythicMobs by lazy {
@@ -184,20 +178,10 @@ object ASConfig : ConfigManager(AttributeSystem) {
     }
 
     val mythicMobsIV by lazy {
-        mythicMobs && try {
-            Class.forName("io.lumine.xikage.mythicmobs.MythicMobs")
-            true
-        } catch (e: ClassNotFoundException) {
-            false
-        }
+        mythicMobs && "io.lumine.xikage.mythicmobs.MythicMobs".existClass()
     }
     val mythicMobsV by lazy {
-        mythicMobs && try {
-            Class.forName("io.lumine.mythic.bukkit.MythicBukkit")
-            true
-        } catch (e: ClassNotFoundException) {
-            false
-        }
+        mythicMobs && "io.lumine.mythic.bukkit.MythicBukkit".existClass()
     }
 
     private val scripts = File(getDataFolder(), "scripts")

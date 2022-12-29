@@ -27,6 +27,7 @@ abstract class DamageMechanic(config: MythicLineConfig) : ITargetedEntitySkill {
 
 
     protected fun doDamage(data: SkillMetadata, target: AbstractEntity?, amount: Double) {
+
         val caster = data.caster
         val meta = DamageMetadata(
             caster, amount,
