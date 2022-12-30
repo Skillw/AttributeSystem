@@ -97,7 +97,6 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
     compileOnly(fileTree("libs"))
     compileOnly(kotlin("stdlib"))
-    taboo("ink.ptms:um:1.0.0-beta-18")
 }
 
 tasks.withType<JavaCompile> {

@@ -28,7 +28,7 @@ internal object MMIVListener {
     @Ghost
     @SubscribeEvent
     fun onMythicMobsSpawn(event: MythicMobSpawnEvent) {
-        val entity = event.mob.entity.bukkitEntity as? LivingEntity ?: return
+        val entity = event.entity as? LivingEntity ?: return
         AttributeSystem.attributeSystemAPI.update(entity)
     }
 
