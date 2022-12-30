@@ -38,11 +38,13 @@ internal object MMIVListener {
         val entity = event.entity
         if (entity !is LivingEntity) return
         MythicMobs.inst().mobManager.getMythicMobInstance(entity).let { mob ->
-            val attributes = mob.type.config.getStringList("Attributes")
+            val config = mob.type.config
+            if (!config.isList("Attributes")) return
+            val attributes = config.getStringList("Attributes")
             if (attributes.isEmpty()) return
             event.compound.register(
                 "MYTHIC-BASE-ATTRIBUTE",
-                AttributeSystem.attributeSystemAPI.read(mob.type.config.getStringList("Attributes"), entity)
+                AttributeSystem.attributeSystemAPI.read(attributes, entity)
             )
         }
     }

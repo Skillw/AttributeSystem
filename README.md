@@ -6,11 +6,11 @@
 
 ## 插件
 
-| 说明     | 内容                               |
-| -------- | ---------------------------------- |
-| 兼容版本 | 1.12.2+ (理论)                     |
-| 硬依赖   | Pouvoir                            |
-| 软依赖   | PlaceholderAPI Mythicmobs SkillAPI |
+| 说明   | 内容                                 |
+|------|------------------------------------|
+| 兼容版本 | 1.12.2+ (理论)                       |
+| 硬依赖  | Pouvoir                            |
+| 软依赖  | PlaceholderAPI Mythicmobs SkillAPI |
 
 ## 介绍
 
@@ -164,10 +164,10 @@ function exec(fightData, context, damageType) {
     var attacker = fightData.attacker;
     var defender = fightData.defender;
     var power = attacker instanceof Player ? attacker.level : 0;
-    var damage = calculate([context.get("formula"), attacker, null]);
+    var damage = calculate(context.get("formula"), attacker);
     var location = defender.location;
     var particle = ProxyParticle.EXPLOSION_LARGE;
-    sendSimpleParticle([particle, location, 36.0, 100, 1.0]);
+    Tool.sendSimpleParticle(particle, location, 36.0, 100, 1.0);
     fightData.damageSources.put(
         "my_mechanic_damage",
         Plus.element(power * 10 + damage)

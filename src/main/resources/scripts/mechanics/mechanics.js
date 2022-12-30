@@ -58,12 +58,12 @@ function frozen(data, context, damageType) {
         listOf("移动速度: -" + value),
         false
     );
-    taskLater([
+    taskLater(
         duration.longValue(),
         function (task) {
             AttrAPI.removeAttribute(defender, "frozen");
-        },
-    ]);
+        }
+    );
     if (attacker instanceof Player)
         attacker.sendMessage(
             color(
@@ -162,11 +162,11 @@ function potion(data, context, damageType) {
         Data.put(attacker.uniqueId + type, true);
         defender.addPotionEffect(new PotionEffect(potionType, duration, level));
     });
-    taskLater([
+    taskLater(
         cooldown,
         function (task) {
             Data.remove(attacker.uniqueId + type);
         },
-    ]);
+    );
     return duration;
 }

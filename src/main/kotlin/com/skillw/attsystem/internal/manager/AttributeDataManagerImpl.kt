@@ -56,8 +56,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     }
 
     override fun get(key: UUID): AttributeDataCompound? {
-        val entity = key.livingEntity() ?: return null
-        return super.get(key) ?: kotlin.run { entity.updateAttr(); super.get(key) }
+        return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) }
     }
 
     override fun update(entity: LivingEntity): AttributeDataCompound? {

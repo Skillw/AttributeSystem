@@ -42,7 +42,7 @@ function shootArrow(event) {
     if (MinecraftVersion.major >= 6 && config.through.enable) {
         const throughChance = attrData.getAttrValue("ArrowPierceChance", "total");
         if (Math.random() < throughChance)
-            arrow.pierceLevel = calculate([config.through.amount, entity, null]);
+            arrow.pierceLevel = calculate(config.through.amount, entity);
     }
     const velocity = arrow.velocity;
     const handle = arrow.getHandle();

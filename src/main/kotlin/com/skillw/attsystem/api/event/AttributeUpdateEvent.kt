@@ -20,7 +20,7 @@ class AttributeUpdateEvent {
     }
 
     /**
-     * 属性更新中 此时上一次的装备属性数据已经释放了
+     * 属性更新中 此时上一次的装备属性数据已经释放了 但属性映射还没有计算
      *
      * @property entity 实体
      * @property compound 属性数据集
@@ -34,7 +34,7 @@ class AttributeUpdateEvent {
     }
 
     /**
-     * 属性更新后 完全新的属性数据
+     * 属性更新后 完全新的属性数据 属性映射已计算
      *
      * @property entity 实体
      * @property compound 属性数据集
