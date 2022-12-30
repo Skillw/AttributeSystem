@@ -324,7 +324,6 @@ class AttributeDataCompound : LowerMap<AttributeData> {
     }
 
     fun mappingAttr() {
-        println(toString())
         attributeManager.attributes.forEach { attribute ->
             with(attribute) {
                 if (map.isEmpty() || !hasAttribute(this)) return@forEach
@@ -348,7 +347,6 @@ class AttributeDataCompound : LowerMap<AttributeData> {
                 }
             }
         }
-        println(toString())
     }
 
 }

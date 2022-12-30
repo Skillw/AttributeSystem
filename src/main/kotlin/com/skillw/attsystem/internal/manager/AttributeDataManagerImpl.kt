@@ -65,7 +65,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         val equipData = equipmentDataManager[uuid] ?: return null
         var attrData =
             if (attributeDataManager.containsKey(uuid)) attributeDataManager[uuid]!!.clone()
-            else AttributeDataCompound(entity)
+            else AttributeDataCompound(entity).also { this[uuid] = it }
         //PRE
         val preEvent =
             AttributeUpdateEvent.Post(entity, attrData)
@@ -88,6 +88,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
             "BASE-ATTRIBUTE",
             if (entity is Player) attributeDataManager.playerBaseAttribute else attributeDataManager.entityBaseAttribute
         )
+        this[uuid] = attrData
         attrData.init()
 
         //AFTER
@@ -95,7 +96,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
             AttributeUpdateEvent.After(entity, attrData)
         afterEvent.call()
         attrData = afterEvent.compound
-        attributeDataManager.register(uuid, attrData)
+        this[uuid] = attrData
         return attrData
     }
 
