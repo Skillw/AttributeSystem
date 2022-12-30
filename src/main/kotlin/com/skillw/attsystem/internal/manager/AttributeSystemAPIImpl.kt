@@ -1,7 +1,6 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.AttributeSystem.poolExecutor
 import com.skillw.attsystem.api.AttributeSystemAPI
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.event.FightEvent
@@ -69,12 +68,6 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
         return runFight(key, FightData(attacker, defender).also { consumer.accept(it) }, false)
     }
 
-    private fun <T> mirrorNowAsync(key: String, func: () -> T): T {
-        return poolExecutor.submit<T> {
-            mirrorNow(key, func)
-        }.get()
-    }
-
     override fun runFight(key: String, data: FightData, message: Boolean): Double {
         if (!AttributeSystem.fightGroupManager.containsKey(key)) return -1.0
         val fightData = data.apply {
@@ -88,17 +81,17 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
             calMessage = message
         }
         val messageData = MessageData()
-        return mirrorNowAsync("fight-$key-cal") {
+        return mirrorNow("fight-$key-cal") {
             val pre = FightEvent.Post(key, fightData)
             pre.call()
-            if (pre.isCancelled) return@mirrorNowAsync -0.1
+            if (pre.isCancelled) return@mirrorNow -0.1
             val eventFightData = pre.fightData
             AttributeSystem.fightGroupManager[key]!!.run(eventFightData)
             if (message)
                 messageData.addAll(eventFightData.messageData)
             val after = FightEvent.After(key, eventFightData)
             after.call()
-            if (after.isCancelled) return@mirrorNowAsync -0.1
+            if (after.isCancelled) return@mirrorNow -0.1
             if (message)
                 submitAsync {
                     messageData.send(fightData.attacker as? Player?, fightData.defender as? Player?)
