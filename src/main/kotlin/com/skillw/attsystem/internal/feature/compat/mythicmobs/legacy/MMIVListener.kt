@@ -28,7 +28,7 @@ internal object MMIVListener {
     @Ghost
     @SubscribeEvent
     fun onMythicMobsSpawn(event: MythicMobSpawnEvent) {
-        val entity = event.entity as? LivingEntity ?: return
+        val entity = event.mob.entity.bukkitEntity as? LivingEntity ?: return
         AttributeSystem.attributeSystemAPI.update(entity)
     }
 
@@ -37,7 +37,7 @@ internal object MMIVListener {
         if (!ASConfig.mythicMobsIV) return
         val entity = event.entity
         if (entity !is LivingEntity) return
-        MythicMobs.inst().mobManager.getMythicMobInstance(entity).let { mob ->
+        MythicMobs.inst().mobManager.getMythicMobInstance(entity)?.let { mob ->
             val config = mob.type.config
             if (!config.isList("Attributes")) return
             val attributes = config.getStringList("Attributes")
