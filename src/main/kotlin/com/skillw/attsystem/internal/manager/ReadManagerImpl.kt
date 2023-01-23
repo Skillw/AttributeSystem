@@ -13,7 +13,6 @@ import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.module.chat.uncolored
 import taboolib.module.nms.*
 import taboolib.platform.util.hasLore
-import taboolib.platform.util.isAir
 import java.util.*
 
 object ReadManagerImpl : ReadManager() {
@@ -31,7 +30,7 @@ object ReadManagerImpl : ReadManager() {
         if (itemStack.hasLore()) {
             val origin = itemStack.itemMeta?.lore ?: return null
             val hashcode = itemStack.itemMeta?.getProperty<List<String>>("lore").hashCode()
-            val lore = lores.map.getOrPut(hashcode) {
+            val lore = lores.map.computeIfAbsent(hashcode) {
                 origin.map { it.uncolored() }
             }
             return AttributeSystem.attributeSystemAPI.read(lore, entity, slot)
@@ -77,7 +76,7 @@ object ReadManagerImpl : ReadManager() {
 
     @JvmStatic
     private fun ItemTag.toMutableMap(strList: List<String> = emptyList()): MutableMap<String, Any> {
-        return nbts.map.getOrPut(keySet().hashCode() + values().hashCode()) {
+        return nbts.map.computeIfAbsent(keySet().hashCode() + values().hashCode()) { _ ->
             val map = HashMap<String, Any>()
             for (it in this) {
                 val key = it.key
@@ -85,7 +84,7 @@ object ReadManagerImpl : ReadManager() {
                 val value = it.value.obj()
                 map[key] = value
             }
-            return map
+            return@computeIfAbsent map
         }
     }
 
@@ -123,19 +122,12 @@ object ReadManagerImpl : ReadManager() {
         }
     }
 
-    val itemAttrData = BaseMap<Int, AttributeDataCompound>()
-    val tagCache = BaseMap<Int, ItemTag>()
-
-    internal fun ItemStack.cacheTag(): ItemTag {
-        if (isAir()) return ItemTag()
-        return tagCache.getOrPut(hashCode()) { getItemTag() }
-    }
 
     override fun readItemNBT(
         itemStack: ItemStack,
         entity: LivingEntity?, slot: String?,
     ): AttributeDataCompound? {
-        val itemTag = itemStack.cacheTag()
+        val itemTag = itemStack.getItemTag()
         val attributeDataMap = itemTag["ATTRIBUTE_DATA"]?.asCompound()?.toMutableMap() ?: return null
         val conditionDataMap = itemTag["CONDITION_DATA"]?.asCompound()?.toMutableMap() ?: emptyMap()
         AttributeSystem.conditionManager.conditionNBT(slot, entity, conditionDataMap).forEach {
@@ -178,9 +170,7 @@ object ReadManagerImpl : ReadManager() {
             slot
         )
         event.call()
-        return (if (!event.isCancelled) event.dataCompound else AttributeDataCompound(entity)).also {
-            itemAttrData.map.putIfAbsent(itemStack.hashCode() + entity.hashCode(), it)
-        }
+        return (if (!event.isCancelled) event.dataCompound else AttributeDataCompound(entity))
     }
 
 

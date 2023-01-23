@@ -87,8 +87,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
 
     override fun addAttribute(uuid: UUID, key: String, attributeData: AttributeData, release: Boolean): AttributeData {
         attributeData.release = release
-        getOrPut(uuid) { AttributeDataCompound() }.register(key, attributeData)
-
+        map.computeIfAbsent(uuid) { AttributeDataCompound() }.register(key, attributeData)
         return attributeData
     }
 

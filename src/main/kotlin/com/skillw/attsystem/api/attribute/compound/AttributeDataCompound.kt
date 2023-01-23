@@ -219,7 +219,8 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      */
     fun saveTo(itemStack: ItemStack) {
         val tag = itemStack.getItemTag()
-        tag.getOrPut("ATTRIBUTE_DATA") { ItemTag() }.asCompound().putAll(ItemTagData.toNBT(serialize()).asCompound())
+        tag.computeIfAbsent("ATTRIBUTE_DATA") { ItemTag() }.asCompound()
+            .putAll(ItemTagData.toNBT(serialize()).asCompound())
         tag.saveTo(itemStack)
     }
 
@@ -334,7 +335,8 @@ class AttributeDataCompound : LowerMap<AttributeData> {
         attributeManager.attributes.forEach { attribute ->
             with(attribute) {
                 if (map.isEmpty() || !hasAttribute(this)) return@forEach
-                val attData = getOrPut("MAP-ATTRIBUTE-${key}") { AttributeData().release() }
+                val attData =
+                    this@AttributeDataCompound.map.computeIfAbsent("MAP-ATTRIBUTE-${key}") { AttributeData().release() }
                 map.forEach inner@{ (key, stringMap) ->
                     val att = AttrAPI.attribute(key) ?: return@inner
                     val read = att.readPattern

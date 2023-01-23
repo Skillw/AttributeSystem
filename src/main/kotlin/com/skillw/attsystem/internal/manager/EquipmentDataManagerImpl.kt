@@ -66,7 +66,7 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
 
 
     override fun addEquipment(uuid: UUID, key: String, equipmentData: EquipmentData): EquipmentData {
-        return getOrPut(uuid) { EquipmentDataCompound() }.let {
+        return map.computeIfAbsent(uuid) { EquipmentDataCompound() }.let {
             it[key] = equipmentData
             equipmentData
         }
