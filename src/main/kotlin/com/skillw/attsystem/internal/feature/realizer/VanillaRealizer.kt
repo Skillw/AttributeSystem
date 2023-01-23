@@ -13,7 +13,7 @@ import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
 
 class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealizer(key), Realizable, Awakeable,
-    Switchable, Vanillable, Valuable {
+    Switchable, Vanillable, Valuable, Syncable {
     override val fileName: String = "vanilla.yml"
     private val realizeKey = "realizer-vanilla-$key"
 
@@ -25,7 +25,6 @@ class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealize
         get() = true
 
     override fun realize(entity: LivingEntity) {
-        if (!entity.isAlive()) return
         entity.getAttribute(attribute)?.run {
             if (modifiers.isNotEmpty())
                 modifiers

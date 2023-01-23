@@ -7,6 +7,7 @@ import com.skillw.attsystem.api.realizer.component.IConfigComponent
 import com.skillw.attsystem.api.realizer.component.sub.Awakeable
 import com.skillw.attsystem.api.realizer.component.sub.Realizable
 import com.skillw.attsystem.api.realizer.component.sub.Switchable
+import com.skillw.attsystem.api.realizer.component.sub.Syncable
 import com.skillw.attsystem.util.AntiCheatUtils
 import com.skillw.pouvoir.api.plugin.handler.ClassHandler
 import com.skillw.pouvoir.taboolib.library.reflex.ClassStructure
@@ -15,6 +16,8 @@ import com.skillw.pouvoir.util.listSubFiles
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.common.io.newFile
+import taboolib.common.platform.function.isPrimaryThread
+import taboolib.common.util.sync
 import taboolib.common.util.unsafeLazy
 import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.module.configuration.Configuration
@@ -99,12 +102,32 @@ object RealizeManagerImpl : RealizeManager() {
     override fun realize(entity: LivingEntity) {
         if (!entity.isAlive()) return
         if (entity is Player) AntiCheatUtils.bypassAntiCheat(entity)
-        values
-            .filterIsInstance<Realizable>()
-            .filter { it !is Switchable || it.isEnable() }
-            .forEach {
-                it.realize(entity)
+        if (!isPrimaryThread) {
+            //不同步处理一些东西会死的
+            sync {
+                values
+                    .filterIsInstance<Realizable>()
+                    .filter { it !is Switchable || it.isEnable() }
+                    .filterIsInstance<Syncable>()
+                    .forEach {
+                        (it as Realizable).realize(entity)
+                    }
             }
+            values
+                .filterIsInstance<Realizable>()
+                .filter { it !is Switchable || it.isEnable() }
+                .filter { it !is Syncable }
+                .forEach {
+                    it.realize(entity)
+                }
+        } else {
+            values
+                .filterIsInstance<Realizable>()
+                .filter { it !is Switchable || it.isEnable() }
+                .forEach {
+                    it.realize(entity)
+                }
+        }
         if (entity is Player) AntiCheatUtils.recoverAntiCheat(entity)
     }
 
