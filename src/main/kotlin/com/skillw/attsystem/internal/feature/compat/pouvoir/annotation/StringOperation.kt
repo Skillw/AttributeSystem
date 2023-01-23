@@ -4,10 +4,10 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.operation.StringOperation
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.Pouvoir
-import com.skillw.pouvoir.api.annotation.AutoRegister
+import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotation
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotationData
-import com.skillw.pouvoir.util.StringUtils.toArgs
+import com.skillw.pouvoir.util.toArgs
 import taboolib.common.platform.function.console
 import taboolib.module.lang.sendLang
 
@@ -17,7 +17,7 @@ import taboolib.module.lang.sendLang
  * @constructor StringOperation Key(Optional)
  */
 @AutoRegister
-object StringOperation : ScriptAnnotation("StringOperation") {
+internal object StringOperation : ScriptAnnotation("StringOperation") {
     override fun handle(data: ScriptAnnotationData) {
         val script = data.script
         val args = data.args.toArgs()

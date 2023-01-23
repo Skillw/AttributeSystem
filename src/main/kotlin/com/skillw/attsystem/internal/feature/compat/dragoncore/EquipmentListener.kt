@@ -5,13 +5,13 @@ import com.skillw.attsystem.api.equipment.EquipmentData
 import eos.moe.dragoncore.api.SlotAPI
 import eos.moe.dragoncore.api.event.PlayerSlotUpdateEvent
 import eos.moe.dragoncore.config.Config.slotSettings
-import taboolib.common.platform.event.OptionalEvent
+import taboolib.common.platform.Ghost
 import taboolib.common.platform.event.SubscribeEvent
 
 object EquipmentListener {
-    @SubscribeEvent(bind = "eos.moe.dragoncore.api.event.PlayerSlotUpdateEvent")
-    fun e(optional: OptionalEvent) {
-        val event = optional.get<PlayerSlotUpdateEvent>()
+    @Ghost
+    @SubscribeEvent
+    fun e(event: PlayerSlotUpdateEvent) {
         val uuid = event.player.uniqueId
         val attributeItems = SlotAPI.getCacheAllSlotItem(event.player)
         attributeItems.entries.removeIf { (key, item) ->

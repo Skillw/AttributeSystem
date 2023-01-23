@@ -15,9 +15,6 @@ internal object MMIVListener {
     @SubscribeEvent
     fun onMythicMechanicLoad(event: MythicMechanicLoadEvent) {
         when (event.mechanicName.lowercase()) {
-            in listOf("att-damage", "attdamage") -> {
-                event.register(AttributeDamageIV(event.config.line, event.config))
-            }
 
             in listOf("att-update", "attupdate") -> {
                 event.register(DataUpdateIV(event.config.line, event.config))

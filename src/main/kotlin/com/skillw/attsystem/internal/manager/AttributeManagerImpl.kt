@@ -5,8 +5,8 @@ import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.manager.AttributeManager
 import com.skillw.attsystem.internal.core.attribute.ConfigAttributeBuilder
 import com.skillw.attsystem.internal.manager.ASConfig.debug
-import com.skillw.pouvoir.api.map.BaseMap
-import com.skillw.pouvoir.util.FileUtils
+import com.skillw.pouvoir.api.plugin.map.BaseMap
+import com.skillw.pouvoir.util.loadMultiply
 import taboolib.common.platform.function.console
 import taboolib.module.lang.sendLang
 import java.io.File
@@ -47,7 +47,7 @@ object AttributeManagerImpl : AttributeManager() {
             }
         }
         this.nameMap.entries.filter { it.value.release }.forEach { nameMap.remove(it.key) }
-        FileUtils.loadMultiply(
+        loadMultiply(
             File(AttributeSystem.plugin.dataFolder, "attributes"), ConfigAttributeBuilder::class.java
         ).forEach {
             it.key.register()

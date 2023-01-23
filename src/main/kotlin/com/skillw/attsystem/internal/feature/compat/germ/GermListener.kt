@@ -12,8 +12,7 @@ object GermListener {
     @SubscribeEvent
     fun load(event: EquipmentUpdateEvent.Post) {
         val player = event.entity
-        if (!germ) return
-        if (player !is Player) return
+        if (!germ || player !is Player) return
         val compound = event.compound
         compound.remove("Germ-Equipment")
         val map = GermSlotAPI.getGermSlotIdentitysAndItemStacks(player, ASConfig.germSlots)

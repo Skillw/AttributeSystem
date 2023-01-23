@@ -2,9 +2,9 @@ package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.manager.ReadPatternManager
-import com.skillw.attsystem.internal.manager.ASConfig.debug
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.util.FileUtils
+import com.skillw.attsystem.internal.manager.ASConfig.debug
+import com.skillw.pouvoir.util.loadMultiply
 import taboolib.common.platform.function.console
 import taboolib.module.lang.sendLang
 import java.io.File
@@ -31,7 +31,7 @@ object ReadPatternManagerImpl : ReadPatternManager() {
                 }
             }
         }
-        FileUtils.loadMultiply(
+        loadMultiply(
             File(AttributeSystem.plugin.dataFolder, "reader"), ReadGroup::class.java
         ).forEach {
             debug {

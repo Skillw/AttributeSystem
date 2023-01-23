@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.manager
 
 import com.skillw.attsystem.api.condition.BaseCondition
 import com.skillw.pouvoir.api.manager.Manager
-import com.skillw.pouvoir.api.map.LowerKeyMap
+import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 import org.bukkit.entity.LivingEntity
 
 /**
@@ -24,7 +24,7 @@ abstract class ConditionManager : LowerKeyMap<BaseCondition>(), Manager {
     abstract fun conditionNBT(
         slot: String? = null,
         entity: LivingEntity?,
-        map: Map<String, Any>
+        map: Map<String, Any>,
     ): Set<String>
 
     /**
@@ -52,7 +52,7 @@ abstract class ConditionManager : LowerKeyMap<BaseCondition>(), Manager {
     abstract fun conditionStrings(
         slot: String? = null,
         entity: LivingEntity?,
-        strings: Collection<String>
+        strings: Collection<String>,
     ): Boolean
 
     /**

@@ -10,15 +10,11 @@ import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.Ghost
 import taboolib.common.platform.event.SubscribeEvent
 
-private object MMVListener {
+internal object MMVListener {
     @Ghost
     @SubscribeEvent
     fun onMythicMechanicLoad(event: MythicMechanicLoadEvent) {
         when (event.mechanicName.lowercase()) {
-            in listOf("att-damage", "attdamage") -> {
-                event.register(AttributeDamageV(event.config))
-            }
-
             in listOf("att-update", "attupdate") -> {
                 event.register(DataUpdateV)
             }

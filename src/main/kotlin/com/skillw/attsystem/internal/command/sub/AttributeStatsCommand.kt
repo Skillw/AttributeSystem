@@ -6,10 +6,10 @@ import com.skillw.attsystem.internal.command.ASCommand.soundClick
 import com.skillw.attsystem.internal.command.ASCommand.soundFail
 import com.skillw.attsystem.internal.command.ASCommand.soundSuccess
 import com.skillw.attsystem.internal.manager.ASConfig
-import com.skillw.pouvoir.util.EntityUtils.getEntityRayHit
-import com.skillw.pouvoir.util.PlayerUtils.soundClick
-import com.skillw.pouvoir.util.PlayerUtils.soundFail
-import com.skillw.pouvoir.util.PlayerUtils.soundSuccess
+import com.skillw.pouvoir.util.getEntityRayHit
+import com.skillw.pouvoir.util.soundClick
+import com.skillw.pouvoir.util.soundFail
+import com.skillw.pouvoir.util.soundSuccess
 import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -92,7 +92,7 @@ object AttributeStatsCommand {
                         sender.soundSuccess()
                         submitAsync {
                             val attributeDataCompound =
-                                AttributeSystem.equipmentDataManager.readItem(
+                                AttributeSystem.readManager.readItem(
                                     itemStack,
                                     player,
                                     argument
@@ -108,7 +108,7 @@ object AttributeStatsCommand {
     val entitystats = subCommand {
         execute<ProxyPlayer> { sender, _, _ ->
             val player = sender.cast<Player>()
-            val entity = player.getEntityRayHit(10.0)
+            val entity = player.getEntityRayHit(10.0) as? LivingEntity
             entity ?: kotlin.run {
                 player.soundFail()
                 sender.sendLang("command-valid-entity")

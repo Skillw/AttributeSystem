@@ -2,8 +2,8 @@ package com.skillw.attsystem.api.manager
 
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.pouvoir.api.manager.Manager
-import com.skillw.pouvoir.api.map.BaseMap
-import com.skillw.pouvoir.api.map.LowerKeyMap
+import com.skillw.pouvoir.api.plugin.map.BaseMap
+import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 
 /**
  * Attribute manager

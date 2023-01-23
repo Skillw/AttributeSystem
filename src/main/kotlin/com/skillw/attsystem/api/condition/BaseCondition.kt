@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.condition
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.pouvoir.api.able.Registrable
+import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
 import java.util.*
 import java.util.regex.Matcher

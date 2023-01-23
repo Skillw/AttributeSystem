@@ -3,12 +3,12 @@ package com.skillw.attsystem
 import com.skillw.attsystem.api.AttributeSystemAPI
 import com.skillw.attsystem.api.manager.*
 import com.skillw.attsystem.internal.manager.ASConfig
-import com.skillw.pouvoir.api.annotation.PouManager
 import com.skillw.pouvoir.api.manager.ManagerData
 import com.skillw.pouvoir.api.plugin.SubPouvoir
-import com.skillw.pouvoir.util.MessageUtils.info
+import com.skillw.pouvoir.api.plugin.annotation.PouManager
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.console
+import taboolib.common.platform.function.info
 import taboolib.module.chat.colored
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.ConfigFile
@@ -31,11 +31,11 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @Config("slot.yml", migrate = true, autoReload = true)
     lateinit var slot: ConfigFile
 
-    @Config("formula.yml", migrate = true, autoReload = true)
-    lateinit var formula: ConfigFile
+    @Config("options.yml", migrate = true, autoReload = true)
+    lateinit var options: ConfigFile
 
-    @Config("message.yml", migrate = true, autoReload = true)
-    lateinit var message: ConfigFile
+    @Config("vanilla.yml", migrate = true, autoReload = true)
+    lateinit var vanilla: ConfigFile
 
     /** Managers */
 
@@ -65,11 +65,7 @@ object AttributeSystem : Plugin(), SubPouvoir {
 
     @JvmStatic
     @PouManager
-    lateinit var playerSlotManager: PlayerSlotManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var entitySlotManager: EntitySlotManager
+    lateinit var readManager: ReadManager
 
     @JvmStatic
     @PouManager
@@ -77,43 +73,11 @@ object AttributeSystem : Plugin(), SubPouvoir {
 
     @JvmStatic
     @PouManager
-    lateinit var formulaManager: FormulaManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var damageTypeManager: DamageTypeManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var mechanicManager: MechanicManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var fightGroupManager: FightGroupManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var realizeManager: RealizeManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var cooldownManager: CooldownManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var personalManager: PersonalManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var fightStatusManager: FightStatusManager
+    lateinit var realizerManager: RealizeManager
 
     @JvmStatic
     @PouManager
     lateinit var operationManager: OperationManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var messageBuilderManager: MessageBuilderManager
 
     override fun onLoad() {
         load()

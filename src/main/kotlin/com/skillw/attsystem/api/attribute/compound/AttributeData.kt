@@ -3,7 +3,7 @@ package com.skillw.attsystem.api.attribute.compound
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.status.Status
-import com.skillw.pouvoir.api.map.BaseMap
+import com.skillw.pouvoir.api.plugin.map.BaseMap
 import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData

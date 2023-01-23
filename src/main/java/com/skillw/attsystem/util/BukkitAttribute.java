@@ -1,11 +1,12 @@
 package com.skillw.attsystem.util;
 
 import org.bukkit.attribute.Attribute;
-import taboolib.common.Isolated;
+import taboolib.common5.Coerce;
 import taboolib.library.reflex.ClassField;
 import taboolib.library.reflex.ClassMethod;
 import taboolib.library.reflex.ReflexClass;
 import taboolib.module.nms.MinecraftVersion;
+
 import java.util.Arrays;
 
 import static taboolib.module.nms.MinecraftServerUtilKt.nmsClass;
@@ -16,7 +17,6 @@ import static taboolib.module.nms.MinecraftServerUtilKt.nmsClass;
  * @author sky
  * @since 2019-12-11 19:31
  */
-@Isolated
 public enum BukkitAttribute {
 
     /**
@@ -95,21 +95,19 @@ public enum BukkitAttribute {
     }
 
     public Attribute toBukkit() {
-        Attribute attribute;
-        try {
-            attribute = Attribute.valueOf("GENERIC_" + this.name());
-        } catch (Exception e) {
-            attribute = Attribute.valueOf(this.name());
+        Attribute attribute = Coerce.toEnum("GENERIC_" + this.name(), Attribute.class);
+        if (attribute == null) {
+            attribute = Coerce.toEnum(this.name(), Attribute.class);
         }
         return attribute;
     }
 
     @SuppressWarnings("ConstantConditions")
     public Object toNMS() {
-        ReflexClass genericAttributesClass = ReflexClass.Companion.of(nmsClass("GenericAttributes"),false);
-        ReflexClass attributeBaseClass = ReflexClass.Companion.of(nmsClass("AttributeBase"),false);
+        ReflexClass genericAttributesClass = ReflexClass.Companion.of(nmsClass("GenericAttributes"), false);
+        ReflexClass attributeBaseClass = ReflexClass.Companion.of(nmsClass("AttributeBase"), false);
         if (MinecraftVersion.INSTANCE.getMajorLegacy() <= 11300) {
-            ClassMethod method = attributeBaseClass.getMethod("getName",false,false);
+            ClassMethod method = attributeBaseClass.getMethod("getName", false, false);
             for (ClassField classField : genericAttributesClass.getStructure().getFields()) {
                 Object attribute = classField.get(null);
                 if (method.invoke(attributeBaseClass.getStructure().getOwner().cast(attribute)).equals(this.minecraftKey)) {
@@ -117,7 +115,7 @@ public enum BukkitAttribute {
                 }
             }
         } else {
-            return genericAttributesClass.getField(this.name(),false,false).get(null);
+            return genericAttributesClass.getField(this.name(), false, false).get(null);
         }
         return null;
     }

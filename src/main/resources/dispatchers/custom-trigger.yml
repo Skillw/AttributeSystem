@@ -1,0 +1,18 @@
+custom entity fight:
+  triggers: [ entity damage by entity ]
+  context:
+    attacker: "@event damager"
+    defender: "@event entity"
+  namespaces: [ bukkit ]
+  pre-handle: |-
+    print attack!
+    if check &attacker !type LivingEntity || &defender !type LivingEntity then exit
+    if check &attacker type Player then {
+        &attacker message '你在打东西!'
+    }
+  post-handle:
+    type: js
+    content: |-
+      print(" entity damage by entity 处理完了!")
+  exception: |-
+    warning '触发器 custom entity fight 处理失败! 具体报错请看后台!'

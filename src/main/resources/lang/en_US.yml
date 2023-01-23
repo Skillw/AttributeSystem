@@ -83,7 +83,7 @@ type-TITLE: 'Title'
 type-ACTION-BAR: 'ActionBar'
 type-CHAT: 'Chat'
 type-HOLO: 'Holo text'
-type-DISABLE: 'Disable'
+type-DISABLE: 'Swichable'
 
 attacking-message-type: 'Attacking MessageType'
 defensive-message-type: 'Defensive MessageType'

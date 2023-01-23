@@ -10,7 +10,6 @@ import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.operation.Operation
-import com.skillw.attsystem.internal.manager.EquipmentDataManagerImpl
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -25,13 +24,29 @@ import java.util.*
 
 object AttrAPI {
     /**
+     * 从Map中读取AttributeDataCompound
+     *
+     * @return AttributeDataCompound
+     * @receiver Map<String, Any>
+     */
+    @JvmStatic
+    fun Map<String, Any>.readAttDataCompound() = AttributeDataCompound.fromMap(this)
+
+    /**
+     * 从Map中读取AttributeData
+     *
+     * @return AttributeData
+     * @receiver Map<String, Any>
+     */
+    @JvmStatic
+    fun Map<String, Any>.readAttData() = AttributeData.fromMap(this)
+
+    /**
      * EntityUpdate
      *
      * 更新实体(装备 属性 原版属性实现)
      *
      * 建议异步调用
-     *
-     * @param entity 实体
      */
     @JvmStatic
     fun LivingEntity.updateAttr() {
@@ -144,23 +159,6 @@ object AttrAPI {
      * 给实体添加属性数据
      *
      * @param key String 键(源)
-     * @param attributes Collection<String> 字符串集合
-     * @param release Boolean 是否在下次更新属性时删除
-     * @return AttributeData? 属性数据
-     * @receiver UUID 实体uuid
-     */
-    @JvmStatic
-    fun UUID.addAttribute(
-        key: String, attributes: Collection<String>,
-        release: Boolean = false,
-    ): AttributeData? {
-        return AttributeSystem.attributeDataManager.addAttribute(this, key, attributes, release)
-    }
-
-    /**
-     * 给实体添加属性数据
-     *
-     * @param key String 键(源)
      * @param attributeData AttributeData 属性数据
      * @param release Boolean 是否在下次更新属性时删除
      * @return AttributeData 属性数据
@@ -208,7 +206,7 @@ object AttrAPI {
     fun ItemStack.readItemLore(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeData? {
-        return AttributeSystem.equipmentDataManager.readItemLore(this, entity, slot)
+        return AttributeSystem.readManager.readItemLore(this, entity, slot)
     }
 
     /**
@@ -223,7 +221,7 @@ object AttrAPI {
     fun Collection<ItemStack>.readItemsLore(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeData? {
-        return AttributeSystem.equipmentDataManager.readItemsLore(this, entity, slot)
+        return AttributeSystem.readManager.readItemsLore(this, entity, slot)
     }
 
     /**
@@ -238,7 +236,7 @@ object AttrAPI {
     fun ItemStack.readItemNBT(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeDataCompound? {
-        return AttributeSystem.equipmentDataManager.readItemNBT(this, entity, slot)
+        return AttributeSystem.readManager.readItemNBT(this, entity, slot)
     }
 
     /**
@@ -253,7 +251,7 @@ object AttrAPI {
     fun Collection<ItemStack>.readItemsNBT(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeDataCompound? {
-        return AttributeSystem.equipmentDataManager.readItemsNBT(this, entity, slot)
+        return AttributeSystem.readManager.readItemsNBT(this, entity, slot)
     }
 
     /**
@@ -268,17 +266,7 @@ object AttrAPI {
     fun ItemStack.readItem(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeDataCompound {
-        return AttributeSystem.equipmentDataManager.readItem(this, entity, slot)
-    }
-
-    /**
-     * 读取物品属性
-     *
-     * @return AttributeDataCompound? 属性数据
-     * @receiver ItemStack 物品
-     */
-    fun ItemStack.getCacheAttrData(): AttributeDataCompound? {
-        return EquipmentDataManagerImpl.itemAttrData[hashCode()]
+        return AttributeSystem.readManager.readItem(this, entity, slot)
     }
 
     /**
@@ -293,7 +281,7 @@ object AttrAPI {
     fun Collection<ItemStack>.readItems(
         entity: LivingEntity? = null, slot: String? = null,
     ): AttributeDataCompound {
-        return AttributeSystem.equipmentDataManager.readItems(this, entity, slot)
+        return AttributeSystem.readManager.readItems(this, entity, slot)
     }
 
     /**
@@ -309,37 +297,6 @@ object AttrAPI {
         return AttributeSystem.attributeSystemAPI.read(this, entity, slot)
     }
 
-    /**
-     * 实体是否在战斗
-     *
-     * @return Boolean 是否在战斗
-     * @receiver LivingEntity 实体
-     */
-    @JvmStatic
-    fun LivingEntity.isFighting(): Boolean {
-        return AttributeSystem.fightStatusManager.isFighting(this)
-    }
-
-    /**
-     * 让实体进入战斗
-     *
-     * @receiver LivingEntity 实体
-     */
-    @JvmStatic
-    fun LivingEntity.intoFighting() {
-        AttributeSystem.fightStatusManager.intoFighting(this)
-    }
-
-    /**
-     * 让实体退出战斗状态
-     *
-     * @receiver LivingEntity 实体
-     */
-
-    @JvmStatic
-    fun LivingEntity.outFighting() {
-        AttributeSystem.fightStatusManager.outFighting(this)
-    }
 
     /**
      * Add equipment
@@ -388,7 +345,7 @@ object AttrAPI {
      */
     @JvmStatic
     fun LivingEntity.realize() {
-        AttributeSystem.realizeManager.realize(this)
+        AttributeSystem.realizerManager.realize(this)
     }
 
 }

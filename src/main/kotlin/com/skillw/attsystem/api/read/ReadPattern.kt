@@ -3,7 +3,7 @@ package com.skillw.attsystem.api.read
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.status.Status
-import com.skillw.pouvoir.api.able.Registrable
+import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
 import taboolib.module.chat.TellrawJson
 
@@ -26,6 +26,7 @@ abstract class ReadPattern<A : Any>(
 ) : Registrable<String> {
     /** 是否在重载时删除 */
     var release = false
+
     /**
      * Read
      *

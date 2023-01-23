@@ -1,0 +1,84 @@
+base-attribute:
+  # strings / nbt
+  type: strings
+  values:
+    - "生命恢复: 0.1"
+    - "攻击速度: 1.5"
+    - "命中几率: 100(%)"
+    - "攻击距离: 2.7"
+    - "暴击伤害: 150(%)"
+#  type: nbt
+#  values:
+#    HitChance:
+#      percent: 100
+attack-cooldown:
+  #攻击冷却的时间与玩家原版攻击速度属性匹配
+  enable: true
+  #cooldown 物品冷却
+  #vanilla 原版攻击速度机制
+  type: cooldown
+  #任何时间都能攻击(冷却不结束，就不能攻击)
+  #伤害会被蓄力机制影响
+  damage-any-time: true
+  #蓄力机制 (已度过冷却时间/总时间)
+  charged: true
+  #cooldown 基于物品冷却
+  #vanilla 基于原版伤害
+  charge-based: vanilla
+  #最小蓄力值 若蓄力开启 且 蓄力值小于此值则伤害取消
+  min-charge: 0.05
+  #不冷却的材质
+  no-cooldown-types:
+    - "BOW"
+    - "CROSSBOW"
+attack-distance:
+  #攻击距离 单位为格
+  enable: true
+  #默认攻击距离
+  #这里填原版的数值 建议不要改动
+  #如果有偏差会导致 “二次伤害” 的触发
+  vanilla-distance:
+    default: 3
+    creative: 4.5
+  distance-attack:
+    #距离攻击的特效
+    effect: true
+    #距离攻击的声音
+    sound: true
+  value: "%as_att:AttackDistance%"
+#生命值缩放
+health-scale:
+  enable: true
+  value: 20
+#无伤间隔/ 无敌帧
+#一个玩家打一次怪物 会有n tick 不能再伤害怪物
+no-damage-ticks:
+  enable: true
+  disable-worlds:
+    - "example_world"
+  #tick
+  value: 5
+health-regain:
+  #默认每10tick(0.5s)恢复一次生命值 (见 period)
+  #为了方便实现"每秒回血" %as_att:HealthRegain% /s 故将值除以二
+  enable: true
+  vanilla: true
+  #每多少tick 恢复一次生命
+  period: 10
+  #战斗时间禁生命恢复系统
+  disable-in-fighting: false
+  value: "%as_att:HealthRegain% / 2"
+fight-status:
+  enable: true
+  #战斗状态持续时间
+  #tick
+  value: 100
+data-clear:
+  #数据清理间隔(tick)
+  period: 1200
+
+#禁止直接普攻的材质
+disable-attack-types:
+  values:
+    - "BOW"
+    - "CROSSBOW"

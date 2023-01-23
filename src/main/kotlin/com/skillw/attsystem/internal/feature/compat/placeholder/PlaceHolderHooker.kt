@@ -9,6 +9,6 @@ object PlaceHolderHooker : PlaceholderExpansion {
     override val identifier: String = "as"
 
     override fun onPlaceholderRequest(player: Player?, args: String): String {
-        return Pouvoir.pouPlaceHolderAPI.replace(player, "%as_$args%")
+        return Pouvoir.placeholderManager.replace(player, "%as_$args%")
     }
 }

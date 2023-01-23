@@ -1,14 +1,14 @@
 package com.skillw.attsystem.api.attribute.compound
 
+import com.skillw.asahi.api.AsahiAPI.asahi
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.api.AttrAPI
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.status.Status
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.api.PouvoirAPI.eval
 import com.skillw.pouvoir.api.PouvoirAPI.placeholder
-import com.skillw.pouvoir.api.map.LowerMap
+import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.ItemTag
@@ -190,6 +190,10 @@ class AttributeDataCompound : LowerMap<AttributeData> {
         return this[key]?.get(attribute)
     }
 
+    operator fun set(key: String, attribute: Attribute, status: Status<*>): Status<*>? {
+        return this[key]?.set(attribute, status)
+    }
+
     /**
      * To mutable map
      *
@@ -324,6 +328,9 @@ class AttributeDataCompound : LowerMap<AttributeData> {
     }
 
     fun mappingAttr() {
+        filterKeys { it.startsWith("MAP-ATTRIBUTE-") }.forEach { (key, _) ->
+            remove(key)
+        }
         attributeManager.attributes.forEach { attribute ->
             with(attribute) {
                 if (map.isEmpty() || !hasAttribute(this)) return@forEach
@@ -338,7 +345,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
                                 str.placeholder(
                                     this@AttributeDataCompound.entity!!,
                                     false
-                                ).eval().toString()
+                                ).asahi().toString()
                             },
                             att
                         )

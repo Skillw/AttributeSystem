@@ -1,25 +1,13 @@
 package com.skillw.attsystem.api.manager
 
+import com.skillw.attsystem.api.realizer.BaseRealizer
+import com.skillw.attsystem.api.realizer.component.sub.Realizable
 import com.skillw.pouvoir.api.manager.Manager
-import org.bukkit.entity.Entity
-import taboolib.common.platform.service.PlatformExecutor
+import com.skillw.pouvoir.api.plugin.map.KeyMap
 
 /**
  * Realize manager
  *
  * @constructor Create empty Realize manager
  */
-abstract class RealizeManager : Manager {
-
-    /**
-     * Realize
-     *
-     * 实现原版属性
-     *
-     * @param entity 实体
-     */
-    abstract fun realize(entity: Entity)
-
-    /** Health regain scheduled */
-    abstract var healthRegainScheduled: PlatformExecutor.PlatformTask?
-}
+abstract class RealizeManager : Manager, KeyMap<String, BaseRealizer>(), Realizable

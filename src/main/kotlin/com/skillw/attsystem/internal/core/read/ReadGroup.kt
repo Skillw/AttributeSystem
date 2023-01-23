@@ -6,19 +6,18 @@ import com.skillw.attsystem.api.operation.Operation
 import com.skillw.attsystem.api.read.ReadPattern
 import com.skillw.attsystem.api.status.GroupStatus
 import com.skillw.attsystem.api.status.Status
-import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.attsystem.internal.core.read.num.NumberReader
 import com.skillw.attsystem.internal.core.read.str.StringReader
+import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.api.PouvoirAPI.placeholder
-import com.skillw.pouvoir.api.map.LowerKeyMap
-import com.skillw.pouvoir.util.FileUtils.toMap
-import com.skillw.pouvoir.util.StringUtils.replacement
-import com.skillw.pouvoir.util.StringUtils.toStringWithNext
+import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
+import com.skillw.pouvoir.util.replacement
+import com.skillw.pouvoir.util.toMap
+import com.skillw.pouvoir.util.toStringWithNext
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.entity.LivingEntity
 import taboolib.common.util.unsafeLazy
-import taboolib.common5.Coerce
 import taboolib.module.chat.TellrawJson
 import taboolib.module.chat.colored
 import java.util.concurrent.CopyOnWriteArrayList
@@ -83,7 +82,7 @@ abstract class ReadGroup<A : Any>(
             return when (section.getString("type")) {
                 "number" -> NumberReader(key, matchers, patternStrings, placeholders)
                 "string" -> StringReader(key, matchers, patternStrings, placeholders)
-                else -> throw IllegalArgumentException("Unknown group type: ${section.getString("type")}")
+                else -> error("Unknown group type: ${section.getString("type")}")
             }
         }
     }

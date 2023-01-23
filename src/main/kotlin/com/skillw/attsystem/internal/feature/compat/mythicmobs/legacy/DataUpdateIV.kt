@@ -1,7 +1,7 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.legacy
 
 import com.skillw.attsystem.api.AttrAPI.updateAttr
-import com.skillw.pouvoir.util.EntityUtils.isAlive
+import com.skillw.pouvoir.util.isAlive
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig
 import io.lumine.xikage.mythicmobs.logging.MythicLogger
 import io.lumine.xikage.mythicmobs.skills.INoTargetSkill

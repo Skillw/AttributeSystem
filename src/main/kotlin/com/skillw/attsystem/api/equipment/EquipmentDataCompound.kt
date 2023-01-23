@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.equipment
 
-import com.skillw.pouvoir.api.map.LowerMap
+import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 

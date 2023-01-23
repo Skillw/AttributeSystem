@@ -4,8 +4,8 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.read.ReadPattern
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.api.`object`.BaseObject
-import com.skillw.pouvoir.util.FileUtils.toMap
+import com.skillw.pouvoir.api.plugin.`object`.BaseObject
+import com.skillw.pouvoir.util.toMap
 import org.bukkit.Bukkit
 import org.bukkit.configuration.ConfigurationSection
 import taboolib.common.platform.function.console
@@ -73,7 +73,7 @@ class ConfigAttributeBuilder(
                                 } ?: return@forEach
                     }
                 return ConfigAttributeBuilder(attKey, priority, display, names, readPattern, isEntity, map = map)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Bukkit.getConsoleSender().sendLang("error.attribute-load", section["key"].toString())
                 e.printStackTrace()
             }

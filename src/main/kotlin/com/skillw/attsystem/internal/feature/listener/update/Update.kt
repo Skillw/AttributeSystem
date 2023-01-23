@@ -12,7 +12,7 @@ import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submitAsync
 
-private object Update {
+internal object Update {
     private fun LivingEntity.updateAsync(delay: Long = 0) {
         submitAsync(delay = delay) { updateAttr() }
     }

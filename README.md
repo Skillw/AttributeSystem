@@ -16,7 +16,7 @@
 
 **AttributeSystem** 是基于 **TabooLib VI** & **Pouvoir** 编写的一款多线程属性引擎插件
 
-**AttributeSystem** 提供包括但不限于以下[**API**](http://book.skillw.com/attrsystem/doc/):
+**AttributeSystem** 提供包括但不限于以下[**API**](http://doc.skillw.com/attsystem/):
 
 - AttributeSystemAPI
 - FightGroupManager

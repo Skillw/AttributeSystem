@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.status
 
 import com.skillw.attsystem.api.operation.Operation
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.api.map.LowerMap
+import com.skillw.pouvoir.api.plugin.map.LowerMap
 
 /**
  * Status

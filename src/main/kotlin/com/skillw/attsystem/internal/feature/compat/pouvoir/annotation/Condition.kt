@@ -4,7 +4,7 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.condition.BaseCondition
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.Pouvoir
-import com.skillw.pouvoir.api.annotation.AutoRegister
+import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotation
 import com.skillw.pouvoir.api.script.annotation.ScriptAnnotationData
 import org.bukkit.entity.LivingEntity
@@ -23,7 +23,7 @@ import javax.script.ScriptContext.ENGINE_SCOPE
  * @constructor Condition Key String
  */
 @AutoRegister
-object Condition : ScriptAnnotation("Condition", fileAnnotation = true) {
+internal object Condition : ScriptAnnotation("Condition", fileAnnotation = true) {
     override fun handle(data: ScriptAnnotationData) {
         val script = data.script
         val function = data.function
@@ -54,7 +54,7 @@ object Condition : ScriptAnnotation("Condition", fileAnnotation = true) {
         ASConfig.debug { console().sendLang("annotation-condition-register", key) }
         script.onDeleted("Condition-$key") {
             ASConfig.debug { console().sendLang("annotation-condition-unregister", key) }
-            AttributeSystem.mechanicManager.remove(key)
+            AttributeSystem.conditionManager.remove(key)
         }
     }
 }

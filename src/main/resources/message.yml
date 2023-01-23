@@ -25,23 +25,23 @@ fight-message:
     defender: '未知'
   chat:
     attack:
-      text: "&d[&9AttributeSystem&d] &e你对 &a{defender-name} &e造成了: {message}"
+      text: "!&d[&9AttributeSystem&d] &e你对 &a{defender-name} &e造成了: {message}"
       separator: "&5,"
     defend:
-      text: "&d[&9AttributeSystem&d] &e&a{attacker-name} &e对你造成了: {message}"
+      text: "!&d[&9AttributeSystem&d] &e&a{attacker-name} &e对你造成了: {message}"
       separator: "&5,"
   action-bar:
     attack:
-      text: "&e你对 &a{defender-name} &e造成了: {message}"
+      text: "!&e你对 &a{defender-name} &e造成了: {message}"
       separator: "&5|"
     defend:
-      text: "&e&a{attacker-name} &e对你造成了: {message}"
+      text: "!&e&a{attacker-name} &e对你造成了: {message}"
       separator: "&5|"
     stay: 30
   title:
     attack:
       title: "{message}"
-      sub-title: "{message}"
+      sub-title: "{mess]age}"
       separator: "&5|"
     defend:
       title: "{message}"

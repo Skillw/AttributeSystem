@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.operation
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.pouvoir.api.able.Registrable
+import com.skillw.pouvoir.api.plugin.map.component.Registrable
 
 /**
  * @className NumberOperation

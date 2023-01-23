@@ -1,8 +1,0 @@
-# damage-cause-id小写 伤害事件（会覆盖）
-# https://bukkit.windit.net/javadoc/org/bukkit/event/entity/EntityDamageEvent.DamageCause.html
-damage-cause-fall:
-  Real:
-    enable: true
-    damage:
-      enable: "true"
-      value: "2"

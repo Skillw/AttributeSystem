@@ -1,7 +1,7 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.common
 
 import com.skillw.attsystem.api.AttrAPI.updateAttr
-import com.skillw.pouvoir.util.EntityUtils.isAlive
+import com.skillw.pouvoir.util.isAlive
 import io.lumine.mythic.api.skills.INoTargetSkill
 import io.lumine.mythic.api.skills.SkillMetadata
 import io.lumine.mythic.api.skills.SkillResult

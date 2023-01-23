@@ -3,20 +3,16 @@ package com.skillw.attsystem.internal.manager
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
-import com.skillw.attsystem.AttributeSystem.configManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
-import com.skillw.attsystem.api.AttrAPI.read
+import com.skillw.attsystem.api.AttrAPI.readItem
 import com.skillw.attsystem.api.AttrAPI.updateAttr
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.event.AttributeUpdateEvent
 import com.skillw.attsystem.api.manager.AttributeDataManager
-import com.skillw.pouvoir.util.EntityUtils.isAlive
-import com.skillw.pouvoir.util.EntityUtils.livingEntity
+import com.skillw.pouvoir.util.isAlive
+import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
-import taboolib.common.platform.function.submit
-import taboolib.common.platform.service.PlatformExecutor
 import taboolib.platform.util.isNotAir
 import java.util.*
 
@@ -24,36 +20,6 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     override val key = "AttributeDataManager"
     override val priority: Int = 3
     override val subPouvoir = AttributeSystem
-
-    private var task:
-            PlatformExecutor.PlatformTask? = null
-
-    private fun clearTask() {
-        task?.cancel()
-        task = submit(period = configManager.attributeClearSchedule) {
-            attributeDataManager.keys.forEach {
-                val livingEntity = it.livingEntity()
-                if (livingEntity?.isValid != true || it.livingEntity()?.isDead != false) {
-                    attributeSystemAPI.remove(it)
-                }
-            }
-        }
-    }
-
-    override fun onActive() {
-        onReload()
-    }
-
-    override var playerBaseAttribute: AttributeData = AttributeData()
-    override var entityBaseAttribute: AttributeData = AttributeData()
-
-    override fun onReload() {
-        playerBaseAttribute =
-            configManager["config"].getStringList("options.attribute.base-attribute.player").read()
-        entityBaseAttribute =
-            configManager["config"].getStringList("options.attribute.base-attribute.entity").read()
-        clearTask()
-    }
 
     override fun get(key: UUID): AttributeDataCompound? {
         return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) }
@@ -78,16 +44,12 @@ object AttributeDataManagerImpl : AttributeDataManager() {
             now@ for ((equipmentKey, itemStack) in equip) {
                 if (itemStack.isNotAir())
                     equipAtt.operation(
-                        equipmentDataManager.readItem(itemStack, entity, equipmentKey)
+                        itemStack.readItem(entity, equipmentKey)
                     )
             }
         }
         attrData.operation(equipAtt)
 
-        attrData.register(
-            "BASE-ATTRIBUTE",
-            if (entity is Player) attributeDataManager.playerBaseAttribute else attributeDataManager.entityBaseAttribute
-        )
         this[uuid] = attrData
         attrData.init()
 
@@ -106,7 +68,12 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         attributes: Collection<String>,
         release: Boolean,
     ): AttributeData {
-        return this.addAttribute(entity.uniqueId, key, attributes, release)
+        return this.addAttribute(
+            entity,
+            key,
+            attributeSystemAPI.read(attributes, entity),
+            release
+        )
     }
 
     override fun addAttribute(
@@ -118,32 +85,10 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         return this.addAttribute(entity.uniqueId, key, attributeData, release)
     }
 
-    override fun addAttribute(
-        uuid: UUID,
-        key: String,
-        attributes: Collection<String>,
-        release: Boolean,
-    ): AttributeData {
-        return this.addAttribute(
-            uuid,
-            key,
-            attributeSystemAPI.read(attributes, uuid.livingEntity()),
-            release
-        )
-    }
-
     override fun addAttribute(uuid: UUID, key: String, attributeData: AttributeData, release: Boolean): AttributeData {
-        if (!uuid.isAlive()) {
-            return attributeData
-        }
         attributeData.release = release
-        if (attributeDataManager.containsKey(uuid)) {
-            attributeDataManager[uuid]!!.register(key, attributeData)
-        } else {
-            val compound = AttributeDataCompound()
-            compound.register(key, attributeData)
-            attributeDataManager.register(uuid, compound)
-        }
+        getOrPut(uuid) { AttributeDataCompound() }.register(key, attributeData)
+
         return attributeData
     }
 
@@ -152,10 +97,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     }
 
     override fun removeAttribute(uuid: UUID, key: String) {
-        if (!uuid.isAlive()) return
-        if (attributeDataManager.containsKey(uuid)) {
-            attributeDataManager[uuid]!!.remove(key)
-        }
+        attributeDataManager[uuid]?.remove(key)
     }
 
     override fun put(key: UUID, value: AttributeDataCompound): AttributeDataCompound? {

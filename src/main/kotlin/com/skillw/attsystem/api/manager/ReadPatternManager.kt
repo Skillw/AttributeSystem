@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.manager
 
 import com.skillw.attsystem.api.read.ReadPattern
 import com.skillw.pouvoir.api.manager.Manager
-import com.skillw.pouvoir.api.map.LowerKeyMap
+import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 
 /**
  * Read pattern manager

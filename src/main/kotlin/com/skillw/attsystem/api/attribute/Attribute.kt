@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.attribute
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.read.ReadPattern
-import com.skillw.pouvoir.api.able.Registrable
+import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import java.util.*
 
 /**

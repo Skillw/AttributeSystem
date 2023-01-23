@@ -2,9 +2,9 @@ import java.net.URL
 
 plugins {
     `java-library`
-    id("io.izzel.taboolib") version "1.51"
-    id("org.jetbrains.kotlin.jvm") version "1.6.10"
-    id("org.jetbrains.dokka") version "1.6.10"
+    id("io.izzel.taboolib") version "1.55"
+    id("org.jetbrains.kotlin.jvm") version "1.7.20"
+    id("org.jetbrains.dokka") version "1.7.20"
 }
 val api: String? by project
 val order: String? by project
@@ -29,7 +29,7 @@ task("version") {
 }
 taboolib {
     if (project.version.toString().contains("-api")) {
-        options("skip-kotlin-relocate")
+        options("skip-kotlin-relocate", "keep-kotlin-module")
     }
     description {
         contributors {
@@ -38,8 +38,8 @@ taboolib {
         dependencies {
             name("Pouvoir")
             name("GermPlugin").optional(true)
-            name("DragonCore").optional(true)
             name("SkillAPI").optional(true)
+            name("DragonCore").optional(true)
             name("Magic").optional(true)
             name("MythicMobs").optional(true)
 
@@ -52,14 +52,13 @@ taboolib {
     install("module-chat")
     install("module-nms-util")
     install("module-nms")
-    install("module-kether")
+    install("module-configuration")
     install("platform-bukkit")
     install("module-lang")
-    install("module-configuration")
 
     install("module-metrics")
     classifier = null
-    version = "6.0.10-31"
+    version = "6.0.10-71"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
@@ -90,13 +89,13 @@ repositories {
 
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
-    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
     compileOnly("com.github.LoneDev6:API-ItemsAdder:3.0.0")
-    compileOnly("ink.ptms:nms-all:1.0.0")
+    dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
+    compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
+    compileOnly("ink.ptms:nms-all:1.0.0")
     compileOnly(fileTree("libs"))
-    compileOnly(kotlin("stdlib"))
+    compileOnly(kotlin("stdlib-jdk8"))
 }
 
 tasks.withType<JavaCompile> {

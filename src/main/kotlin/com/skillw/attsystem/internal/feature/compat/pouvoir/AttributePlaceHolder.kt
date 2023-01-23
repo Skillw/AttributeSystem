@@ -3,18 +3,16 @@ package com.skillw.attsystem.internal.feature.compat.pouvoir
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
-import com.skillw.attsystem.AttributeSystem.formulaManager
 import com.skillw.attsystem.api.AttrAPI.getAttrData
+import com.skillw.attsystem.api.AttrAPI.readItem
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.status.GroupStatus
 import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.api.annotation.AutoRegister
-import com.skillw.pouvoir.api.placeholder.PouPlaceHolder
-import com.skillw.pouvoir.util.NumberUtils.format
+import com.skillw.pouvoir.api.feature.placeholder.PouPlaceHolder
+import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
 import taboolib.platform.util.isAir
-import java.math.BigDecimal
 
 @AutoRegister
 object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
@@ -71,20 +69,8 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
                 val item = equipment[key, subKey] ?: return "0.0"
                 val attribute = attributeManager[attKey] ?: return "0.0"
                 if (item.isAir()) return "0.0"
-                val itemData = equipmentDataManager.readItem(item)
+                val itemData = item.readItem(entity, subKey)
                 return get(itemData, attribute, strings)
-            }
-
-            "formula" -> {
-                strings.removeAt(0)
-                if (strings.isEmpty()) return "0.0"
-                return BigDecimal(formulaManager.calculate(uuid, strings[0])).format()
-            }
-
-            "formulastr" -> {
-                strings.removeAt(0)
-                if (strings.isEmpty()) return "0.0"
-                return formulaManager[strings[0]] ?: "N/A"
             }
         }
         return "0.0"

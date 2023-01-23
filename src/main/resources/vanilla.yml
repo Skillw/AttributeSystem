@@ -1,0 +1,25 @@
+#支持 PAPI/PPAPI 字符串内联函数
+#会影响实体的原版属性 / 其它属性
+max-health:
+  enable: true
+  vanilla: true
+  value: "%as_att:MaxHealth%"
+movement-speed:
+  enable: true
+  vanilla: true
+  value: "%as_att:MovementSpeed% / 2250"
+knockback-resistance:
+  #击退抗性
+  enable: true
+  vanilla: true
+  value: "%as_att:Resistance%"
+#下面这些只支持玩家
+attack-speed:
+  #单位为 攻击次数/s
+  enable: true
+  vanilla: true
+  value: "%as_att:AttackSpeed%"
+luck:
+  enable: true
+  vanilla: true
+  value: "%as_att:Luck%"

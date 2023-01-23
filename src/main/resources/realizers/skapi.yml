@@ -1,0 +1,9 @@
+skill-api-max-mana:
+  enable: false
+  value: "%as_att:MaxMana%"
+skill-api-skill-cooldown:
+  enable: false
+  value: "{cooldown} * (1- (%as_att:SkillSpeed%/(100-%as_att:SkillSpeed%)))"
+skill-api-mana-regain:
+  enable: false
+  value: "%as_att:ManaRegain%"

@@ -3,10 +3,9 @@ package com.skillw.attsystem.internal.command
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.internal.command.sub.AttributeStatsCommand
 import com.skillw.attsystem.internal.command.sub.MirrorCommand
-import com.skillw.attsystem.internal.command.sub.PersonalCommand
-import com.skillw.pouvoir.util.PlayerUtils.soundClick
-import com.skillw.pouvoir.util.PlayerUtils.soundFail
-import com.skillw.pouvoir.util.PlayerUtils.soundSuccess
+import com.skillw.pouvoir.util.soundClick
+import com.skillw.pouvoir.util.soundFail
+import com.skillw.pouvoir.util.soundSuccess
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
@@ -104,7 +103,4 @@ object ASCommand {
 
     @CommandBody(permission = "as.command.stats")
     val entitystats = AttributeStatsCommand.entitystats
-
-    @CommandBody(permission = "as.command.personal")
-    val personal = PersonalCommand.personal
 }
