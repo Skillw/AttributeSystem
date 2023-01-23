@@ -1,4 +1,4 @@
-name: build_2
+name: build_V2
 on:
   push:
     branches:

@@ -1,4 +1,4 @@
-name: publish_2
+name: publish_V2
 on:
   push:
     branches:
