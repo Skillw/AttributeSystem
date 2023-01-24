@@ -13,6 +13,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common5.Coerce
 import taboolib.common5.cint
+import taboolib.module.nms.getItemTag
 import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
 import taboolib.platform.util.isNotAir
@@ -80,8 +81,7 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
                 event.call()
                 if (event.isCancelled) return
                 val eventItem = event.itemStack
-                //FIXME eventItem.getItemTag().containsKey("IGNORE_ATTRIBUTE")
-                if (eventItem.isNotAir())
+                if (eventItem.isNotAir() && !eventItem.getItemTag().containsKey("IGNORE_ATTRIBUTE"))
                     data["BASE-EQUIPMENT", playerSlot.key] = eventItem
             }
         }

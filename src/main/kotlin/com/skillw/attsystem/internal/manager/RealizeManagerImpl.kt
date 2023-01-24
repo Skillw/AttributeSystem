@@ -133,11 +133,32 @@ object RealizeManagerImpl : RealizeManager() {
 
     override fun unrealize(entity: LivingEntity) {
         if (!entity.isAlive()) return
-        values
-            .filterIsInstance<Realizable>()
-            .forEach {
-                it.unrealize(entity)
+        if (!isPrimaryThread) {
+            //不同步处理一些东西会死的
+            sync {
+                values
+                    .filterIsInstance<Realizable>()
+                    .filter { it !is Switchable || it.isEnable() }
+                    .filterIsInstance<Syncable>()
+                    .forEach {
+                        (it as Realizable).unrealize(entity)
+                    }
             }
+            values
+                .filterIsInstance<Realizable>()
+                .filter { it !is Switchable || it.isEnable() }
+                .filter { it !is Syncable }
+                .forEach {
+                    it.unrealize(entity)
+                }
+        } else {
+            values
+                .filterIsInstance<Realizable>()
+                .filter { it !is Switchable || it.isEnable() }
+                .forEach {
+                    it.unrealize(entity)
+                }
+        }
     }
 
     override fun onDisable() {
