@@ -32,38 +32,41 @@ import java.util.regex.Pattern
  */
 
 
-abstract class ReadGroup<A : Any>(
-    override val key: String,
-    matchers: Map<String, String>,
-    patternStrings: List<String>,
-    protected val placeholders: Map<String, String>,
-    defaultPattern: String? = null,
-) : ReadPattern<A>(key),
+abstract class ReadGroup<A : Any>(override val key: String) : ReadPattern<A>(key),
     ConfigurationSerializable {
-    val placeholderKeys = placeholders.keys
+    val placeholderKeys by lazy {
+        placeholders.keys
+    }
+    protected val placeholders = HashMap<String, String>()
+    val matchers = LowerKeyMap<Matcher<A>>()
+    protected val patterns = CopyOnWriteArrayList<PatternMatcher<A>>()
 
-    val matchers = LowerKeyMap<Matcher<A>>().apply {
+    constructor(
+        key: String,
+        matchers: Map<String, String>,
+        patternStrings: List<String>,
+        placeholders: Map<String, String>,
+        defaultPattern: String? = null,
+    ) : this(key) {
+        this.placeholders.putAll(placeholders)
         matchers.forEach { (key, operationStr) ->
             val operation = AttributeSystem.operationManager[operationStr] as? Operation<A>? ?: return@forEach
-            register(Matcher(key.lowercase(), operation))
+            this.matchers.register(Matcher(key.lowercase(), operation))
+        }
+        patternStrings.forEach { str ->
+            var temp = str.replace("{name}", "\\{name\\}")
+            val nMatchers = HashSet<Matcher<A>>()
+            this@ReadGroup.matchers.forEach matcher@{ (key, matcher) ->
+                if (temp.contains("<$key>", true)) {
+                    defaultPattern?.let {
+                        temp = temp.replace("<$key>", it.replace("value", key.lowercase()), true)
+                    }
+                    nMatchers += matcher
+                }
+            }
+            this.patterns.add(PatternMatcher(Pattern.compile(temp), nMatchers))
         }
     }
-    protected val patterns: MutableList<PatternMatcher<A>> =
-        CopyOnWriteArrayList<PatternMatcher<A>>().apply {
-            patternStrings.forEach { str ->
-                var temp = str.replace("{name}", "\\{name\\}")
-                val nMatchers = HashSet<Matcher<A>>()
-                this@ReadGroup.matchers.forEach matcher@{ (key, matcher) ->
-                    if (temp.contains("<$key>", true)) {
-                        defaultPattern?.let {
-                            temp = temp.replace("<$key>", it.replace("value", key.lowercase()), true)
-                        }
-                        nMatchers += matcher
-                    }
-                }
-                add(PatternMatcher(Pattern.compile(temp), nMatchers))
-            }
-        }
 
     companion object {
         @JvmStatic

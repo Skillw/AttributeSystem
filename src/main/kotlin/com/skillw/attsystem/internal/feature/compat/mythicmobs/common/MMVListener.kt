@@ -39,7 +39,7 @@ internal object MMVListener {
             if (attributes.isEmpty()) return
             event.compound.register(
                 "MYTHIC-BASE-ATTRIBUTE",
-                AttributeSystem.attributeSystemAPI.read(
+                AttributeSystem.readManager.read(
                     attributes, entity
                 )
 

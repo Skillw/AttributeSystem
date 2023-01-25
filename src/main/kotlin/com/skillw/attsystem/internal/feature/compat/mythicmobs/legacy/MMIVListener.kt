@@ -41,7 +41,7 @@ internal object MMIVListener {
             if (attributes.isEmpty()) return
             event.compound.register(
                 "MYTHIC-BASE-ATTRIBUTE",
-                AttributeSystem.attributeSystemAPI.read(attributes, entity)
+                AttributeSystem.readManager.read(attributes, entity)
             )
         }
     }

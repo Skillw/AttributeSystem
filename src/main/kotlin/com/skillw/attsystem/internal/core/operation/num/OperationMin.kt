@@ -5,7 +5,7 @@ import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import kotlin.math.min
 
 @AutoRegister
-object OperationMin : NumberOperation("min") {
+object OperationMin : NumberOperation("min", ">") {
     override fun operate(a: Number, b: Number): Number {
         return min(a.toDouble(), b.toDouble())
     }

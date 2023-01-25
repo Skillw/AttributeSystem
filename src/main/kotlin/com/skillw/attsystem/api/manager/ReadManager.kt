@@ -13,6 +13,19 @@ import org.bukkit.inventory.ItemStack
  */
 abstract class ReadManager : Manager {
 
+
+    /**
+     * Read
+     *
+     * 读取字符串集的属性数据
+     *
+     * @param strings 待读取属性的字符串集
+     * @param entity 实体
+     * @param slot 槽位(可为null)
+     * @return 属性数据
+     */
+    abstract fun read(strings: Collection<String>, entity: LivingEntity? = null, slot: String? = null): AttributeData
+
     /**
      * Read item lore
      *

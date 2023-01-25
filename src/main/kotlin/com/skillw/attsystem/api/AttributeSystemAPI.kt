@@ -1,6 +1,5 @@
 package com.skillw.attsystem.api
 
-import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.pouvoir.api.manager.Manager
 import org.bukkit.entity.LivingEntity
 import java.util.*
@@ -11,18 +10,6 @@ import java.util.*
  * @constructor Create empty Attribute system a p i
  */
 interface AttributeSystemAPI : Manager {
-
-    /**
-     * Read
-     *
-     * 读取字符串集的属性数据
-     *
-     * @param strings 待读取属性的字符串集
-     * @param entity 实体
-     * @param slot 槽位(可为null)
-     * @return 属性数据
-     */
-    fun read(strings: Collection<String>, entity: LivingEntity? = null, slot: String? = null): AttributeData
 
     /**
      * EntityUpdate

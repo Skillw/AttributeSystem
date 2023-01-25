@@ -16,4 +16,8 @@ data class OperationElement(val numberOperation: NumberOperation, val number: Nu
     fun operate(other: Number): Number {
         return numberOperation.operate(other, number)
     }
+
+    override fun toString(): String {
+        return "Operation { ${numberOperation.key} $number }"
+    }
 }

@@ -4,7 +4,7 @@ import com.skillw.attsystem.api.operation.NumberOperation
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 
 @AutoRegister
-object OperationPlus : NumberOperation("plus") {
+object OperationPlus : NumberOperation("plus", "+") {
     override fun operate(a: Number, b: Number): Number {
         return a.toDouble() + b.toDouble()
     }

@@ -1,12 +1,14 @@
 package com.skillw.attsystem.api.operation
 
+import com.skillw.attsystem.AttributeSystem.operationManager
+
 /**
  * Base operation
  *
  * @constructor Create empty Base operation
  * @property key 运算操作键
  */
-abstract class NumberOperation(override val key: String) : Operation<Number> {
+abstract class NumberOperation(override val key: String, vararg val alias: String) : Operation<Number> {
     abstract override fun operate(a: Number, b: Number): Number
 
     override var release: Boolean = false
@@ -18,5 +20,11 @@ abstract class NumberOperation(override val key: String) : Operation<Number> {
      * @return 运算元素
      */
     fun element(number: Number): OperationElement = OperationElement(this, number)
+
+    override fun register() {
+        arrayOf(key, *alias).forEach {
+            operationManager.register(it, this)
+        }
+    }
 
 }

@@ -29,7 +29,7 @@ class Attribute private constructor(
     var entity = true
 
     /** Release */
-    var release = false
+    var config = false
 
     override fun register() {
         AttributeSystem.attributeManager.register(this)
@@ -94,7 +94,7 @@ class Attribute private constructor(
          */
         fun build(): Attribute {
             val att = Attribute(key, display ?: names.first, names, readPattern, priority)
-            att.release = release
+            att.config = release
             att.entity = entity
             att.map = map
             return att

@@ -2,8 +2,8 @@ package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
-import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
+import com.skillw.attsystem.AttributeSystem.readManager
 import com.skillw.attsystem.api.AttrAPI.readItem
 import com.skillw.attsystem.api.AttrAPI.updateAttr
 import com.skillw.attsystem.api.attribute.compound.AttributeData
@@ -71,7 +71,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         return this.addAttribute(
             entity,
             key,
-            attributeSystemAPI.read(attributes, entity),
+            readManager.read(attributes, entity),
             release
         )
     }

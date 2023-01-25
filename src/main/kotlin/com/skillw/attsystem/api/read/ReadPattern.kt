@@ -58,7 +58,6 @@ abstract class ReadPattern<A : Any>(
         attribute: Attribute,
         entity: LivingEntity?,
     ): Status<A>? {
-
         return read(string, attribute, entity, "null")
     }
 

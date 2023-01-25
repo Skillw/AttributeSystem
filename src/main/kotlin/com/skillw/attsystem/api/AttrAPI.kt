@@ -294,7 +294,7 @@ object AttrAPI {
      */
     @JvmStatic
     fun Collection<String>.read(entity: LivingEntity? = null, slot: String? = null): AttributeData {
-        return AttributeSystem.attributeSystemAPI.read(this, entity, slot)
+        return AttributeSystem.readManager.read(this, entity, slot)
     }
 
 
