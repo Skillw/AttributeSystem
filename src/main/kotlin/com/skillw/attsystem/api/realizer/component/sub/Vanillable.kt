@@ -1,8 +1,8 @@
 package com.skillw.attsystem.api.realizer.component.sub
 
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.ConfigComponent
-import com.skillw.attsystem.api.realizer.component.IConfigComponent
+
+import taboolib.common5.cbool
 
 /**
  * @className Vanillable
@@ -10,17 +10,9 @@ import com.skillw.attsystem.api.realizer.component.IConfigComponent
  * @author Glom
  * @date 2023/1/5 16:51 Copyright 2022 user. All rights reserved.
  */
-@ConfigComponent
-interface Vanillable : IConfigComponent {
+interface Vanillable {
 
     val defaultVanilla: Boolean
-    fun isEnableVanilla(): Boolean = (this as? BaseRealizer)?.config?.get("vanilla", false) ?: true
+    fun isEnableVanilla(): Boolean = (this as? BaseRealizer)?.config?.get("vanilla")?.cbool ?: defaultVanilla
 
-
-    companion object {
-        @JvmStatic
-        fun defaultConfig(vanillable: Vanillable, config: MutableMap<String, Any>) {
-            config["vanilla"] = vanillable.defaultVanilla
-        }
-    }
 }

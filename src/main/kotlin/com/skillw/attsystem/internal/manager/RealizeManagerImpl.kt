@@ -2,43 +2,26 @@ package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.manager.RealizeManager
-import com.skillw.attsystem.api.realizer.component.ConfigComponent
-import com.skillw.attsystem.api.realizer.component.IConfigComponent
 import com.skillw.attsystem.api.realizer.component.sub.Awakeable
 import com.skillw.attsystem.api.realizer.component.sub.Realizable
 import com.skillw.attsystem.api.realizer.component.sub.Switchable
 import com.skillw.attsystem.api.realizer.component.sub.Syncable
 import com.skillw.attsystem.util.AntiCheatUtils
-import com.skillw.pouvoir.api.plugin.handler.ClassHandler
-import com.skillw.pouvoir.taboolib.library.reflex.ClassStructure
 import com.skillw.pouvoir.util.isAlive
-import com.skillw.pouvoir.util.listSubFiles
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
-import taboolib.common.io.newFile
 import taboolib.common.platform.function.isPrimaryThread
 import taboolib.common.util.sync
-import taboolib.common.util.unsafeLazy
-import taboolib.library.reflex.Reflex.Companion.invokeMethod
+import taboolib.common5.FileWatcher
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
 import taboolib.module.configuration.util.asMap
+import java.io.File
 
 object RealizeManagerImpl : RealizeManager() {
     override val key = "RealizeManager"
     override val priority: Int = 9
     override val subPouvoir = AttributeSystem
-    private val components = HashSet<Class<*>>()
-    private val configComponents by unsafeLazy {
-        components.filter { IConfigComponent::class.java.isAssignableFrom(it) }.toHashSet()
-    }
-
-    object ConfigComponentInject : ClassHandler(0) {
-        override fun inject(clazz: ClassStructure) {
-            if (clazz.owner.isAnnotationPresent(ConfigComponent::class.java))
-                components.add(clazz.owner)
-        }
-    }
 
     override fun onLoad() {
         onReload()
@@ -49,45 +32,36 @@ object RealizeManagerImpl : RealizeManager() {
         values.filterIsInstance<Awakeable>().forEach(Awakeable::onEnable)
     }
 
-    override fun onReload() {
+    private val watcher = FileWatcher()
 
-        val filenames = HashSet<String>()
+    override fun onReload() {
+        val files = HashSet<File>()
         val previous = HashMap<String, Boolean>()
         values.forEach { realizer ->
             val key = realizer.key
-            val fileName = realizer.fileName
+            val file = realizer.file
             previous[key] = realizer !is Switchable || realizer.isEnable()
-            filenames.add(fileName)
-            val defaultConfig = realizer.defaultConfig.clone() as MutableMap<String, Any>
-            configComponents.filter { it.isAssignableFrom(realizer::class.java) }
-                .forEach {
-                    it.invokeMethod<Unit>("defaultConfig", realizer, defaultConfig, isStatic = true)
-                }
-            val file = newFile(AttributeSystem.plugin.dataFolder, fileName)
-            val config = Configuration.loadFromFile(file, Type.YAML)
-            config[key] = if (config.isConfigurationSection(key)) {
-                config.getConfigurationSection(key)?.also { innerConfig ->
-                    defaultConfig.forEach { (subKey, value) ->
-                        if (!innerConfig.contains(subKey))
-                            innerConfig[subKey] = value
-                    }
-                }
-            } else defaultConfig
-            config.saveToFile(file)
+            files.add(file)
         }
-        AttributeSystem.plugin.dataFolder.listSubFiles().filter {
-            it.extension == "yml"
-        }.map {
+        files.map {
             Configuration.loadFromFile(it, Type.YAML)
-        }.filter { it.file!!.name in filenames }
-            .forEach {
-                it.toMap().forEach { (key, data) ->
+        }.forEach {
+            watcher.removeListener(it.file)
+            it.toMap().forEach { (key, data) ->
+                this[key]?.config?.apply {
+                    clear()
+                    putAll(data.asMap().entries.associate { entry -> entry.key to entry.value!! })
+                }
+            }
+            watcher.addSimpleListener(it.file) {
+                Configuration.loadFromFile(it.file!!, Type.YAML).toMap().forEach { (key, data) ->
                     this[key]?.config?.apply {
                         clear()
                         putAll(data.asMap().entries.associate { entry -> entry.key to entry.value!! })
                     }
                 }
             }
+        }
         values.forEach { realizer ->
             if (realizer is Switchable) {
                 val now = realizer.isEnable()

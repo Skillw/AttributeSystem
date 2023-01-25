@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer
 
+import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.realizer.BaseRealizer
 import com.skillw.attsystem.api.realizer.component.sub.*
 import com.skillw.attsystem.util.AttributeUtils.clear
@@ -15,7 +16,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealizer(key), Realizable, Awakeable,
     Switchable, Vanillable, Valuable, Syncable {
-    override val fileName: String = "vanilla.yml"
+    override val file by lazy {
+        AttributeSystem.vanilla.file!!
+    }
     private val realizeKey = "realizer-vanilla-$key"
 
     override val defaultEnable: Boolean

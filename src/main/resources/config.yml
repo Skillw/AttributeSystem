@@ -1,17 +1,5 @@
 options:
   debug: false
-  #生命值缩放
-  fight:
-    #原版弓弩伤害是否会按攻击者射箭时的属性计算 而非射中时的属性
-    arrow-cache-data: true
-    #是否进行非玩家实体间的战斗计算
-    eve-fight-cal: false
-    vanilla-armor: true
-    attack-fight: { }
-    #若没有这些权限，则攻击时运行默认的 attack 战斗组
-    #当攻击者拥有这个权限时，攻击时将运行 class-a-attack 战斗组
-    #      as.class.a: class-a-attack
-    # as.class.b: class-b-attack
   read:
     #当行中有这些之一时，忽略此行属性
     ignores:

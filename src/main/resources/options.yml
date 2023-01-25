@@ -11,41 +11,6 @@ base-attribute:
 #  values:
 #    HitChance:
 #      percent: 100
-attack-cooldown:
-  #攻击冷却的时间与玩家原版攻击速度属性匹配
-  enable: true
-  #cooldown 物品冷却
-  #vanilla 原版攻击速度机制
-  type: cooldown
-  #任何时间都能攻击(冷却不结束，就不能攻击)
-  #伤害会被蓄力机制影响
-  damage-any-time: true
-  #蓄力机制 (已度过冷却时间/总时间)
-  charged: true
-  #cooldown 基于物品冷却
-  #vanilla 基于原版伤害
-  charge-based: vanilla
-  #最小蓄力值 若蓄力开启 且 蓄力值小于此值则伤害取消
-  min-charge: 0.05
-  #不冷却的材质
-  no-cooldown-types:
-    - "BOW"
-    - "CROSSBOW"
-attack-distance:
-  #攻击距离 单位为格
-  enable: true
-  #默认攻击距离
-  #这里填原版的数值 建议不要改动
-  #如果有偏差会导致 “二次伤害” 的触发
-  vanilla-distance:
-    default: 3
-    creative: 4.5
-  distance-attack:
-    #距离攻击的特效
-    effect: true
-    #距离攻击的声音
-    sound: true
-  value: "%as_att:AttackDistance%"
 #生命值缩放
 health-scale:
   enable: true
@@ -68,17 +33,6 @@ health-regain:
   #战斗时间禁生命恢复系统
   disable-in-fighting: false
   value: "%as_att:HealthRegain% / 2"
-fight-status:
-  enable: true
-  #战斗状态持续时间
-  #tick
-  value: 100
 data-clear:
   #数据清理间隔(tick)
   period: 1200
-
-#禁止直接普攻的材质
-disable-attack-types:
-  values:
-    - "BOW"
-    - "CROSSBOW"

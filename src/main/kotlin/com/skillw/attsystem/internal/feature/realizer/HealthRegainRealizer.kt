@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer
 
+import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.event.HealthRegainEvent
 import com.skillw.attsystem.api.realizer.*
 import com.skillw.attsystem.api.realizer.component.*
@@ -20,8 +21,9 @@ import kotlin.math.min
 
 @AutoRegister
 internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switchable, Vanillable, Valuable {
-
-    override val fileName: String = "options.yml"
+    override val file by lazy {
+        AttributeSystem.options.file!!
+    }
 
     override val defaultPeriod: Long = 10
     override val defaultEnable: Boolean

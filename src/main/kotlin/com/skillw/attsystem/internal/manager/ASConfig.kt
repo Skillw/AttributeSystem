@@ -40,18 +40,11 @@ object ASConfig : ConfigManager(AttributeSystem) {
         createIfNotExists(
             "handlers", "on-attack.yml"
         )
+        createIfNotExists("reader", "number/default.yml", "number/percent.yml", "string/string.yml")
         createIfNotExists(
             "attributes",
-            "Fight/Physical.yml",
-            "Fight/Magic.yml",
-            "Fight/Other.yml",
-            "Mechanic/Vampire.yml",
-            "Mechanic/Mechanic.yml",
-            "Other/Other.yml",
-            "Example.yml",
-            "shield.yml"
+            "Example.yml"
         )
-        createIfNotExists("reader", "number/default.yml", "number/percent.yml", "string/string.yml")
         createIfNotExists(
             "scripts",
             "conditions/level.js",

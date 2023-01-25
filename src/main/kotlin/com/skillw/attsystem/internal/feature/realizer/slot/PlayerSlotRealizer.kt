@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer.slot
 
+import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
 import com.skillw.attsystem.api.event.ItemLoadEvent
@@ -23,7 +24,9 @@ import java.util.*
 @AutoRegister
 object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
     private val slots = LowerKeyMap<PlayerSlot>()
-    override val fileName: String = "slot.yml"
+    override val file by lazy {
+        AttributeSystem.slot.file!!
+    }
 
     override fun onEnable() {
         onReload()

@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer.slot
 
+import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
 import com.skillw.attsystem.api.event.ItemLoadEvent
@@ -17,7 +18,9 @@ import taboolib.type.BukkitEquipment
 @AutoRegister
 object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
     private val slots = LowerMap<BukkitEquipment>()
-    override val fileName: String = "slot.yml"
+    override val file by lazy {
+        AttributeSystem.slot.file!!
+    }
 
     init {
         defaultConfig.putAll(
@@ -39,7 +42,7 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
     override fun onReload() {
         slots.clear()
         for (key in config.keys) {
-            val slot = config.getString(key)
+            val slot = config[key].toString()
             val type = kotlin.runCatching { BukkitEquipment.fromString(slot) }.getOrNull()
             type ?: console().sendLang("equipment-type-error", key)
             type ?: continue

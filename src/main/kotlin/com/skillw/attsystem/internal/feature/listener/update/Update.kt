@@ -17,6 +17,13 @@ internal object Update {
         submitAsync(delay = delay) { updateAttr() }
     }
 
+//    @SubscribeEvent
+//    fun onPlayerItemChanged(event: PacketSendEvent) {
+//        val packet = event.packet
+//        if (packet.name != "PacketPlayOutWindowItems" && packet.name != "PacketPlayOutSetSlot") return
+//        event.player.updateAsync(2)
+//    }
+
     @SubscribeEvent
     fun onPlayerRespawn(event: PlayerJoinEvent) {
         event.player.updateAsync(2)

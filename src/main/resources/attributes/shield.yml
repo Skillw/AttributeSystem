@@ -1,5 +1,0 @@
-Blocking:
-  names: ["盾牌减伤"]
-BlockingIgnore:
-  names: ["破盾几率"]
-  read-pattern: Percent

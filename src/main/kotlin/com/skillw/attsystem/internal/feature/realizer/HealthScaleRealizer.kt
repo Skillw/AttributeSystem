@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer
 
+import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.realizer.BaseRealizer
 import com.skillw.attsystem.api.realizer.component.sub.Awakeable
 import com.skillw.attsystem.api.realizer.component.sub.Switchable
@@ -15,7 +16,9 @@ import taboolib.common.platform.event.SubscribeEvent
 @AutoRegister
 internal object HealthScaleRealizer : BaseRealizer("health-scale"), Awakeable, Switchable, Valuable {
 
-    override val fileName: String = "options.yml"
+    override val file by lazy {
+        AttributeSystem.options.file!!
+    }
     override val defaultEnable: Boolean
         get() = true
     override val defaultValue: String

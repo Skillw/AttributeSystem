@@ -1,4 +1,4 @@
-# AttributeSystem
+# AttributeSystem II
 
 插件永久免费
 
@@ -14,25 +14,17 @@
 
 ## 介绍
 
-**AttributeSystem** 是基于 **TabooLib VI** & **Pouvoir** 编写的一款多线程属性引擎插件
+**AttributeSystem** 是基于 **TabooLib VI** & **Pouvoir** 编写的一款属性引擎插件  
+奉单一职责的宗旨，本引擎仅提供属性 属性读取 属性实现框架，具体属性与功能需要通过 配置 / API 来实现
 
 **AttributeSystem** 提供包括但不限于以下[**API**](http://doc.skillw.com/attsystem/):
 
 - AttributeSystemAPI
-- FightGroupManager
-- MechanicManager
-- FormulaManager
-- PlayerSlotManager
-- CooldownManager
 - AttributeManager
-- PersonalManager
 - ConditionManager
 - EquipmentDataManager
 - AttributeDataManager
-- DamageTypeManager
 - OperationManager
-- FightStatusManager
-- EntitySlotManager
 - RealizeManager
 - ReadPatternManager
 
@@ -131,48 +123,6 @@ function level(slot, entity, matcher, text) {
     }
     var level = Coerce.toInteger(matcher.group("value"))
     return entity.level >= level
-}
-
-```
-
-#### 机制 (Mechanic)
-
-```kotlin
-@AutoRegister
-object MyMechanic : Mechanic("my_mechanic") {
-    override fun exec(fightData: FightData, context: Map<String, Any>, damageType: DamageType): Any? {
-        val attacker = fightData.attacker ?: return false
-        val defender = fightData.defender
-        val power = max(if (attacker is Player) attacker.level else 0, 0)
-        val damage = Coerce.toDouble(context["formula"])
-        val players = attacker.getNearbyEntities(10.0, 10.0, 10.0).filterIsInstance<Player>().map { adaptPlayer(it) }
-        val location = adaptLocation(defender.location)
-        ProxyParticle.EXPLOSION_LARGE.sendTo(location, range = 10.0)
-        fightData.damageSources["my_mechanic_damage"] = Plus.element(power * 10 + damage)
-        return true
-    }
-}
-```
-
-```javascript
-var Coerce = static("Coerce");
-var Player = find("org.bukkit.entity.Player");
-var ProxyParticle = find(">taboolib.common.platform.ProxyParticle");
-
-//@Mechanic(my_mechanic)
-function exec(fightData, context, damageType) {
-    var attacker = fightData.attacker;
-    var defender = fightData.defender;
-    var power = attacker instanceof Player ? attacker.level : 0;
-    var damage = calculate(context.get("formula"), attacker);
-    var location = defender.location;
-    var particle = ProxyParticle.EXPLOSION_LARGE;
-    Tool.sendSimpleParticle(particle, location, 36.0, 100, 1.0);
-    fightData.damageSources.put(
-        "my_mechanic_damage",
-        Plus.element(power * 10 + damage)
-    );
-    return true;
 }
 
 ```

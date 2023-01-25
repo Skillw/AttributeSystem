@@ -8,7 +8,9 @@ import com.skillw.pouvoir.util.livingEntity
 @AutoRegister
 internal object DataClearRealizer : ScheduledRealizer("data-clear") {
 
-    override val fileName: String = "options.yml"
+    override val file by lazy {
+        AttributeSystem.options.file!!
+    }
     override val defaultPeriod: Long = 1200
     override fun task() {
         AttributeSystem.attributeDataManager.keys.forEach {
