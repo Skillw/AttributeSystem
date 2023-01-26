@@ -3,6 +3,7 @@ package com.skillw.attsystem.internal.manager
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttributeSystemAPI
 import com.skillw.pouvoir.util.isAlive
+import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
@@ -57,7 +58,7 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
     override fun remove(uuid: UUID) {
         AttributeSystem.attributeDataManager.remove(uuid)
         AttributeSystem.equipmentDataManager.remove(uuid)
-
+        uuid.livingEntity()?.let { AttributeSystem.realizerManager.unrealize(it) }
 //        AttributeSystem.getShieldDataManager().removeByKey(uuid)
     }
 

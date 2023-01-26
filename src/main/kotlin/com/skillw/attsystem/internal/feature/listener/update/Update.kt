@@ -11,18 +11,19 @@ import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submitAsync
+import taboolib.module.nms.PacketSendEvent
 
 internal object Update {
     private fun LivingEntity.updateAsync(delay: Long = 0) {
         submitAsync(delay = delay) { updateAttr() }
     }
 
-//    @SubscribeEvent
-//    fun onPlayerItemChanged(event: PacketSendEvent) {
-//        val packet = event.packet
-//        if (packet.name != "PacketPlayOutWindowItems" && packet.name != "PacketPlayOutSetSlot") return
-//        event.player.updateAsync(2)
-//    }
+    @SubscribeEvent
+    fun onPlayerItemChanged(event: PacketSendEvent) {
+        val packet = event.packet
+        if (packet.name != "PacketPlayOutWindowItems" && packet.name != "PacketPlayOutSetSlot") return
+        event.player.updateAsync(2)
+    }
 
     @SubscribeEvent
     fun onPlayerRespawn(event: PlayerJoinEvent) {
@@ -77,5 +78,11 @@ internal object Update {
         if (entity !is Player) {
             AttributeSystem.attributeSystemAPI.remove(entity.uniqueId)
         }
+    }
+
+    @SubscribeEvent
+    fun onPlayerQuit(event: PlayerQuitEvent) {
+        val player = event.player
+        AttributeSystem.attributeSystemAPI.remove(player.uniqueId)
     }
 }

@@ -47,8 +47,10 @@ object RealizeManagerImpl : RealizeManager() {
             Configuration.loadFromFile(it, Type.YAML)
         }.forEach {
             watcher.removeListener(it.file)
-            it.toMap().forEach { (key, data) ->
-                this[key]?.config?.apply {
+            it.toMap().forEach inner@{ (key, data) ->
+                val realizer = this[key]
+                if (realizer?.file?.path != it.file?.path) return@inner
+                realizer?.config?.apply {
                     clear()
                     putAll(data.asMap().entries.associate { entry -> entry.key to entry.value!! })
                 }
