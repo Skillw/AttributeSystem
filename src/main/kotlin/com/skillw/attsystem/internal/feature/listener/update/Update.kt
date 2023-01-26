@@ -11,18 +11,23 @@ import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submitAsync
+import taboolib.common5.Baffle
 import taboolib.module.nms.PacketSendEvent
+import java.util.concurrent.TimeUnit
 
 internal object Update {
     private fun LivingEntity.updateAsync(delay: Long = 0) {
         submitAsync(delay = delay) { updateAttr() }
     }
 
+    private val baffle = Baffle.of(500, TimeUnit.MILLISECONDS)
+
     @SubscribeEvent
     fun onPlayerItemChanged(event: PacketSendEvent) {
         val packet = event.packet
         if (packet.name != "PacketPlayOutWindowItems" && packet.name != "PacketPlayOutSetSlot") return
-        event.player.updateAsync(2)
+        if (baffle.hasNext(event.player.name))
+            event.player.updateAsync(2)
     }
 
     @SubscribeEvent
@@ -84,5 +89,6 @@ internal object Update {
     fun onPlayerQuit(event: PlayerQuitEvent) {
         val player = event.player
         AttributeSystem.attributeSystemAPI.remove(player.uniqueId)
+        baffle.reset(player.name)
     }
 }
