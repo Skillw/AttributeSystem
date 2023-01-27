@@ -15,14 +15,6 @@ base-attribute:
 health-scale:
   enable: true
   value: 20
-#无伤间隔/ 无敌帧
-#一个玩家打一次怪物 会有n tick 不能再伤害怪物
-no-damage-ticks:
-  enable: true
-  disable-worlds:
-    - "example_world"
-  #tick
-  value: 5
 health-regain:
   #默认每10tick(0.5s)恢复一次生命值 (见 period)
   #为了方便实现"每秒回血" %as_att:HealthRegain% /s 故将值除以二

@@ -1,6 +1,7 @@
 package com.skillw.attsystem.internal.feature.realizer
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.api.event.HealthRegainEvent
 import com.skillw.attsystem.api.realizer.*
 import com.skillw.attsystem.api.realizer.component.*
@@ -62,6 +63,7 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
     override fun task() {
         Bukkit.getWorlds().forEach { world ->
             world.entities.filterIsInstance<LivingEntity>().forEach entities@{ entity ->
+                if (!attributeDataManager.containsKey(entity.uniqueId)) return
                 if (disableInFight && fightSystem && entity.isFighting()) return
                 entity.regain(value(entity))
             }
