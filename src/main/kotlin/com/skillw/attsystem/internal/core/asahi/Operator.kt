@@ -48,7 +48,7 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
         return key.contains(".") && getOrigin(key.split(".")[0]) is AttributeDataCompound
     }
 
-    override fun AsahiContext.setValue(key: String, value: Any): Any? {
+    override fun AsahiContext.setValue(key: String, value: Any?): Any? {
         val varKey = key.split(".")[0]
         val data = getOrigin(varKey)
         val subKeys = key.substringAfter("$varKey.").split(".")
@@ -77,7 +77,8 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
                         val attribute = attribute(subKeys[1]) ?: return null
                         if (attribute.readPattern !is ReadGroup<*>) return null
                         val matcher = subKeys[2]
-                        (data[subKey, attribute] as? GroupStatus<Any>)?.set(matcher, value)
+                        value ?: (data[subKey, attribute] as? GroupStatus<Any>)?.remove(matcher)
+                        value?.let { (data[subKey, attribute] as? GroupStatus<Any>)?.set(matcher, it) }
 
                     }
 
