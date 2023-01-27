@@ -12,6 +12,7 @@ import com.skillw.attsystem.api.realizer.component.sub.Vanillable
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
 import com.skillw.fightsystem.api.FightAPI.isFighting
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
+import com.skillw.pouvoir.util.isAlive
 import org.bukkit.Bukkit
 import org.bukkit.entity.Damageable
 import org.bukkit.entity.LivingEntity
@@ -65,6 +66,7 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
             world.entities.filterIsInstance<LivingEntity>().forEach entities@{ entity ->
                 if (!attributeDataManager.containsKey(entity.uniqueId)) return
                 if (disableInFight && fightSystem && entity.isFighting()) return
+                if (!entity.isAlive()) return
                 entity.regain(value(entity))
             }
         }

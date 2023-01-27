@@ -5,6 +5,7 @@ import com.skillw.attsystem.api.AttrAPI.updateAttr
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
+import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.*
@@ -83,6 +84,12 @@ internal object Update {
         if (entity !is Player) {
             AttributeSystem.attributeSystemAPI.remove(entity.uniqueId)
         }
+    }
+
+    @SubscribeEvent
+    fun onPlayerDead(event: PlayerDeathEvent) {
+        val entity = event.entity
+        AttributeSystem.attributeSystemAPI.remove(entity.uniqueId)
     }
 
     @SubscribeEvent
