@@ -12,8 +12,6 @@ import java.io.File
  */
 abstract class BaseRealizer(final override val key: String) : Registrable<String> {
     val config = HashMap<String, Any>()
-
-    @Deprecated("无用")
     val defaultConfig = LinkedHashMap<String, Any>()
     abstract val file: File
     override fun register() {

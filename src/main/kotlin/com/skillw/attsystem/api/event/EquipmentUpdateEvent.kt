@@ -10,11 +10,11 @@ class EquipmentUpdateEvent {
      * 装备更新前事件
      *
      * @property entity 实体
-     * @property data 装备数据集
+     * @property compound 装备数据集
      */
-    class Pre(
+    class Post(
         val entity: Entity,
-        val data: EquipmentDataCompound,
+        val compound: EquipmentDataCompound,
     ) : BukkitProxyEvent() {
 
         override val allowCancelled = false
@@ -25,11 +25,11 @@ class EquipmentUpdateEvent {
      * 装备更新中事件
      *
      * @property entity 实体
-     * @property data 装备数据集
+     * @property compound 装备数据集
      */
     class Process(
         val entity: Entity,
-        val data: EquipmentDataCompound,
+        val compound: EquipmentDataCompound,
     ) : BukkitProxyEvent() {
 
         override val allowCancelled = false
@@ -40,11 +40,11 @@ class EquipmentUpdateEvent {
      * 装备更新后事件
      *
      * @property entity 实体
-     * @property data 装备数据集
+     * @property compound 装备数据集
      */
-    class Post(
+    class After(
         val entity: Entity,
-        val data: EquipmentDataCompound,
+        val compound: EquipmentDataCompound,
     ) : BukkitProxyEvent() {
 
         override val allowCancelled = false

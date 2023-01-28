@@ -22,6 +22,19 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
         AttributeSystem.slot.file!!
     }
 
+    init {
+        defaultConfig.putAll(
+            linkedMapOf(
+                "头盔" to "HEAD",
+                "胸甲" to "CHEST",
+                "护腿" to "LEGS",
+                "靴子" to "FEET",
+                "主手" to "HAND",
+                "副手" to "OFFHAND"
+            )
+        )
+    }
+
     override fun onEnable() {
         onReload()
     }
@@ -40,10 +53,11 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
     @AutoRegister
     object NormalEquipmentLoader : EquipmentLoader<LivingEntity> {
 
-
         override val key: String = "default"
 
-        override val priority: Int = 1000
+        override fun entityType(): Class<*> {
+            return LivingEntity::class.java
+        }
 
         override fun loadEquipment(entity: LivingEntity, data: EquipmentDataCompound) {
             for ((key, equipmentType) in slots) {

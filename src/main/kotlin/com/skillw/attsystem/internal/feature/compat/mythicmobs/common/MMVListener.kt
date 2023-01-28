@@ -30,14 +30,14 @@ internal object MMVListener {
     }
 
     @SubscribeEvent
-    fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Pre) {
+    fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Post) {
         if (!ASConfig.mythicMobsV) return
         val entity = event.entity
         if (entity !is LivingEntity) return
         MythicBukkit.inst().mobManager.getMythicMobInstance(entity)?.let { mob ->
             val attributes = mob.type.config.getStringList("Attributes")
             if (attributes.isEmpty()) return
-            event.data.register(
+            event.compound.register(
                 "MYTHIC-BASE-ATTRIBUTE",
                 AttributeSystem.readManager.read(
                     attributes, entity

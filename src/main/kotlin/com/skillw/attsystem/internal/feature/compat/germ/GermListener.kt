@@ -10,10 +10,10 @@ import taboolib.platform.util.isNotAir
 
 object GermListener {
     @SubscribeEvent
-    fun load(event: EquipmentUpdateEvent.Pre) {
+    fun load(event: EquipmentUpdateEvent.Post) {
         val player = event.entity
         if (!germ || player !is Player) return
-        val compound = event.data
+        val compound = event.compound
         compound.remove("Germ-Equipment")
         val map = GermSlotAPI.getGermSlotIdentitysAndItemStacks(player, ASConfig.germSlots)
         map.filter { it.value.isNotAir() }.forEach {

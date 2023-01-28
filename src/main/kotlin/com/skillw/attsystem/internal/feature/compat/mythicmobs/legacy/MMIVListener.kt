@@ -30,7 +30,7 @@ internal object MMIVListener {
     }
 
     @SubscribeEvent
-    fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Pre) {
+    fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Post) {
         if (!ASConfig.mythicMobsIV) return
         val entity = event.entity
         if (entity !is LivingEntity) return
@@ -39,7 +39,7 @@ internal object MMIVListener {
             if (!config.isList("Attributes")) return
             val attributes = config.getStringList("Attributes")
             if (attributes.isEmpty()) return
-            event.data.register(
+            event.compound.register(
                 "MYTHIC-BASE-ATTRIBUTE",
                 AttributeSystem.readManager.read(attributes, entity)
             )
