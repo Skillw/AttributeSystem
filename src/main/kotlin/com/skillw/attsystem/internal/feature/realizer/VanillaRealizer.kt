@@ -14,12 +14,12 @@ import taboolib.common.platform.Awake
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealizer(key), Realizable, Awakeable,
+open class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealizer(key), Realizable, Awakeable,
     Switchable, Vanillable, Valuable, Syncable {
     override val file by lazy {
         AttributeSystem.vanilla.file!!
     }
-    private val realizeKey = "realizer-vanilla-$key"
+    protected val realizeKey = "realizer-vanilla-$key"
 
     override val defaultEnable: Boolean
         get() = false
@@ -28,7 +28,7 @@ class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealize
     override val defaultVanilla: Boolean
         get() = true
 
-    private val cache = ConcurrentHashMap<UUID, AttributeModifier>()
+    protected val cache = ConcurrentHashMap<UUID, AttributeModifier>()
 
     override fun realize(entity: LivingEntity) {
         val uuid = entity.uniqueId
@@ -64,7 +64,8 @@ class VanillaRealizer(key: String, val attribute: BukkitAttribute) : BaseRealize
 
         @Awake(LifeCycle.LOAD)
         fun registerCommon() {
-            BukkitAttribute.values().forEach { att ->
+            MaxHealthRealizer.register()
+            BukkitAttribute.values().filter { it != BukkitAttribute.MAX_HEALTH }.forEach { att ->
                 att.toBukkit()?.let { VanillaRealizer(att.normalizeName, att).register() }
             }
         }

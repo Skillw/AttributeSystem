@@ -18,8 +18,9 @@ import java.util.concurrent.TimeUnit
 
 internal object Update {
     internal fun LivingEntity.updateAsync(delay: Long = 0) {
-        if (baffle.hasNext(name))
+        if (baffle.hasNext(name)) {
             submitAsync(delay = delay) { updateAttr() }
+        }
     }
 
     private val baffle = Baffle.of(100, TimeUnit.MILLISECONDS)
