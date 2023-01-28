@@ -8,6 +8,7 @@ import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
 import com.skillw.attsystem.api.manager.EquipmentDataManager
+import com.skillw.attsystem.internal.feature.realizer.slot.EntitySlotRealizer
 import com.skillw.pouvoir.util.isAlive
 import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
@@ -28,26 +29,25 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         val uuid = entity.uniqueId
         var dataCompound =
             if (containsKey(uuid)) EquipmentDataCompound(this.map[uuid]!!) else EquipmentDataCompound()
-        val post = EquipmentUpdateEvent.Post(entity, dataCompound)
-        post.call()
-        if (post.isCancelled) {
+        val pre = EquipmentUpdateEvent.Pre(entity, dataCompound)
+        pre.call()
+        if (pre.isCancelled) {
             return dataCompound
         }
-        dataCompound = post.compound
+        dataCompound = pre.data
         equipmentDataManager.register(uuid, dataCompound)
         dataCompound.remove("BASE-EQUIPMENT")
 
-        for (loader in loaders) {
-            if (!loader.filter(entity)) continue
-            loader.loadEquipment(entity, dataCompound)
-            break
-        }
-        val afterEvent = EquipmentUpdateEvent.After(entity, dataCompound)
-        afterEvent.call()
-        if (afterEvent.isCancelled) {
+        (loaders.firstOrNull { it.filter(entity) } ?: EntitySlotRealizer.NormalEquipmentLoader).loadEquipment(
+            entity,
+            dataCompound
+        )
+        val postEvent = EquipmentUpdateEvent.Post(entity, dataCompound)
+        postEvent.call()
+        if (postEvent.isCancelled) {
             return dataCompound
         }
-        dataCompound = afterEvent.compound
+        dataCompound = postEvent.data
         equipmentDataManager.register(uuid, dataCompound)
         return dataCompound
     }

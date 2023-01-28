@@ -17,18 +17,18 @@ import taboolib.module.nms.PacketSendEvent
 import java.util.concurrent.TimeUnit
 
 internal object Update {
-    private fun LivingEntity.updateAsync(delay: Long = 0) {
-        submitAsync(delay = delay) { updateAttr() }
+    internal fun LivingEntity.updateAsync(delay: Long = 0) {
+        if (baffle.hasNext(name))
+            submitAsync(delay = delay) { updateAttr() }
     }
 
-    private val baffle = Baffle.of(500, TimeUnit.MILLISECONDS)
+    private val baffle = Baffle.of(100, TimeUnit.MILLISECONDS)
 
     @SubscribeEvent
     fun onPlayerItemChanged(event: PacketSendEvent) {
         val packet = event.packet
         if (packet.name != "PacketPlayOutWindowItems" && packet.name != "PacketPlayOutSetSlot") return
-        if (baffle.hasNext(event.player.name))
-            event.player.updateAsync(2)
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent
@@ -66,16 +66,17 @@ internal object Update {
         event.player.updateAsync(2)
     }
 
+
     @SubscribeEvent(ignoreCancelled = true)
     fun onInventoryClick(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
-        player.updateAsync()
+        player.updateAsync(2)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun onInventoryClose(event: InventoryCloseEvent) {
         val player = event.player as Player
-        player.updateAsync()
+        player.updateAsync(2)
     }
 
     @SubscribeEvent

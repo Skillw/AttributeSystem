@@ -59,7 +59,6 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
         AttributeSystem.attributeDataManager.remove(uuid)
         AttributeSystem.equipmentDataManager.remove(uuid)
         uuid.livingEntity()?.let { AttributeSystem.realizerManager.unrealize(it) }
-//        AttributeSystem.getShieldDataManager().removeByKey(uuid)
     }
 
 }

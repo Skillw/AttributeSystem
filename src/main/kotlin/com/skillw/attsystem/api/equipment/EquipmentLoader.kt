@@ -12,12 +12,13 @@ import org.bukkit.entity.LivingEntity
  */
 interface EquipmentLoader<E : LivingEntity> : Registrable<String>, Comparable<EquipmentLoader<*>> {
     override val key: String
-    fun entityType(): Class<*> = this::class.java
-    fun filter(entity: LivingEntity): Boolean = true
+    fun filter(entity: LivingEntity): Boolean = false
     fun loadEquipment(entity: E, data: EquipmentDataCompound)
 
-    override fun compareTo(other: EquipmentLoader<*>): Int = if (this.entityType() == other.entityType()) 0
-    else if (this.entityType().isAssignableFrom(other.entityType())) 1
+    val priority: Int
+
+    override fun compareTo(other: EquipmentLoader<*>): Int = if (this.priority == other.priority) 0
+    else if (this.priority > other.priority) 1
     else -1
 
     override fun register() {
