@@ -45,32 +45,17 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
             } else {
                 slot = value.toString()
             }
-            PlayerSlot(key, slot.uppercase(), requirements).register()
+            slots.register(PlayerSlot(key, slot.uppercase(), requirements))
         }
     }
 
-    init {
-        defaultConfig.putAll(
-            linkedMapOf(
-                "头盔" to "HEAD",
-                "胸甲" to "CHEST",
-                "护腿" to "LEGS",
-                "靴子" to "FEET",
-                "主手" to "HAND",
-                "副手" to "OFFHAND",
-                "20th" to "20"
-            )
-        )
-    }
 
     @AutoRegister
     object PlayerEquipmentLoader : EquipmentLoader<Player> {
 
         override val key: String = "default"
 
-        override fun entityType(): Class<*> {
-            return Player::class.java
-        }
+        override val priority: Int = 999
 
         override fun filter(entity: LivingEntity): Boolean {
             return entity is Player

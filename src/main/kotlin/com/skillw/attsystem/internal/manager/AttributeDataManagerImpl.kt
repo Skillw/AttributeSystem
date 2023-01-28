@@ -34,9 +34,9 @@ object AttributeDataManagerImpl : AttributeDataManager() {
             else AttributeDataCompound(entity).also { this[uuid] = it }
         //PRE
         val preEvent =
-            AttributeUpdateEvent.Post(entity, attrData)
+            AttributeUpdateEvent.Pre(entity, attrData)
         preEvent.call()
-        attrData = preEvent.compound
+        attrData = preEvent.data
         attrData.release()
         //PROCESS
         val equipAtt = AttributeDataCompound(entity)
@@ -50,14 +50,17 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         }
         attrData.operation(equipAtt)
 
+        val process = AttributeUpdateEvent.Process(entity, attrData)
+        process.call()
+        attrData = process.data
         this[uuid] = attrData
         attrData.init()
 
         //AFTER
-        val afterEvent =
-            AttributeUpdateEvent.After(entity, attrData)
-        afterEvent.call()
-        attrData = afterEvent.compound
+        val postEvent =
+            AttributeUpdateEvent.Post(entity, attrData)
+        postEvent.call()
+        attrData = postEvent.data
         this[uuid] = attrData
         return attrData
     }
