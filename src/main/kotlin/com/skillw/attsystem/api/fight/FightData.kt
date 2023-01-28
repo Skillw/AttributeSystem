@@ -1,8 +1,5 @@
 package com.skillw.attsystem.api.fight
 
-import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.AttrAPI.getAttrData
-import com.skillw.attsystem.api.AttrAPI.hasData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.event.FightDataHandleEvent
 import com.skillw.attsystem.api.fight.message.MessageData
@@ -18,11 +15,9 @@ import com.skillw.pouvoir.util.ColorUtils.decolored
 import com.skillw.pouvoir.util.MessageUtils.info
 import com.skillw.pouvoir.util.StringUtils.parse
 import org.bukkit.entity.LivingEntity
-import org.bukkit.entity.Player
 import taboolib.common.util.asList
 import taboolib.common5.Coerce
 import taboolib.module.chat.uncolored
-import taboolib.module.nms.getI18nName
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.function.Consumer
@@ -39,38 +34,34 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
         run.accept(this)
     }
 
-    /** Attacker */
+    var cache = DataCache(this)
+        set(value) {
+            field = value
+            value.data = this
+        }
     var attacker: LivingEntity? = null
         set(value) {
             field = value
-            this["attacker-name"] =
-                (value as? Player)?.displayName
-                    ?: value?.getI18nName()
-                            ?: ASConfig.defaultAttackerName
-            this["attacker"] = value ?: return
-            if (!value.hasData())
-                AttributeSystem.attributeSystemAPI.update(value)
-            attackerData = value.getAttrData()?.clone() ?: AttributeDataCompound()
+            cache.attacker(value)
         }
-
-    /** Attacker data */
-    private var attackerData: AttributeDataCompound? = null
-
-
-    /** Defender */
     var defender: LivingEntity? = null
         set(value) {
             field = value
-            this["defender-name"] =
-                (value as? Player)?.displayName
-                    ?: value?.getI18nName()
-                            ?: ASConfig.defaultDefenderName
-            this["defender"] = value ?: return
-            if (!value.hasData())
-                AttributeSystem.attributeSystemAPI.update(value)
-            defenderData = value.getAttrData()?.clone() ?: AttributeDataCompound()
+            cache.defender(value)
         }
-    private var defenderData: AttributeDataCompound? = null
+
+    fun attackerData(attKey: String, params: List<String>) {
+        cache.attackerData(attKey, params)
+    }
+
+    fun defenderData(attKey: String, params: List<String>) {
+        cache.defenderData(attKey, params)
+    }
+
+    val attackerData: AttributeDataCompound
+        get() = cache.attackerData ?: AttributeDataCompound()
+    val defenderData: AttributeDataCompound
+        get() = cache.defenderData ?: AttributeDataCompound()
 
     init {
         this.attacker = attacker
@@ -106,8 +97,7 @@ class FightData(attacker: LivingEntity?, defender: LivingEntity?) : IContext by 
 
 
     constructor(fightData: FightData) : this(fightData.attacker, fightData.defender) {
-        this.attackerData = fightData.attackerData?.clone()
-        this.defenderData = fightData.defenderData?.clone()
+        this.cache = fightData.cache
         putAll(fightData)
     }
 

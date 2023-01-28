@@ -9,11 +9,11 @@ class AttributeUpdateEvent {
      * 属性更新前 此时上一次的装备属性数据还没有释放
      *
      * @property entity 实体
-     * @property compound 属性数据集
+     * @property data 属性数据集
      */
-    class Post(
+    class Pre(
         val entity: Entity,
-        val compound: AttributeDataCompound,
+        val data: AttributeDataCompound,
     ) : BukkitProxyEvent() {
         override val allowCancelled = false
 
@@ -23,11 +23,11 @@ class AttributeUpdateEvent {
      * 属性更新中 此时上一次的装备属性数据已经释放了 但属性映射还没有计算
      *
      * @property entity 实体
-     * @property compound 属性数据集
+     * @property data 属性数据集
      */
     class Process(
         val entity: Entity,
-        val compound: AttributeDataCompound,
+        val data: AttributeDataCompound,
     ) : BukkitProxyEvent() {
         override val allowCancelled = false
 
@@ -37,11 +37,11 @@ class AttributeUpdateEvent {
      * 属性更新后 完全新的属性数据 属性映射已计算
      *
      * @property entity 实体
-     * @property compound 属性数据集
+     * @property data 属性数据集
      */
-    class After(
+    class Post(
         val entity: Entity,
-        val compound: AttributeDataCompound,
+        val data: AttributeDataCompound,
     ) : BukkitProxyEvent() {
         override val allowCancelled = false
 

@@ -42,12 +42,12 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         val uuid = entity.uniqueId
         var dataCompound =
             if (containsKey(uuid)) EquipmentDataCompound(this.map[uuid]!!) else EquipmentDataCompound()
-        val post = EquipmentUpdateEvent.Post(entity, dataCompound)
-        post.call()
-        if (post.isCancelled) {
+        val pre = EquipmentUpdateEvent.Pre(entity, dataCompound)
+        pre.call()
+        if (pre.isCancelled) {
             return dataCompound
         }
-        dataCompound = post.compound
+        dataCompound = pre.data
         equipmentDataManager.register(uuid, dataCompound)
         dataCompound.remove("BASE-EQUIPMENT")
         if (entity is Player) {
@@ -55,12 +55,12 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         } else {
             loadLivingEntity(entity, dataCompound)
         }
-        val afterEvent = EquipmentUpdateEvent.After(entity, dataCompound)
-        afterEvent.call()
-        if (afterEvent.isCancelled) {
+        val postEvent = EquipmentUpdateEvent.Post(entity, dataCompound)
+        postEvent.call()
+        if (postEvent.isCancelled) {
             return dataCompound
         }
-        dataCompound = afterEvent.compound
+        dataCompound = postEvent.data
         equipmentDataManager.register(uuid, dataCompound)
         return dataCompound
     }
