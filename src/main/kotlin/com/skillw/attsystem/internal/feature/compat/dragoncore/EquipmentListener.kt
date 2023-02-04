@@ -3,6 +3,7 @@ package com.skillw.attsystem.internal.feature.compat.dragoncore
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
 import com.skillw.attsystem.internal.feature.listener.update.Update.updateAsync
+import com.skillw.attsystem.internal.manager.ASConfig.dragonCore
 import eos.moe.dragoncore.api.SlotAPI
 import eos.moe.dragoncore.api.event.PlayerSlotUpdateEvent
 import eos.moe.dragoncore.config.Config.slotSettings
@@ -15,6 +16,7 @@ object EquipmentListener {
     @SubscribeEvent(bind = "eos.moe.dragoncore.api.SlotAPI")
     fun e(event: EquipmentUpdateEvent.Pre) {
         val player = event.entity as? Player ?: return
+        if (!dragonCore) return
         val uuid = player.uniqueId
         val attributeItems = SlotAPI.getCacheAllSlotItem(player)
         attributeItems.entries.removeIf { (key, item) ->

@@ -106,6 +106,10 @@ object ASConfig : ConfigManager(AttributeSystem) {
     val germ by lazy {
         Bukkit.getPluginManager().isPluginEnabled("GermPlugin")
     }
+    val dragonCore by lazy {
+        Bukkit.getPluginManager().isPluginEnabled("DragonCore")
+    }
+
     val matrix by lazy {
         Bukkit.getPluginManager().isPluginEnabled("Matrix")
     }
