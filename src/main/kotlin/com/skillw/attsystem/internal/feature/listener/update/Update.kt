@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.feature.listener.update
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.internal.manager.ASConfig.dungeonPlus
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.*
+import org.serverct.ersha.dungeon.DungeonPlus
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submitAsync
@@ -91,6 +93,7 @@ internal object Update {
     @SubscribeEvent
     fun onPlayerDead(event: PlayerDeathEvent) {
         val entity = event.entity
+        if (dungeonPlus && DungeonPlus.dungeonManager.isDungeonWorld(entity)) return
         AttributeSystem.attributeSystemAPI.remove(entity.uniqueId)
     }
 

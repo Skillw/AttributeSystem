@@ -91,8 +91,8 @@ repositories {
 
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.0.0")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
+    compileOnly("com.github.LoneDev6:API-ItemsAdder:3.0.0")
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
     compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
     compileOnly("ink.ptms:nms-all:1.0.0")

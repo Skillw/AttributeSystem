@@ -15,11 +15,9 @@ import org.bukkit.inventory.ItemStack
 import taboolib.common5.Coerce
 import taboolib.common5.cint
 import taboolib.module.nms.getItemTag
-import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
 import taboolib.platform.util.isNotAir
 import taboolib.type.BukkitEquipment
-import java.util.*
 
 @AutoRegister
 object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
@@ -36,16 +34,14 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
         slots.clear()
         for (key in config.keys) {
             val slot: String
-            val requirements = LinkedList<String>()
             val value = config[key]
             if (value is Map<*, *>) {
                 val section = value as Map<String, Any>
                 slot = section["slot"].toString()
-                requirements.addAll(section["requirements"] as List<String>)
             } else {
                 slot = value.toString()
             }
-            slots.register(PlayerSlot(key, slot.uppercase(), requirements))
+            slots.register(PlayerSlot(key, slot.uppercase()))
         }
     }
 
@@ -83,7 +79,7 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
      * @property slotStr 槽位 ( BukkitEquipment 或 数字)
      * @property requirements 槽位物品要求含有的字符串
      */
-    data class PlayerSlot(override val key: String, val slotStr: String, val requirements: List<String>) :
+    data class PlayerSlot(override val key: String, val slotStr: String) :
         Registrable<String> {
         /** Bukkit equipment */
         val bukkitEquipment: BukkitEquipment? =
@@ -102,10 +98,6 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
                 equipmentType.getItem(player)
             } else {
                 player.inventory.getItem(getSlot(player))
-            }?.let { item ->
-                if (requirements.isNotEmpty() && requirements.all { !item.hasLore(it) })
-                    null
-                else item
             }
         }
 

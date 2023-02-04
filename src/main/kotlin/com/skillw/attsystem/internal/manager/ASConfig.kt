@@ -109,6 +109,9 @@ object ASConfig : ConfigManager(AttributeSystem) {
     val dragonCore by lazy {
         Bukkit.getPluginManager().isPluginEnabled("DragonCore")
     }
+    val dungeonPlus by lazy {
+        Bukkit.getPluginManager().isPluginEnabled("DungeonPlus")
+    }
 
     val matrix by lazy {
         Bukkit.getPluginManager().isPluginEnabled("Matrix")
