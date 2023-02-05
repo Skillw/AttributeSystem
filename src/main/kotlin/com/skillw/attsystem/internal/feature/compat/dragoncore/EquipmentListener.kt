@@ -17,8 +17,7 @@ object EquipmentListener {
     fun e(event: EquipmentUpdateEvent.Pre) {
         val player = event.entity as? Player ?: return
         if (!dragonCore) return
-        val uuid = player.uniqueId
-        val attributeItems = SlotAPI.getCacheAllSlotItem(player)
+        val attributeItems = SlotAPI.getCacheAllSlotItem(player) ?: return
         attributeItems.entries.removeIf { (key, item) ->
             !slotSettings.containsKey(
                 key
