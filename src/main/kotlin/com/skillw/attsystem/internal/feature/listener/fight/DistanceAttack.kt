@@ -29,6 +29,24 @@ private object DistanceAttack {
     fun distanceDamage(player: Player, entity: LivingEntity) {
         bypassAntiCheat(player)
         val attackDamage = player.getAttribute(BukkitAttribute.ATTACK_DAMAGE)?.value ?: 0.0
+        val main = player.inventory.itemInMainHand
+        val force = when {
+            //如果无视攻击速度，可以随时攻击，并开启近战蓄力
+            ASConfig.isAttackAnyTime && ASConfig.isAttackForce -> when {
+                //基于AS的冷却系统计算蓄力
+                AttributeSystem.cooldownManager.isItemCoolDown(player, main) -> {
+                    AttributeSystem.cooldownManager.pull(player, main.type)
+                }
+
+                //基于原版伤害计算蓄力
+                else -> {
+                    1.0
+                }
+            }
+            //如果无视攻击速度，可以随时攻击，并关闭近战蓄力
+            !ASConfig.isAttackAnyTime && ASConfig.isAttackForce -> 1.0
+            else -> 1.0
+        }
         if (ASConfig.isDistanceSound) XSound.ENTITY_PLAYER_ATTACK_SWEEP.play(player, 1.0f, 1.0f)
         if (ASConfig.isDistanceEffect) {
             val location = entity.eyeLocation
@@ -37,7 +55,7 @@ private object DistanceAttack {
                 Location(player.world.name, location.x, location.y, location.z)
             )
         }
-        entity.damage(attackDamage.coerceAtLeast(1.0), player)
+        entity.damage(attackDamage.coerceAtLeast(1.0) * force, player)
         recoverAntiCheat(player)
     }
 

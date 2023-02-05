@@ -20,7 +20,7 @@ options:
       attack-force: true
       #蓄力百分比基于冷却
       #若false则为基于原版伤害
-      force-based-cooldown: false
+      force-based-cooldown: true
       #最小蓄力值 若蓄力开启 且 蓄力值小于此值则伤害取消
       min-force: 0.05
       #不冷却的材质
