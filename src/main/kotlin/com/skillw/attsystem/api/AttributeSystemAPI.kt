@@ -14,9 +14,6 @@ import java.util.function.Consumer
  */
 interface AttributeSystemAPI : Manager {
 
-    /** 是否跳过下次战斗组计算 */
-    fun skipNextDamageCal()
-
     /**
      * Entity attack cal
      *

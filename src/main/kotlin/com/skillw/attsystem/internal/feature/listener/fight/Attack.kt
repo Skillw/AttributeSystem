@@ -28,14 +28,12 @@ import taboolib.common.platform.event.EventPriority
 import taboolib.common.platform.event.SubscribeEvent
 import taboolib.common.platform.function.submit
 import taboolib.platform.util.attacker
+import taboolib.platform.util.getMeta
 
 internal object Attack {
     private val isSkillAPIDamage
         get() = ASConfig.skillAPI && Skill.isSkillDamage()
 
-
-    @JvmStatic
-    var nextAttackCal = false
     private fun Entity.force(): Double? =
         if (hasMetadata("ATTRIBUTE_SYSTEM_FORCE")) getMetadata("ATTRIBUTE_SYSTEM_FORCE")[0].asDouble() else null
 
@@ -58,9 +56,7 @@ internal object Attack {
         //是否是EVE (非玩家 打 非玩家)                       如果关闭EVE计算则跳过计算
         if (attacker !is Player && defender !is Player && !eveFightCal) return
 
-        //是否跳过这次计算
-        if (nextAttackCal) {
-            nextAttackCal = false
+        if (attacker.getMeta("doing-skill-damage").firstOrNull()?.asBoolean() == true) {
             return
         }
 

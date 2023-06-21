@@ -1,7 +1,6 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.common
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.internal.manager.AttributeSystemAPIImpl.skipNextDamageCal
 import io.lumine.mythic.api.adapters.AbstractEntity
 import io.lumine.mythic.api.config.MythicLineConfig
 import io.lumine.mythic.api.skills.SkillMetadata
@@ -36,7 +35,6 @@ internal class AttributeDamageV(private val config: MythicLineConfig) :
                         it[entry.key] = entry.value
                     }
                 }
-            skipNextDamageCal()
             doDamage(data, targetAE, damage)
             MythicLogger.debug(
                 MythicLogger.DebugLevel.MECHANIC,
