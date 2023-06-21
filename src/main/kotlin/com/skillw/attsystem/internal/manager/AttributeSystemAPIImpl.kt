@@ -53,6 +53,9 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
         Mirror.mirrorData.clear()
     }
 
+    override fun skipNextDamageCal() {
+    }
+
     @Deprecated("请使用 [runFight] 方法")
     override fun entityAttackCal(
         key: String,
