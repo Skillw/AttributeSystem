@@ -166,7 +166,7 @@ function potion(data, context, damageType) {
         cooldown,
         function (task) {
             Data.remove(attacker.uniqueId + type);
-        },
+        }
     );
     return duration;
 }
