@@ -59,7 +59,7 @@ taboolib {
 
     install("module-metrics")
     classifier = null
-    version = "6.0.10-31"
+    version = "6.0.11-13"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
