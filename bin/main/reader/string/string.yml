@@ -1,0 +1,30 @@
+StrSkip:
+  type: string
+  matchers:
+    value: skip
+  patterns:
+    # 唯一字符串属性: 好耶
+    - '{name}(:|：)?\s?(?<value>.*)'
+  placeholders:
+    total: <value>
+    value: <value>
+StrAppend:
+  type: string
+  matchers:
+    value: append
+  patterns:
+    # 拼接字符串属性: 好耶
+    - '{name}(:|：)?\s?(?<value>.*)'
+  placeholders:
+    total: <value>
+    value: <value>
+StrRoman:
+  type: string
+  matchers:
+    roman: roman_num
+  patterns:
+    # 罗马数字: IV
+    - '{name}(:|：)?\s?(?<roman>[IVXLCDM]+)'
+  placeholders:
+    total: <roman>
+    romanNum: <roman>

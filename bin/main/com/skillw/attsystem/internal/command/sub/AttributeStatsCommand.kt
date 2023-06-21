@@ -1,0 +1,164 @@
+package com.skillw.attsystem.internal.command.sub
+
+import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
+import com.skillw.attsystem.internal.command.ASCommand.soundClick
+import com.skillw.attsystem.internal.command.ASCommand.soundFail
+import com.skillw.attsystem.internal.command.ASCommand.soundSuccess
+import com.skillw.attsystem.internal.manager.ASConfig
+import com.skillw.pouvoir.util.EntityUtils.getEntityRayHit
+import com.skillw.pouvoir.util.PlayerUtils.soundClick
+import com.skillw.pouvoir.util.PlayerUtils.soundFail
+import com.skillw.pouvoir.util.PlayerUtils.soundSuccess
+import org.bukkit.Bukkit
+import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
+import taboolib.common.platform.ProxyCommandSender
+import taboolib.common.platform.ProxyPlayer
+import taboolib.common.platform.command.subCommand
+import taboolib.common.platform.function.adaptPlayer
+import taboolib.common.platform.function.onlinePlayers
+import taboolib.common.platform.function.submitAsync
+import taboolib.module.chat.TellrawJson
+import taboolib.module.chat.colored
+import taboolib.module.lang.sendLang
+import taboolib.module.nms.getI18nName
+import taboolib.module.nms.getName
+import taboolib.platform.util.hasLore
+import taboolib.platform.util.isAir
+import taboolib.platform.util.sendLang
+import java.util.*
+
+object AttributeStatsCommand {
+    val stats = subCommand {
+        dynamic(optional = true) {
+            suggestion<ProxyCommandSender> { sender, _ ->
+                sender.soundClick()
+                onlinePlayers().map { it.name }
+            }
+            execute<ProxyCommandSender> { sender, _, argument ->
+                Bukkit.getPlayer(argument)?.let {
+                    sender.soundSuccess()
+                    submitAsync {
+                        sendStatText(sender, it)
+                    }
+                } ?: run {
+                    sender.soundFail()
+                    sender.sendLang("command-valid-player", argument)
+                    return@execute
+                }
+            }
+        }
+        execute<ProxyPlayer> { sender, _, _ ->
+            submitAsync {
+                sender.soundSuccess()
+                sendStatText(sender, sender.cast())
+            }
+        }
+    }
+
+    val itemstats = subCommand {
+        dynamic {
+            suggestion<ProxyCommandSender> { sender, _ ->
+                sender.soundClick()
+                onlinePlayers().map { it.name }
+            }
+            dynamic {
+                suggestion<Player> { sender, _ ->
+                    sender.soundClick()
+                    AttributeSystem.equipmentDataManager[sender.uniqueId]?.map { it.key }
+                }
+                dynamic {
+                    suggestion<Player> { sender, _ ->
+                        sender.soundClick()
+                        val list = LinkedList<String>()
+                        AttributeSystem.equipmentDataManager[sender.uniqueId]?.values?.forEach { list.addAll(it.keys) }
+                        list
+                    }
+                    execute<Player> { sender, context, argument ->
+                        val player = Bukkit.getPlayer(context.argument(-2))
+                        player ?: run {
+                            sender.sendLang("command-valid-player", context.argument(-2))
+                            return@execute
+                        }
+                        val key = context.argument(-1)
+                        val itemStack = AttributeSystem.equipmentDataManager[player.uniqueId]?.get(key, argument)
+                        itemStack ?: run {
+                            sender.soundFail()
+                            sender.sendLang("command-valid-item")
+                            return@execute
+                        }
+                        if (itemStack.isAir() || !itemStack.hasLore()) return@execute
+                        sender.soundSuccess()
+                        submitAsync {
+                            val attributeDataCompound =
+                                AttributeSystem.equipmentDataManager.readItem(
+                                    itemStack,
+                                    player,
+                                    argument
+                                )
+                            sendStatText(adaptPlayer(sender), player, itemStack.getName(), attributeDataCompound, true)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    val entitystats = subCommand {
+        execute<ProxyPlayer> { sender, _, _ ->
+            val player = sender.cast<Player>()
+            val entity = player.getEntityRayHit(10.0)
+            entity ?: kotlin.run {
+                player.soundFail()
+                sender.sendLang("command-valid-entity")
+                return@execute
+            }
+            player.soundSuccess()
+            submitAsync {
+                sendStatText(sender, entity)
+            }
+        }
+    }
+
+    private fun attributeStatusToJson(
+        attributeDataCompound: AttributeDataCompound,
+        livingEntity: LivingEntity,
+        item: Boolean = false,
+    ): LinkedList<TellrawJson> {
+        val attributes = AttributeSystem.attributeManager.attributes
+        val list = LinkedList<TellrawJson>()
+        for (index in attributes.indices) {
+            val attribute = attributes[index]
+            if (!attribute.entity && item) continue
+            val status = attributeDataCompound.getStatus(attribute) ?: continue
+            val json = attribute.readPattern.stat(
+                attribute,
+                status,
+                livingEntity
+            )
+            list.add(json)
+        }
+        return list
+    }
+
+    private fun sendStatText(
+        sender: ProxyCommandSender,
+        entity: LivingEntity,
+        name: String = (entity as? Player)?.displayName
+            ?: ((if (entity.customName == null) entity.getI18nName() else entity.customName) ?: "null"),
+        attributeDataCompound: AttributeDataCompound = AttributeSystem.attributeDataManager[entity.uniqueId]
+            ?: AttributeDataCompound(),
+        item: Boolean = false,
+    ) {
+        val title = ASConfig.statsTitle.replace("{name}", name).replace("{player}", name).colored()
+        sender.sendMessage(" ")
+        sender.sendMessage(title)
+        sender.sendMessage(" ")
+        attributeStatusToJson(attributeDataCompound, entity, item).forEach {
+            it.sendTo(sender)
+        }
+        sender.sendMessage(" ")
+        sender.sendLang("stats-end")
+    }
+}

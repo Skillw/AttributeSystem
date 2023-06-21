@@ -1,0 +1,46 @@
+Default:
+  type: number
+  matchers:
+    #左边是捕获组id 右边是运算操作
+    #运算操作:
+    #- plus 加
+    #- max 取最大
+    #- min 取最小
+    #- reduce 减
+    #- scalar 乘
+    percentMax: plus
+    percentMin: plus
+    valueMin: plus
+    valueMax: plus
+    percent: plus
+    value: plus
+    scalar: scalar
+  #匹配模式(正则)
+  #从上到下先后匹配
+  #特殊字符要转义
+  patterns:
+    # 攻击力: 11-23(%)
+    - '{name}(:|：)?\s?<percentMin>-<percentMax>\(%\)'
+    # 攻击力: 10-20
+    - "{name}(:|：)?\\s?<valueMin>-<valueMax>"
+    # 攻击力: 10(%)
+    - '{name}(:|：)?\s?<percent>\(%\)'
+    # 攻击力: 100  /  攻击力 100
+    - "{name}(:|：)?\\s?<value>"
+    #  攻击力*10
+    - '{name}\*<scalar>'
+  #变量(PAPI / PouPAPI)
+  #调用变量格式: %as_att:属性ID_下面的id%
+  placeholders:
+    #占位符id
+    #可带入捕获组的值
+    total: "( <value> + {random <valueMin> to <valueMax>})*(1+(<percent>/100 + {random <percentMin> to <percentMax>} /100)) * { if check <scalar> == 0 then 1 else <scalar> }"
+    scalar: <scalar>
+    value: <value>
+    percent: <percent>/100
+    valueMin: <valueMin>
+    valueMax: <valueMax>
+    percentMin: <percentMin>/100
+    percentMax: <percentMax>/100
+    valueRandom: <value> + {random <valueMin> to <valueMax>}
+    percentRandom: (<percent>/100 + {random <percentMin> to <percentMax>}/100)

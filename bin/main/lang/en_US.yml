@@ -1,0 +1,90 @@
+prefix: '&d[&9AttributeSystem&d] '
+equipment-type-error: '&d[&9AttributeSystem&d] &6{0} &cis not a slot type!'
+
+command-reload: '&d[&9AttributeSystem&d] &aReloaded!'
+command-info:
+  - '&f&m─&6&m──────────────────────────────────&6&f&m─'
+  - ' &9Command List:'
+  - '  &6/as'
+  - '    &d- &ehelp &5—— &aShow help.'
+  - '    &d- &einfo &5—— &aShow info.'
+  - '    &d- &estats (Player) &5—— &aShow the stats.'
+  - '    &d- &eitemstats [Player] [key] [slot] &5—— &aShow the stats of a item&e.'
+  - '    &d- &eentitystats &5—— &aShow the stats of the entity you look at.'
+  - '    &d- &epersonal [Type] [Sub Type] &5—— &aSet where does the info show.'
+  - '    &d- &ereport &5—— &aCheck Mirror Data.'
+  - '    &d- &eclear &5—— &aClear Mirror Data.'
+  - '    &d- &ereload &5—— &aReload.'
+  - '&f&m─&6&m──────────────────────────────────&6&f&m─'
+command-personal: '&d[&9AttributeSystem&d] &eYour &6{0} &eis changed to &b{1} &e!'
+command-valid-player: '&d[&9AttributeSystem&d] &cThe player &6{0} &cdosen t exist!'
+command-valid-item: '&d[&9AttributeSystem&d] &cThe item is not exists!'
+command-valid-entity: '&d[&9AttributeSystem&d] &cYou have to look at a Entity!'
+command-disable-warning: '&d[&9AttributeSystem&d] &cAre you sure to disable &9AttributeSystem &c? Type &6/as disable confirm &cif you really wanna disable it! &4:('
+command-disable: '&d[&9AttributeSystem&d] &cYou disabled &9AttributeSystem &c！Please stop the server then delete this plugin &4:('
+
+fight-in: '&d[&9AttributeSystem&d] &eInto fighting!'
+fight-out: '&d[&9AttributeSystem&d] &eOut of fighting!'
+
+
+disable-damage-type: '&d[&9AttributeSystem&d] &cYou can t attack with &6{0} &c!'
+wrong-command: '&d[&9AttributeSystem&d] &cWrong command!'
+wrong-sender: '&d[&9AttributeSystem&d] &cWrong sender!'
+command-clear: '&d[&9AttributeSystem&d] &aMirrorData has been cleared!'
+
+group-reader-register: '&d[&9AttributeSystem&d] &aRead Group &6{0} &7[&f{1}&7] &ahas been registered!'
+group-reader-unregister: '&d[&9AttributeSystem&d] &cRead Group &6{0} &7[&f{1}&7] &chas been unregistered!'
+attribute-register: '&d[&9AttributeSystem&d] &aAttribute &6{0} &7[&f{1}&7] &ahas been registered!'
+attribute-unregister: '&d[&9AttributeSystem&d] &cAttribute &6{0} &7[&f{1}&7] &chas been unregistered!'
+
+annotation-mechanic-register: '&d[&9AttributeSystem&d] &aMechanic &6{0} &ahas been registered!'
+annotation-mechanic-unregister: '&d[&9AttributeSystem&d] &cMechanic &6{0} &chas been unregistered!'
+annotation-condition-register: '&d[&9AttributeSystem&d] &aCondition &6{0} &ahas been registered!'
+annotation-condition-unregister: '&d[&9AttributeSystem&d] &cCondition &6{0} &chas been unregistered!'
+annotation-string-operation-register: '&d[&9AttributeSystem&d] &aString Operation &6{0} &ahas been registered!'
+annotation-string-operation-unregister: '&d[&9AttributeSystem&d] &cString Operation &6{0} &chas been unregistered!'
+annotation-number-operation-register: '&d[&9AttributeSystem&d] &aNumber Operation &6{0} &ahas been registered!'
+annotation-number-operation-unregister: '&d[&9AttributeSystem&d] &cNumber Operation &6{0} &chas been unregistered!'
+annotation-read-pattern-register: '&d[&9AttributeSystem&d] &aRead Pattern &6{0} &ahas been registered!'
+annotation-read-pattern-unregister: '&d[&9AttributeSystem&d] &cRead Pattern &6{0} &chas been unregistered!'
+annotation-message-type-register: '&d[&9AttributeSystem&d] &aMessage Type &6{0} &ahas been registered!'
+annotation-message-type-unregister: '&d[&9AttributeSystem&d] &cMessage Type &6{0} &chas been unregistered!'
+
+stats-title: '  &f&m─&7&m─────────&f&m─&fAttribute Status&f&m─&7&m─────────&f&m─'
+stats-attribute-format: '&7        &7{name} &f>&7>&8> &c{value} '
+stats-status: 'Status:'
+stats-status-value: '{key} = {value}'
+stats-status-none: 'None'
+stats-status-placeholder: 'Placeholder:'
+stats-status-placeholder-value: '{key} = {value}'
+stats-end: '  &f&m─&7&m───────────────────────────&7&f&m─'
+
+fight-info: "&b&lFight Info:"
+fight-info-key: "&6Fight Key: &4{0}"
+fight-info-attacker: "&7Attacker: &c{0}"
+fight-info-defender: "&7Defender: &c{0}"
+fight-info-damage-type: " &8-> &eDamageType: &6{0}"
+fight-info-mechanic: "   &7- &5Machine: &c{0}"
+fight-info-mechanic-return: "     &5return: &6{0}"
+fight-info-usable-vars: "  &7- &dUsable variables:"
+fight-info-message: "  &7- &dMessage:"
+fight-info-result: "&7Result: &c{0}"
+
+error-read-group: '&d[&9AttributeSystem&d] &cAn error occurred while loading NumberReader &6{0} &c!'
+error-read-group-cause: '&d[&9AttributeSystem&d] &cCause: &f{0}'
+invalid-read-pattern: '&d[&9AttributeSystem&d] &cThe ReadPattern &b{1} &cof Attribute &6{0} &cdoes not exist!'
+invalid-damage-type: '&d[&9AttributeSystem&d] &cThe DamageType is null in &6{0}&c!'
+invalid-mechanic: '&d[&9AttributeSystem&d] &cThe Mechanic is null in &6{0}&c!'
+invalid-attribute: '&d[&9AttributeSystem&d] &cThe Attribute is null! &6{0}'
+
+read-restrict-numeric: "&d[&9AttributeSystem&d] &cThe value &d{0} &cin &6{1} &cmust be a Numeric!"
+
+type-TITLE: 'Title'
+type-ACTION-BAR: 'ActionBar'
+type-CHAT: 'Chat'
+type-HOLO: 'Holo text'
+type-DISABLE: 'Disable'
+
+attacking-message-type: 'Attacking MessageType'
+defensive-message-type: 'Defensive MessageType'
+health-regain-type: 'Health Regain MessageType'

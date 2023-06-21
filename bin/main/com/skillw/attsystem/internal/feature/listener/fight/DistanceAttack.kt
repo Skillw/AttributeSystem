@@ -5,7 +5,6 @@ import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.attsystem.internal.manager.ASConfig.creativeDistance
 import com.skillw.attsystem.internal.manager.ASConfig.defaultDistance
 import com.skillw.attsystem.internal.manager.RealizeManagerImpl.ATTACK_DISTANCE
-import com.skillw.attsystem.internal.manager.RealizeManagerImpl.ATTACK_SPEED
 import com.skillw.attsystem.internal.manager.RealizeManagerImpl.getAttribute
 import com.skillw.attsystem.util.AntiCheatUtils.bypassAntiCheat
 import com.skillw.attsystem.util.AntiCheatUtils.recoverAntiCheat
@@ -33,10 +32,16 @@ private object DistanceAttack {
         val main = player.inventory.itemInMainHand
         val force = when {
             //如果无视攻击速度，可以随时攻击，并开启近战蓄力
-            ASConfig.isAttackAnyTime && ASConfig.isAttackForce -> {
-                if (AttributeSystem.cooldownManager.isItemCoolDown(player, main)) {
+            ASConfig.isAttackAnyTime && ASConfig.isAttackForce -> when {
+                //基于AS的冷却系统计算蓄力
+                AttributeSystem.cooldownManager.isItemCoolDown(player, main) -> {
                     AttributeSystem.cooldownManager.pull(player, main.type)
-                } else 1.0
+                }
+
+                //基于原版伤害计算蓄力
+                else -> {
+                    1.0
+                }
             }
             //如果无视攻击速度，可以随时攻击，并关闭近战蓄力
             !ASConfig.isAttackAnyTime && ASConfig.isAttackForce -> 1.0
@@ -50,12 +55,6 @@ private object DistanceAttack {
                 Location(player.world.name, location.x, location.y, location.z)
             )
         }
-        //让玩家的武器冷却的
-        AttributeSystem.cooldownManager.setItemCoolDown(
-            player,
-            main,
-            AttributeSystem.formulaManager[player.uniqueId, ATTACK_SPEED]
-        )
         entity.damage(attackDamage.coerceAtLeast(1.0) * force, player)
         recoverAntiCheat(player)
     }

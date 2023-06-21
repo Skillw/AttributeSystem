@@ -1,0 +1,46 @@
+# 在这里的属性 重载即可注册
+# AttributeSystem没有脚本属性，
+# 在AttributeSystem里，属性与其功能的实现是完全分开的
+# 你可以通过修改各种公式乃至自定义机制，注册脚本监听器来实现属性的功能
+#ID
+ExampleAtt:
+  #权重  不填默认0
+  priority: 1
+  #是否会计算到实体属性上  不填默认true
+  include-entity: true
+  #展示名  不填默认names的第一个
+  display: "示例属性"
+  #名称  不填默认是key
+  names:
+    - "示例属性"
+    - "示例属性2"
+    - "示例属性3"
+  #读取组 不填默认Default
+  read-pattern: Default
+  #属性映射
+  map:
+    #其他属性, 这里格式和NBT属性一样
+    PhysicalDamage:
+      #其他属性的捕获组
+      #后面可以通过 <占位符公式id> 调用本属性读取组的占位符公式
+      #就像这样: <total>
+      #支持内联函数与占位符
+      value: |-
+        type double '<total>'
+
+#快速声明一个属性
+快速属性: { }
+
+
+#下面是字符串属性，感兴趣的可以看看
+StringAtt:
+  names: [ "唯一字符串属性" ]
+  read-pattern: StrSkip
+
+StringAppendAtt:
+  names: [ "拼接字符串属性" ]
+  read-pattern: StrAppend
+
+RomenAtt:
+  names: [ "罗马数字" ]
+  read-pattern: StrRoman
