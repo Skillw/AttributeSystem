@@ -103,14 +103,26 @@ internal object Attack {
                 isAttackAnyTime && isAttackForce -> when {
                     //基于AS的冷却系统计算蓄力
                     forceBasedCooldown -> {
-                        cooldownManager.pull(attacker, main.type)
+                        cooldownManager.pull(attacker, main.type).also {
+                            //Fix 距离攻击连点满蓄力BUG:
+                            //pull完cooldown，还没执行到冷却玩家攻击的代码段，玩家就再次攻击了
+                            //至于为什么 距离攻击 中的处理会执行的这么慢:
+                            //  距离攻击中使用了 Entity#damage 函数让玩家对实体造成伤害
+                            //  最慢需要n个tick (n*50ms)后，这个EventHandler才会处理，造成玩家冷却延迟
+                            //因此在这里在pull时就冷却一下
+                            cooldownManager.setItemCoolDown(
+                                attacker,
+                                attacker.inventory.itemInMainHand,
+                                formulaManager[attacker.uniqueId, ATTACK_SPEED]
+                            )
+                        }
                     }
 
                     //基于原版伤害计算蓄力
                     else -> {
-                        attacker.getAttribute(BukkitAttribute.ATTACK_DAMAGE)?.value?.let { attackDamage ->
+                        (attacker.getAttribute(BukkitAttribute.ATTACK_DAMAGE)?.value?.let { attackDamage ->
                             event.getOriginalDamage(EntityDamageEvent.DamageModifier.BASE) / attackDamage
-                        } ?: 1.0
+                        } ?: 1.0)
                     }
                 }
                 //如果无视攻击速度，可以随时攻击，并关闭近战蓄力
