@@ -7,6 +7,7 @@ import com.skillw.attsystem.api.event.HealthRegainEvent
 import com.skillw.attsystem.api.fight.FightData
 import com.skillw.attsystem.api.manager.RealizeManager
 import com.skillw.attsystem.internal.feature.message.ASHologramGroup
+import com.skillw.attsystem.internal.manager.ASConfig.defaultMaxHealth
 import com.skillw.attsystem.internal.manager.ASConfig.disableRegainOnFight
 import com.skillw.attsystem.internal.manager.ASConfig.isVanillaAttackSpeed
 import com.skillw.attsystem.internal.manager.ASConfig.isVanillaMaxHealth
@@ -19,6 +20,7 @@ import com.skillw.pouvoir.api.PouvoirAPI.placeholder
 import com.skillw.pouvoir.api.map.BaseMap
 import com.skillw.pouvoir.util.EntityUtils.isAlive
 import com.skillw.pouvoir.util.EntityUtils.livingEntity
+import com.skillw.pouvoir.util.GsonUtils.encodeJson
 import com.skillw.pouvoir.util.MapUtils.put
 import com.skillw.pouvoir.util.NumberUtils.format
 import com.sucy.skill.SkillAPI
@@ -28,9 +30,11 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.Entity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
+import taboolib.common.platform.function.isPrimaryThread
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 import taboolib.common.platform.service.PlatformExecutor
+import taboolib.common.util.sync
 import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.library.reflex.Reflex.Companion.invokeMethod
 import taboolib.module.nms.MinecraftVersion
@@ -83,7 +87,7 @@ object RealizeManagerImpl : RealizeManager() {
                 if (fightStatusManager.isFighting(entity) && disableRegainOnFight) continue
                 val healthRegain = calRegain(entity)
                 if (healthRegain <= 0) continue
-                if (entity is Player && AttributeSystem.personalManager[uuid]?.regainHolo == true) submitAsync {
+                if (entity is Player && AttributeSystem.personalManager.getPreference(uuid).regainHolo) submitAsync {
                     val section =
                         ASConfig["message"].getConfigurationSection("health-regain-holo") ?: return@submitAsync
                     val text =
@@ -148,33 +152,47 @@ object RealizeManagerImpl : RealizeManager() {
     }
 
     private fun realizeHealth(entity: LivingEntity) {
-        val maxHealthValue = formulaManager[entity, MAX_HEALTH]
+        var maxHealthValue = formulaManager[entity, MAX_HEALTH]
         if (maxHealthValue < 0) return
-        val maxHealth = maxHealthValue + if (entity is Player) getSkillAPIHealth(entity).toDouble() else 0.0
-        if (isVanillaMaxHealth)
-            realizeAttribute(entity, BukkitAttribute.MAX_HEALTH, maxHealth, true)
-        else entity.maxHealth = if (maxHealth <= 0.0) return else maxHealth
+        maxHealthValue += if (entity is Player) getSkillAPIHealth(entity).toDouble() else 0.0
+        if (isVanillaMaxHealth || entity !is Player)
+            realizeAttribute(entity, BukkitAttribute.MAX_HEALTH, maxHealthValue, true)
+        else {
+            entity.apply {
+                getAttribute(BukkitAttribute.MAX_HEALTH)?.apply {
+                    clear()
+                }
+                maxHealthValue += defaultMaxHealth
+                maxHealth = if (maxHealthValue < 0.0) return else maxHealthValue
+            }
+        }
     }
 
+
+    private fun realizeAll(entity: LivingEntity) {
+        realizeHealth(entity)
+
+        val movementSpeed = formulaManager[entity, MOVEMENT_SPEED]
+        entity.setWalkSpeed(movementSpeed)
+
+        val knockbackResistance = formulaManager[entity, KNOCKBACK_RESISTANCE]
+        realizeAttribute(entity, BukkitAttribute.KNOCKBACK_RESISTANCE, knockbackResistance)
+
+        if (entity !is Player) return
+        realizeAttackSpeed(entity)
+
+        val luck = formulaManager[entity, LUCK]
+        realizeAttribute(entity, BukkitAttribute.LUCK, luck)
+    }
 
     override fun realize(entity: Entity) {
         if (!entity.isAlive()) return
         entity as LivingEntity
         if (entity is Player) bypassAntiCheat(entity)
-        submit {
-            realizeHealth(entity)
-
-            val movementSpeed = formulaManager[entity, MOVEMENT_SPEED]
-            entity.setWalkSpeed(movementSpeed)
-
-            val knockbackResistance = formulaManager[entity, KNOCKBACK_RESISTANCE]
-            realizeAttribute(entity, BukkitAttribute.KNOCKBACK_RESISTANCE, knockbackResistance)
-
-            if (entity !is Player) return@submit
-            realizeAttackSpeed(entity)
-
-            val luck = formulaManager[entity, LUCK]
-            realizeAttribute(entity, BukkitAttribute.LUCK, luck)
+        if (isPrimaryThread) {
+            realizeAll(entity)
+        } else {
+            sync { realizeAll(entity) }
         }
         if (entity is Player) recoverAntiCheat(entity)
     }
@@ -218,6 +236,9 @@ object RealizeManagerImpl : RealizeManager() {
         } else {
             return this.getAttribute(bukkitAttribute.toBukkit() ?: return null)
         }
+    }
+    fun AttributeInstance.toFormatString() : String{
+       return linkedMapOf("default" to defaultValue,"base" to baseValue, "modifiers" to modifiers.map { it.serialize() }, "total" to value).encodeJson()
     }
 
     override fun onActive() {

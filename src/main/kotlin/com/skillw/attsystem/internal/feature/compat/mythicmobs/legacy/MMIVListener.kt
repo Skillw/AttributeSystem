@@ -6,9 +6,13 @@ import com.skillw.attsystem.internal.manager.ASConfig
 import io.lumine.xikage.mythicmobs.MythicMobs
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent
+import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.Ghost
+import taboolib.common.platform.event.EventPriority
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.submit
+import taboolib.platform.util.setMeta
 
 internal object MMIVListener {
     @Ghost
@@ -29,7 +33,10 @@ internal object MMIVListener {
     @SubscribeEvent
     fun onMythicMobsSpawn(event: MythicMobSpawnEvent) {
         val entity = event.entity as? LivingEntity ?: return
-        AttributeSystem.attributeSystemAPI.update(entity)
+        submit(delay = 5) {
+            AttributeSystem.attributeSystemAPI.update(entity)
+            entity.health = entity.maxHealth
+        }
     }
 
     @SubscribeEvent
@@ -37,7 +44,7 @@ internal object MMIVListener {
         if (!ASConfig.mythicMobsIV) return
         val entity = event.entity
         if (entity !is LivingEntity) return
-        MythicMobs.inst().mobManager.getMythicMobInstance(entity)?.let { mob ->
+        MythicMobs.inst().mobManager.getMythicMobInstance(entity)?.also { mob ->
             val config = mob.type.config
             if (!config.isList("Attributes")) return
             val attributes = config.getStringList("Attributes")

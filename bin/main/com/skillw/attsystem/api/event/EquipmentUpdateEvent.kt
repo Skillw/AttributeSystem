@@ -12,7 +12,7 @@ class EquipmentUpdateEvent {
      * @property entity 实体
      * @property data 装备数据集
      */
-    class Pre(
+    class Before(
         val entity: Entity,
         val data: EquipmentDataCompound,
     ) : BukkitProxyEvent() {
@@ -26,7 +26,7 @@ class EquipmentUpdateEvent {
      * @property entity 实体
      * @property data 装备数据集
      */
-    class Post(
+    class After(
         val entity: Entity,
         val data: EquipmentDataCompound,
     ) : BukkitProxyEvent() {

@@ -39,8 +39,7 @@ class DamageType(override val key: String, val name: String, messages: Map<Strin
      * @return 攻击消息
      */
     fun attackMessage(player: Player, fightData: FightData, first: Boolean = false): Message? {
-        return AttributeSystem.messageBuilderManager.attack[AttributeSystem.personalManager[player.uniqueId]?.attacking
-            ?: "disable"]?.build(this, fightData, first, Message.Type.ATTACK)
+        return AttributeSystem.messageBuilderManager.attack[AttributeSystem.personalManager.getPreference(player.uniqueId).attacking]?.build(this, fightData, first, Message.Type.ATTACK)
 
     }
 
@@ -53,8 +52,7 @@ class DamageType(override val key: String, val name: String, messages: Map<Strin
      * @return
      */
     fun defendMessage(player: Player, fightData: FightData, first: Boolean = false): Message? {
-        return AttributeSystem.messageBuilderManager.defend[AttributeSystem.personalManager[player.uniqueId]?.defensive
-            ?: "disable"]?.build(this, fightData, first, Message.Type.DEFEND)
+        return AttributeSystem.messageBuilderManager.defend[AttributeSystem.personalManager.getPreference(player.uniqueId).defensive]?.build(this, fightData, first, Message.Type.DEFEND)
     }
 
 

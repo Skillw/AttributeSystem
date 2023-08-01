@@ -11,6 +11,7 @@ import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.event.AttributeUpdateEvent
 import com.skillw.attsystem.api.manager.AttributeDataManager
+import com.skillw.attsystem.internal.manager.PersonalManagerImpl.pullInitialAttrData
 import com.skillw.pouvoir.util.EntityUtils.isAlive
 import com.skillw.pouvoir.util.EntityUtils.livingEntity
 import org.bukkit.entity.LivingEntity
@@ -25,12 +26,12 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     override val priority: Int = 3
     override val subPouvoir = AttributeSystem
 
-    private var task:
+    private var clearTask:
             PlatformExecutor.PlatformTask? = null
 
     private fun clearTask() {
-        task?.cancel()
-        task = submit(period = configManager.attributeClearSchedule) {
+        clearTask?.cancel()
+        clearTask = submit(period = configManager.attributeClearSchedule) {
             attributeDataManager.keys.forEach {
                 val livingEntity = it.livingEntity()
                 if (livingEntity?.isValid != true || it.livingEntity()?.isDead != false) {
@@ -56,7 +57,9 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     }
 
     override fun get(key: UUID): AttributeDataCompound? {
-        return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) }
+        return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) } ?: pullInitialAttrData(
+            key
+        )?.compound
     }
 
     override fun update(entity: LivingEntity): AttributeDataCompound? {
@@ -104,43 +107,25 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         return attrData
     }
 
-    override fun addAttribute(
+    override fun addAttrData(
         entity: LivingEntity,
         key: String,
         attributes: Collection<String>,
-        release: Boolean,
-    ): AttributeData {
-        return this.addAttribute(entity.uniqueId, key, attributes, release)
+
+        ): AttributeData {
+        return this.addAttrData(entity.uniqueId, key, attributes)
     }
 
-    override fun addAttribute(
+    override fun addAttrData(
         entity: LivingEntity,
         key: String,
         attributeData: AttributeData,
-        release: Boolean,
-    ): AttributeData {
-        return this.addAttribute(entity.uniqueId, key, attributeData, release)
-    }
 
-    override fun addAttribute(
-        uuid: UUID,
-        key: String,
-        attributes: Collection<String>,
-        release: Boolean,
-    ): AttributeData {
-        return this.addAttribute(
-            uuid,
-            key,
-            attributeSystemAPI.read(attributes, uuid.livingEntity()),
-            release
-        )
-    }
-
-    override fun addAttribute(uuid: UUID, key: String, attributeData: AttributeData, release: Boolean): AttributeData {
-        if (!uuid.isAlive()) {
+        ): AttributeData {
+        if (!entity.isAlive()) {
             return attributeData
         }
-        attributeData.release = release
+        val uuid = entity.uniqueId
         if (attributeDataManager.containsKey(uuid)) {
             attributeDataManager[uuid]!!.register(key, attributeData)
         } else {
@@ -151,16 +136,34 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         return attributeData
     }
 
-    override fun removeAttribute(entity: LivingEntity, key: String) {
-        removeAttribute(entity.uniqueId, key)
+    override fun addAttrData(
+        uuid: UUID,
+        key: String,
+        attributes: Collection<String>,
+
+        ): AttributeData {
+        return this.addAttrData(
+            uuid,
+            key,
+            attributeSystemAPI.read(attributes, uuid.livingEntity())
+        )
     }
 
-    override fun removeAttribute(uuid: UUID, key: String) {
-        if (!uuid.isAlive()) return
-        if (attributeDataManager.containsKey(uuid)) {
-            attributeDataManager[uuid]!!.remove(key)
+    override fun addAttrData(uuid: UUID, key: String, attributeData: AttributeData): AttributeData {
+        return uuid.livingEntity()?.let { addAttrData(it, key, attributeData) } ?: AttributeData()
+    }
+
+    override fun removeAttrData(entity: LivingEntity, key: String) {
+        if (!entity.isAlive()) return
+        attributeDataManager[entity.uniqueId]?.run {
+            remove(key)
         }
     }
+
+    override fun removeAttrData(uuid: UUID, key: String) {
+        uuid.livingEntity()?.let { removeAttrData(it, key) }
+    }
+
 
     override fun put(key: UUID, value: AttributeDataCompound): AttributeDataCompound? {
         return super.put(key, value)?.apply { entity = key.livingEntity() }

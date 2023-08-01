@@ -80,21 +80,21 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
         }
         val messageData = MessageData()
         return mirrorNow("fight-$key-cal") {
-            val pre = FightEvent.Post(key, fightData)
+            val pre = FightEvent.Pre(key, fightData)
             pre.call()
             if (pre.isCancelled) return@mirrorNow -0.1
             val eventFightData = pre.fightData
             AttributeSystem.fightGroupManager[key]!!.run(eventFightData)
             if (message)
                 messageData.addAll(eventFightData.messageData)
-            val after = FightEvent.After(key, eventFightData)
-            after.call()
-            if (after.isCancelled) return@mirrorNow -0.1
+            val post = FightEvent.Post(key, eventFightData)
+            post.call()
+            if (post.isCancelled) return@mirrorNow -0.1
             if (message)
                 submitAsync {
                     messageData.send(fightData.attacker as? Player?, fightData.defender as? Player?)
                 }
-            after.fightData.calResult()
+            post.fightData.calResult()
         }
     }
 
@@ -125,8 +125,9 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
                 return@mirrorNow attributeData
             }
             strings@ for (string in strings) {
-                if (ignores.any { string.uncolored().contains(it) }) continue
-                val matcher = ASConfig.lineConditionPattern.matcher(string)
+                var toRead = string
+                if (ignores.any { toRead.uncolored().contains(it) }) continue
+                val matcher = ASConfig.lineConditionPattern.matcher(toRead)
                 if (matcher.find()) {
                     try {
                         val requirements = matcher.group("requirement")
@@ -134,11 +135,13 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
                     } catch (_: IllegalStateException) {
                     } catch (_: IllegalArgumentException) {
                     }
+                    toRead = matcher.replaceAll("")
                 }
+
                 att@ for (attribute in AttributeSystem.attributeManager.attributes) {
                     val read = attribute.readPattern
                     if (read !is ReadGroup<*>) continue
-                    val status = read.read(string, attribute, entity, slot)
+                    val status = read.read(toRead, attribute, entity, slot)
                     if (status != null) {
                         attributeData.operation(attribute, status)
                         continue@strings
@@ -154,6 +157,9 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
     override fun update(entity: LivingEntity) {
         if (!entity.isAlive()) return
         AttributeSystem.equipmentDataManager.update(entity)
+        //第一次更新无条件的属性
+        AttributeSystem.attributeDataManager.update(entity)
+        //第一次更新有条件的属性（有些条件是以其它属性为基础）
         AttributeSystem.attributeDataManager.update(entity)
         AttributeSystem.realizeManager.realize(entity)
     }

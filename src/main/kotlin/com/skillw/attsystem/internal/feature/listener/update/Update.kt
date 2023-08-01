@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.feature.listener.update
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.api.event.FightEvent
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
@@ -16,14 +17,15 @@ import taboolib.common5.Baffle
 import java.util.concurrent.TimeUnit
 
 internal object Update {
-    private val baffle = Baffle.of(50, TimeUnit.MILLISECONDS)
+
+
+    internal val baffle = Baffle.of(200, TimeUnit.MILLISECONDS)
     internal fun LivingEntity.updateAsync(delay: Long = 0) {
-        if (baffle.hasNext(name))
+        if (baffle.hasNext(uniqueId.toString()))
             submitAsync(delay = delay) { updateAttr() }
     }
-
     @SubscribeEvent
-    fun onPlayerRespawn(event: PlayerJoinEvent) {
+    fun onPlayerJoin(event: PlayerJoinEvent) {
         event.player.updateAsync(2)
     }
 
@@ -89,5 +91,11 @@ internal object Update {
         val player = event.player
         AttributeSystem.attributeSystemAPI.remove(player.uniqueId)
         baffle.reset(player.name)
+    }
+
+    @SubscribeEvent
+    fun fightPost(event: FightEvent.Post){
+        (event.fightData.attacker as? Player?)?.updateAsync()
+        (event.fightData.defender as? Player?)?.updateAsync()
     }
 }

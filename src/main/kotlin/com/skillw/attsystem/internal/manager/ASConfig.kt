@@ -19,6 +19,7 @@ import taboolib.common.platform.function.submit
 import taboolib.library.xseries.XMaterial
 import taboolib.module.lang.asLangText
 import taboolib.module.metrics.charts.SingleLineChart
+import taboolib.module.nms.MinecraftVersion
 import java.io.File
 import java.util.*
 import java.util.function.Function
@@ -30,10 +31,10 @@ object ASConfig : ConfigManager(AttributeSystem) {
     val ignores: List<String>
         get() = this["config"].getStringList("options.attribute.ignores")
 
-    var lineConditionPattern: Pattern = Pattern.compile("options.attribute.line-condition.format")
+    var lineConditionPattern: Pattern = Pattern.compile("")
 
     private val lineConditionFormat: String
-        get() = this["config"].getString("options.attribute.line-condition.format") ?: ".*\\/(?<requirement>.*)"
+        get() = this["config"].getString("options.attribute.line-condition.format")?.replace(".*\\/(?<requirement>.*)","(?=.*)\\/(?<requirement>.*)") ?: "(?=.*)\\/(?<requirement>.*)"
     val lineConditionSeparator: String
         get() = this["config"].getString("options.attribute.line-condition.separator") ?: ","
 
@@ -199,8 +200,8 @@ object ASConfig : ConfigManager(AttributeSystem) {
     }
 
     private val scripts = File(getDataFolder(), "scripts")
-    val isPersonalEnable
-        get() = this["message"].getBoolean("options.personal")
+    val isPreferenceEnable
+        get() = this["message"].getBoolean("options.personal") || this["message"].getBoolean("options.preference")
 
     val defaultAttackMessageType: String
         get() = (this["message"].getString("options.default.attack") ?: "HOLO").uppercase()
@@ -210,8 +211,6 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     val defaultRegainHolo: Boolean
         get() = this["message"].getBoolean("options.default.health-regain-holo")
-
-
     val disableRegainOnFight: Boolean
         get() = this["config"].getBoolean("options.fight.disable-regain-on-fight")
 
@@ -226,6 +225,10 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     val isVanillaMaxHealth: Boolean
         get() = this["config"].getBoolean("options.fight.vanilla-max-health")
+
+    val defaultMaxHealth: Double
+        get() = this["config"].getDouble("options.fight.default-player-max-health",20.0)
+
     val isVanillaMovementSpeed: Boolean
         get() = this["config"].getBoolean("options.fight.vanilla-movement-speed")
     val isVanillaAttackSpeed: Boolean

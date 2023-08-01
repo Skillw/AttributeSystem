@@ -2,7 +2,7 @@ import java.net.URL
 
 plugins {
     `java-library`
-    id("io.izzel.taboolib") version "1.51"
+    id("io.izzel.taboolib") version "1.56"
     id("org.jetbrains.kotlin.jvm") version "1.6.10"
     id("org.jetbrains.dokka") version "1.6.10"
 }
@@ -38,8 +38,8 @@ taboolib {
         dependencies {
             name("Pouvoir")
             name("GermPlugin").optional(true)
-            name("DragonCore").optional(true)
             name("SkillAPI").optional(true)
+            name("DragonCore").optional(true)
             name("Magic").optional(true)
             name("MythicMobs").optional(true)
 
@@ -59,7 +59,7 @@ taboolib {
 
     install("module-metrics")
     classifier = null
-    version = "6.0.11-13"
+    version = "6.0.11-31"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

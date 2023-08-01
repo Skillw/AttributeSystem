@@ -16,7 +16,7 @@ class MechanicRunEvent {
      * @property damageType 伤害类型
      * @property result 机制运行结果
      */
-    class Post(
+    class Pre(
         val mechanic: Mechanic,
         val fightData: FightData,
         val context: Map<String, Any>,

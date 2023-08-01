@@ -40,7 +40,7 @@ abstract class Mechanic(override val key: String) :
      * @return 返回值
      */
     fun run(fightData: FightData, context: Map<String, Any>, damageType: DamageType): Any? {
-        val pre = MechanicRunEvent.Post(this, fightData, context, damageType, null)
+        val pre = MechanicRunEvent.Pre(this, fightData, context, damageType, null)
         if (pre.isCancelled) return null
         val result = exec(fightData, context, damageType)
         val after = MechanicRunEvent.After(this, fightData, context, damageType, result)

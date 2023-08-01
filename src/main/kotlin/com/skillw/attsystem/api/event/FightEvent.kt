@@ -11,7 +11,7 @@ class FightEvent {
      * @property key 战斗组键
      * @property fightData 战斗数据
      */
-    class Post(val key: String, val fightData: FightData) : BukkitProxyEvent()
+    class Pre(val key: String, val fightData: FightData) : BukkitProxyEvent()
 
     /**
      * 攻击中事件
@@ -27,5 +27,5 @@ class FightEvent {
      * @property key 战斗组键
      * @property fightData 战斗数据
      */
-    class After(val key: String, val fightData: FightData) : BukkitProxyEvent()
+    class Post(val key: String, val fightData: FightData) : BukkitProxyEvent()
 }

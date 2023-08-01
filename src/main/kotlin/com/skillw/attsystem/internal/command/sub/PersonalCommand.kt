@@ -35,8 +35,8 @@ object PersonalCommand {
                     }
                 }
                 execute<Player> { sender, context, argument ->
-                    if (!ASConfig.isPersonalEnable) return@execute
-                    val data = AttributeSystem.personalManager[sender.uniqueId]!!
+                    if (!ASConfig.isPreferenceEnable) return@execute
+                    val data = AttributeSystem.personalManager.getPreference(sender.uniqueId)
                     val type = context.argument(-1)
                     var typeMessage: String
                     when (type) {
@@ -53,7 +53,7 @@ object PersonalCommand {
                     }
                     val subTypeMessage = sender.asLangText("type-${argument.replace("_", "-")}")
                     sender.soundSuccess()
-                    AttributeSystem.personalManager[sender.uniqueId] = data
+                    AttributeSystem.personalManager.registerPreferenceData(data)
                     sender.sendLang("command-personal", typeMessage, subTypeMessage)
                 }
             }

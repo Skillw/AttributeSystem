@@ -103,7 +103,7 @@ internal object Attack {
                 isAttackAnyTime && isAttackForce -> when {
                     //基于AS的冷却系统计算蓄力
                     forceBasedCooldown -> {
-                        cooldownManager.pull(attacker, main.type).also { println(it) }
+                        cooldownManager.pull(attacker, main.type)
                     }
 
                     //基于原版伤害计算蓄力

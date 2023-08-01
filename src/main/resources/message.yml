@@ -15,7 +15,7 @@ options:
     # false 关闭
     health-regain-holo: false
   #是否开启玩家个性选择
-  personal: true
+  preference: true
 fight-message:
   #默认的名字
   default-name:

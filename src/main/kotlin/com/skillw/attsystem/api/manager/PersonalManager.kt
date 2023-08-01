@@ -1,9 +1,9 @@
 package com.skillw.attsystem.api.manager
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.internal.feature.personal.PersonalData
+import com.skillw.attsystem.internal.feature.personal.InitialAttrData
+import com.skillw.attsystem.internal.feature.personal.PreferenceData
 import com.skillw.pouvoir.api.manager.Manager
-import com.skillw.pouvoir.api.map.KeyMap
 import org.bukkit.entity.Player
 import java.util.*
 
@@ -12,10 +12,10 @@ import java.util.*
  *
  * @constructor Create empty Personal manager
  */
-abstract class PersonalManager : KeyMap<UUID, PersonalData>(), Manager {
+abstract class PersonalManager : Manager {
 
     /** Enable */
-    abstract val enable: Boolean
+    abstract val isPreferenceEnable: Boolean
 
     /**
      * Push data
@@ -27,10 +27,10 @@ abstract class PersonalManager : KeyMap<UUID, PersonalData>(), Manager {
     /**
      * Pull data
      *
-     * @param player
+     * @param uuid
      * @return
      */
-    abstract fun pullData(player: Player): PersonalData?
+    abstract fun pullPreferenceData(uuid: UUID): PreferenceData?
 
     /**
      * Has data
@@ -38,14 +38,23 @@ abstract class PersonalManager : KeyMap<UUID, PersonalData>(), Manager {
      * @param player
      * @return
      */
-    abstract fun hasData(player: Player): Boolean
+    abstract fun hasPreferenceData(player: Player): Boolean
 
     companion object {
         internal fun Player.pushData() {
             AttributeSystem.personalManager.pushData(this)
         }
 
-        internal fun Player.pullData(): PersonalData? = AttributeSystem.personalManager.pullData(this)
-        internal fun Player.hasData(): Boolean = AttributeSystem.personalManager.hasData(this)
+        internal fun UUID.pullPreferenceData(): PreferenceData? =
+            AttributeSystem.personalManager.pullPreferenceData(this)
+
+        internal fun UUID.pullInitialAttrData(): InitialAttrData? =
+            AttributeSystem.personalManager.pullInitialAttrData(this)
+
+        internal fun Player.hasPreferenceData(): Boolean = AttributeSystem.personalManager.hasPreferenceData(this)
     }
+
+    abstract fun getPreference(key: UUID): PreferenceData
+    abstract fun registerPreferenceData(data: PreferenceData)
+    abstract fun pullInitialAttrData(uuid: UUID): InitialAttrData?
 }
