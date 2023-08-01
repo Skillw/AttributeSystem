@@ -35,10 +35,10 @@ abstract class PersonalManager : Manager {
     /**
      * Has data
      *
-     * @param player
+     * @param uuid
      * @return
      */
-    abstract fun hasPreferenceData(player: Player): Boolean
+    abstract fun hasPreferenceData(uuid: UUID): Boolean
 
     companion object {
         internal fun Player.pushData() {
@@ -51,7 +51,7 @@ abstract class PersonalManager : Manager {
         internal fun UUID.pullInitialAttrData(): InitialAttrData? =
             AttributeSystem.personalManager.pullInitialAttrData(this)
 
-        internal fun Player.hasPreferenceData(): Boolean = AttributeSystem.personalManager.hasPreferenceData(this)
+        internal fun Player.hasPreferenceData(): Boolean = AttributeSystem.personalManager.hasPreferenceData(uniqueId)
     }
 
     abstract fun getPreference(key: UUID): PreferenceData

@@ -1,7 +1,6 @@
 package com.skillw.attsystem.internal.feature.listener.person
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
 import com.skillw.attsystem.AttributeSystem.personalManager
 import com.skillw.attsystem.api.manager.PersonalManager.Companion.pullPreferenceData
@@ -28,7 +27,6 @@ internal object Personal {
     }
 
     private fun Player.init() {
-        attributeDataManager[uniqueId] = personalManager.pullInitialAttrData(this).compound
         initScale()
     }
 
@@ -38,8 +36,8 @@ internal object Personal {
         val uuid = player.uniqueId
         player.init()
         submitAsync(delay = 10) {
-            player.pullPreferenceData()?.register()
-            if (!personalManager.hasPreferenceData(player)) PreferenceData(uuid).register()
+            uuid.pullPreferenceData()?.register()
+            if (!personalManager.hasPreferenceData(uuid)) PreferenceData(uuid).register()
         }
     }
 

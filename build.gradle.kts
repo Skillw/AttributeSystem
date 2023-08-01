@@ -71,7 +71,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 
 tasks.dokkaJavadoc.configure {
-    outputDirectory.set(File("C:\\Users\\Administrator\\Desktop\\Doc\\attsystem"))
+    outputDirectory.set(File("E:\\code\\git\\Javadoc\\attsystem\\legacy"))
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {

@@ -6,7 +6,6 @@ import com.skillw.attsystem.internal.feature.personal.InitialAttrData
 import com.skillw.attsystem.internal.feature.personal.PreferenceData
 import com.skillw.pouvoir.Pouvoir.containerManager
 import com.skillw.pouvoir.api.map.KeyMap
-import com.skillw.pouvoir.api.script.ScriptTool
 import com.skillw.pouvoir.util.EntityUtils.player
 import org.bukkit.entity.Player
 import java.util.*
@@ -66,8 +65,8 @@ object PersonalManagerImpl : PersonalManager() {
         return InitialAttrData.deserialize(uuid, data)
     }
 
-    override fun hasPreferenceData(player: Player): Boolean {
-        return (ScriptTool.get(player, "personal-data") ?: "null") != "null"
+    override fun hasPreferenceData(uuid: UUID): Boolean {
+        return (containerManager[uuid.toString(), "personal-data"] ?: "null") != "null"
     }
 
 
