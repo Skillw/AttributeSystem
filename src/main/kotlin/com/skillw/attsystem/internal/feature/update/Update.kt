@@ -1,8 +1,8 @@
-package com.skillw.attsystem.internal.feature.listener.update
+package com.skillw.attsystem.internal.feature.update
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.updateAttr
-import com.skillw.attsystem.internal.manager.ASConfig.dungeonPlus
+import com.skillw.attsystem.internal.manager.ASConfig
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
@@ -93,7 +93,7 @@ internal object Update {
     @SubscribeEvent
     fun onPlayerDead(event: PlayerDeathEvent) {
         val entity = event.entity
-        if (dungeonPlus && DungeonPlus.dungeonManager.isDungeonWorld(entity)) return
+        if (ASConfig.dungeonPlus && DungeonPlus.dungeonManager.isDungeonWorld(entity)) return
         AttributeSystem.attributeSystemAPI.remove(entity.uniqueId)
     }
 

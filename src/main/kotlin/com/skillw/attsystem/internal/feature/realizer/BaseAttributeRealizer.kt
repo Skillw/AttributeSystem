@@ -19,6 +19,8 @@ import taboolib.module.configuration.util.asMap
 /**
  * @className BaseAttributeRealizer
  *
+ * 应该叫做 basic attribute的。。
+ *
  * @author Glom
  * @date 2023/1/6 7:05 Copyright 2022 user. All rights reserved.
  */

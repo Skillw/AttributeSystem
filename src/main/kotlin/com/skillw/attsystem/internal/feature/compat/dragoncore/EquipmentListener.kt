@@ -2,7 +2,7 @@ package com.skillw.attsystem.internal.feature.compat.dragoncore
 
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
-import com.skillw.attsystem.internal.feature.listener.update.Update.updateAsync
+import com.skillw.attsystem.internal.feature.update.Update.updateAsync
 import com.skillw.attsystem.internal.manager.ASConfig.dragonCore
 import eos.moe.dragoncore.api.SlotAPI
 import eos.moe.dragoncore.api.event.PlayerSlotUpdateEvent

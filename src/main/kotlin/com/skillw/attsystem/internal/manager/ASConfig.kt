@@ -5,8 +5,10 @@ import com.skillw.attsystem.api.AttrAPI
 import com.skillw.attsystem.api.operation.Operation
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.manager.ConfigManager
+import com.skillw.pouvoir.api.plugin.map.DataMap
 import com.skillw.pouvoir.util.existClass
 import com.skillw.pouvoir.util.static
+import com.skillw.pouvoir.util.toMap
 import org.bukkit.Bukkit
 import org.spigotmc.AsyncCatcher
 import taboolib.common.platform.Platform
@@ -30,6 +32,9 @@ object ASConfig : ConfigManager(AttributeSystem) {
         get() = this["config"].getString("options.condition.line-condition.format") ?: ".*\\/(?<requirement>.*)"
     val lineConditionSeparator: String
         get() = this["config"].getString("options.condition.line-condition.separator") ?: ","
+    
+    val databaseConfig: DataMap
+        get() = DataMap().also { it.putAll(this["config"].getConfigurationSection("database")!!.toMap()) }
 
 
     override fun onLoad() {

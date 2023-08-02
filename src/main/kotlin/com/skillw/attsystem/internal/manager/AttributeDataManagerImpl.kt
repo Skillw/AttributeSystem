@@ -65,40 +65,41 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         return attrData
     }
 
-    override fun addAttribute(
+    override fun addAttrData(
         entity: LivingEntity,
         key: String,
         attributes: Collection<String>,
-        release: Boolean,
     ): AttributeData {
-        return this.addAttribute(
+        return this.addAttrData(
             entity,
             key,
-            readManager.read(attributes, entity),
-            release
+            readManager.read(attributes, entity)
         )
     }
 
-    override fun addAttribute(
+    override fun addAttrData(
         entity: LivingEntity,
         key: String,
         attributeData: AttributeData,
-        release: Boolean,
-    ): AttributeData {
-        return this.addAttribute(entity.uniqueId, key, attributeData, release)
+
+        ): AttributeData {
+        return this.addAttrData(entity.uniqueId, key, attributeData)
     }
 
-    override fun addAttribute(uuid: UUID, key: String, attributeData: AttributeData, release: Boolean): AttributeData {
-        attributeData.release = release
+    override fun addAttrData(uuid: UUID, key: String, attributes: Collection<String>): AttributeData? {
+        return addAttrData(uuid, key, attributes)
+    }
+
+    override fun addAttrData(uuid: UUID, key: String, attributeData: AttributeData): AttributeData {
         map.computeIfAbsent(uuid) { AttributeDataCompound() }.register(key, attributeData)
         return attributeData
     }
 
-    override fun removeAttribute(entity: LivingEntity, key: String) {
-        removeAttribute(entity.uniqueId, key)
+    override fun removeAttrData(entity: LivingEntity, key: String) {
+        removeAttrData(entity.uniqueId, key)
     }
 
-    override fun removeAttribute(uuid: UUID, key: String) {
+    override fun removeAttrData(uuid: UUID, key: String) {
         attributeDataManager[uuid]?.remove(key)
     }
 
