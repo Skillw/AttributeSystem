@@ -1,6 +1,5 @@
 package com.skillw.attsystem.api
 
-import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.fight.FightData
 import com.skillw.pouvoir.api.manager.Manager
 import org.bukkit.entity.LivingEntity
@@ -38,17 +37,16 @@ interface AttributeSystemAPI : Manager {
 
 
     /**
-     * Entity attack cal
+     * 实体间战斗组计算
      *
-     * @param key
-     * @param data
-     * @return
+     * @param key 战斗组键
+     * @param data 战斗数据
+     * @param message 是否计算战斗消息
+     * @return 最终伤害结果
      */
     fun runFight(key: String, data: FightData, message: Boolean = true): Double
 
     /**
-     * Player attack cal
-     *
      * 玩家间战斗组计算 (计算战斗消息)
      *
      * @param key 战斗组键
@@ -62,17 +60,6 @@ interface AttributeSystemAPI : Manager {
         key: String, attacker: LivingEntity?, defender: LivingEntity, consumer: Consumer<FightData>,
     ): Double
 
-    /**
-     * Read
-     *
-     * 读取字符串集的属性数据
-     *
-     * @param strings 待读取属性的字符串集
-     * @param entity 实体
-     * @param slot 槽位(可为null)
-     * @return 属性数据
-     */
-    fun read(strings: Collection<String>, entity: LivingEntity? = null, slot: String? = null): AttributeData
 
     /**
      * EntityUpdate

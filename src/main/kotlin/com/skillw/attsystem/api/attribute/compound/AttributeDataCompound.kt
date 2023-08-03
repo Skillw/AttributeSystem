@@ -33,14 +33,15 @@ class AttributeDataCompound : LowerMap<AttributeData> {
 
     constructor(compound: AttributeDataCompound) {
         this.entity = compound.entity
-        for (attKey in compound.keys) {
-            val attributeData = compound[attKey] ?: continue
-            this[attKey] = attributeData.clone()
+        for (source in compound.keys) {
+            val attributeData = compound[source] ?: continue
+            this[source] = attributeData.clone()
         }
     }
 
+
     fun release() {
-        filterValues { it.release }.keys.forEach(::remove)
+        filterValues { it.release }.keys.forEach(this::remove)
     }
 
     /**
@@ -48,12 +49,12 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      *
      * @return 属性数据集
      */
-    fun clone(): AttributeDataCompound {
+    public override fun clone(): AttributeDataCompound {
         return AttributeDataCompound(this)
     }
 
     override fun toString(): String {
-        return map.toString()
+        return serialize().toString()
     }
 
     /**
@@ -73,7 +74,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @return 是否存在该属性的数据
      */
     fun hasAttribute(attribute: Attribute): Boolean {
-        return map.any { it.value.containsKey(attribute) }
+        return any { it.value.containsKey(attribute) }
     }
 
     /**
@@ -141,7 +142,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
     fun toAttributeData(): AttributeData {
         val attributeData = AttributeData()
         this.forEach {
-            attributeData.operation(it.value)
+            attributeData.combine(it.value)
         }
         return attributeData
     }
@@ -151,15 +152,18 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      *
      * 运算操作
      *
-     * @param attributeDataCompound 属性数据集
+     * @param other 属性数据集
      * @return 属性数据集(操作后的)
      */
-    fun operation(attributeDataCompound: AttributeDataCompound): AttributeDataCompound {
-        attributeDataCompound.forEach { (key, attributeData) ->
+    @Deprecated("use combine", ReplaceWith("combine(other)"))
+    fun operation(other: AttributeDataCompound): AttributeDataCompound = combine(other)
+
+    fun combine(other: AttributeDataCompound): AttributeDataCompound {
+        other.forEach { (key, attributeData) ->
             if (this.containsKey(key)) {
-                this[key]!!.operation(attributeData)
+                this[key]!!.combine(attributeData.clone())
             } else {
-                this[key] = attributeDataCompound[key]!!
+                this[key] = attributeData.clone()
             }
         }
         return this
@@ -215,7 +219,8 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      */
     fun saveTo(itemStack: ItemStack) {
         val tag = itemStack.getItemTag()
-        tag.getOrPut("ATTRIBUTE_DATA") { ItemTag() }.asCompound().putAll(ItemTagData.toNBT(serialize()).asCompound())
+        tag.computeIfAbsent("ATTRIBUTE_DATA") { ItemTag() }.asCompound()
+            .putAll(ItemTagData.toNBT(serialize()).asCompound())
         tag.saveTo(itemStack)
     }
 
@@ -233,7 +238,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
             for ((key, value) in map) {
                 if (value !is Map<*, *>) continue
                 val subTag = value as Map<String, Any>
-                attributeDataCompound[key] = AttributeData.fromMap(subTag).release()
+                attributeDataCompound[key] = AttributeData.fromMap(subTag)
             }
             return attributeDataCompound
         }
@@ -327,7 +332,8 @@ class AttributeDataCompound : LowerMap<AttributeData> {
         attributeManager.attributes.forEach { attribute ->
             with(attribute) {
                 if (map.isEmpty() || !hasAttribute(this)) return@forEach
-                val attData = getOrPut("MAP-ATTRIBUTE-${key}") { AttributeData().release() }
+                val attData =
+                    this@AttributeDataCompound.computeIfAbsent("MAP-ATTRIBUTE-${key}") { AttributeData().release() }
                 map.forEach inner@{ (key, stringMap) ->
                     val att = AttrAPI.attribute(key) ?: return@inner
                     val read = att.readPattern
@@ -347,6 +353,11 @@ class AttributeDataCompound : LowerMap<AttributeData> {
                 }
             }
         }
+    }
+
+    fun allToRelease(): AttributeDataCompound {
+        values.forEach(AttributeData::release)
+        return this
     }
 
 }

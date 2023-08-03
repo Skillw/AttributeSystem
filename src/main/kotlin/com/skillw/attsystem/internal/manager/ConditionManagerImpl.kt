@@ -1,11 +1,15 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.condition.BaseCondition
-import com.skillw.attsystem.api.event.ConditionEvent
+import com.skillw.attsystem.api.attribute.compound.AttributeData
+import com.skillw.attsystem.api.compiled.ConditionData
+import com.skillw.attsystem.api.compiled.oper.ComplexCompiledData
+import com.skillw.attsystem.api.compiled.oper.NBTCompiledData
+import com.skillw.attsystem.api.compiled.oper.StringsCompiledData
 import com.skillw.attsystem.api.manager.ConditionManager
+import com.skillw.attsystem.util.Utils.clone
 import org.bukkit.entity.LivingEntity
-import java.util.regex.Matcher
+import java.util.*
 
 object ConditionManagerImpl : ConditionManager() {
     override val key = "ConditionManager"
@@ -20,69 +24,56 @@ object ConditionManagerImpl : ConditionManager() {
         this.entries.filter { it.value.release }.forEach { this.remove(it.key) }
     }
 
-    private fun matches(str: String, type: BaseCondition.ConditionType): Pair<Matcher, BaseCondition>? {
+    private fun matches(text: String, slot: String?): Collection<ConditionData> {
+        val datas = LinkedList<ConditionData>()
         for ((_, condition) in this) {
-            if (!condition.isType(type)) continue
-            for (name in condition.patterns) {
-                val matcher = name.matcher(str)
-                if (matcher.find()) {
-                    return matcher to condition
-                }
+            condition.parameters(text)?.let {
+                datas += ConditionData(condition).push(HashMap(it).apply { put("slot", slot) })
             }
         }
-        return null
+        return datas
     }
 
-    override fun lineConditions(slot: String?, requirements: String, entity: LivingEntity?): Boolean {
-        val separator = ASConfig.lineConditionSeparator
-        val array: List<String> =
-            if (requirements.contains(separator)) {
-                requirements.split(separator)
-            } else {
-                listOf(requirements)
-            }
-        return array.all { AttributeSystem.conditionManager.conditionLine(slot, entity, it) }
-    }
-
-    private fun condition(
+    override fun conditionNBT(
+        entity: LivingEntity?,
+        nbt: Collection<Any>,
         slot: String?,
-        livingEntity: LivingEntity?,
-        str: String,
-        type: BaseCondition.ConditionType,
-    ): Boolean {
-        val pair = this.matches(str, type) ?: return true
-        val (matcher, condition1) = pair
-        val pass = condition1.condition(slot, livingEntity, matcher, str)
-        val event = ConditionEvent(condition1, livingEntity, matcher, str, pass)
-        event.call()
-        return event.pass
-    }
-
-    override fun conditionNBT(slot: String?, entity: LivingEntity?, map: Map<String, Any>): Set<String> {
-        val limits = HashSet<String>()
-        for ((path, conditions) in map) {
-            conditions as? Map<String, Any> ?: continue
-            inner@ for ((key, parameters) in conditions) {
-                parameters as? Map<String, Any> ?: continue
-                val condition = get(key) ?: continue
-                if (!condition.conditionNBT(slot, entity, parameters)) {
-                    limits.add(path.replace("$", "."))
-                    break@inner
+    ): (MutableMap<String, Any>) -> ComplexCompiledData {
+        return { attrDataMap ->
+            val total = ComplexCompiledData()
+            for (condCompound in nbt) {
+                condCompound as? Map<String, Any> ?: continue
+                val paths = condCompound["paths"] as? List<String> ?: continue
+                val nbtConOperator = NBTCompiledData(attrDataMap.clone() as MutableMap<String, Any>, paths)
+                val conditions = condCompound["conditions"] as? List<Map<String, Any>> ?: continue
+                inner@ for (map in conditions) {
+                    val key = map["key"].toString()
+                    val condition = get(key) ?: continue
+                    val args = HashMap(map)
+                    args["slot"] = slot
+                    val data = ConditionData(condition).push(args)
+                    nbtConOperator.register(data)
                 }
+                total.add(nbtConOperator)
             }
+            total
         }
-        return limits
+
     }
 
-    override fun conditionLine(slot: String?, entity: LivingEntity?, str: String): Boolean {
-        return condition(slot, entity, str, BaseCondition.ConditionType.LINE)
-    }
-
-    override fun conditionStrings(slot: String?, entity: LivingEntity?, strings: Collection<String>): Boolean {
-        return strings.all { str ->
-            if (ASConfig.lineConditionPattern.matcher(str).find()) return@all true
-            condition(slot, entity, str, BaseCondition.ConditionType.STRINGS)
-        }
+    override fun condition(
+        entity: LivingEntity?,
+        string: String,
+        slot: String?,
+    ): ((AttributeData) -> StringsCompiledData)? {
+        val matches = matches(string, slot)
+        return if (matches.isNotEmpty()) { data ->
+            val total = StringsCompiledData(data)
+            matches.forEach { condData ->
+                total.register(condData)
+            }
+            total
+        } else null
     }
 
 

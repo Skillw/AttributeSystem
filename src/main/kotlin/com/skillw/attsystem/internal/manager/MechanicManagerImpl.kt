@@ -18,10 +18,10 @@ object MechanicManagerImpl : MechanicManager() {
         this.entries.filter { it.value.release }.forEach { this.remove(it.key) }
     }
 
-    override fun register(key: String, value: Mechanic) {
+    override fun put(key: String, value: Mechanic): Mechanic? {
         val event = MechanicRegisterEvent(value)
         event.call()
-        if (event.isCancelled) return
-        put(key, value)
+        if (event.isCancelled) return null
+        return super.put(key, value)
     }
 }

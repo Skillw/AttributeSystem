@@ -1,6 +1,6 @@
 package com.skillw.attsystem.internal.feature.compat.dragoncore
 
-import com.skillw.attsystem.api.equipment.EquipmentData
+import com.skillw.attsystem.AttributeSystem.equipmentDataManager
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
 import com.skillw.attsystem.internal.feature.listener.update.Update.updateAsync
 import com.skillw.attsystem.internal.manager.ASConfig.dragonCore
@@ -17,14 +17,13 @@ object EquipmentListener {
     fun e(event: EquipmentUpdateEvent.Pre) {
         if (!dragonCore) return
         val player = event.entity as? Player ?: return
-        val attributeItems = SlotAPI.getCacheAllSlotItem(player)
+        val attributeItems = SlotAPI.getCacheAllSlotItem(player) ?: return
         attributeItems.entries.removeIf { (key, item) ->
             !slotSettings.containsKey(
                 key
             ) || !slotSettings[key]!!.isAttribute || item == null
         }
-        val data = event.data
-        data["Dragon-Core"] = EquipmentData().apply { putAll(attributeItems) }
+        equipmentDataManager.addEquipData(player, "Dragon-Core", attributeItems)
     }
 
     @Ghost

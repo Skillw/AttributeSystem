@@ -3,8 +3,8 @@ package com.skillw.attsystem.internal.core.read.num
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.status.GroupStatus
 import com.skillw.attsystem.api.status.NumberStatus
-import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.util.CalculationUtils.calculateDouble
 import org.bukkit.entity.LivingEntity
 import taboolib.common5.Coerce

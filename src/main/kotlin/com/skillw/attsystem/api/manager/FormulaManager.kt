@@ -12,7 +12,7 @@ import java.util.*
  */
 abstract class FormulaManager : BaseMap<String, String>(), Manager {
     /**
-     * Calculate
+     * 计算公式值
      *
      * @param uuid 实体UUID
      * @param key 公式键
@@ -22,7 +22,7 @@ abstract class FormulaManager : BaseMap<String, String>(), Manager {
     abstract fun calculate(uuid: UUID, key: String, replacement: Map<String, String> = emptyMap()): Double
 
     /**
-     * Calculate
+     * 计算公式值
      *
      * @param entity 实体
      * @param key 公式键
@@ -32,7 +32,7 @@ abstract class FormulaManager : BaseMap<String, String>(), Manager {
     abstract fun calculate(entity: Entity, key: String, replacement: Map<String, String> = emptyMap()): Double
 
     /**
-     * Get
+     * 计算公式值
      *
      * @param uuid 实体UUID
      * @param key 公式键
@@ -41,7 +41,7 @@ abstract class FormulaManager : BaseMap<String, String>(), Manager {
     abstract operator fun get(uuid: UUID, key: String): Double
 
     /**
-     * Get
+     * 计算公式值
      *
      * @param entity 实体
      * @param key 公式键

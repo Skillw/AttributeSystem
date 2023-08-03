@@ -1,6 +1,6 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.common
 
-import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.pouvoir.util.EntityUtils.isAlive
 import io.lumine.mythic.api.skills.INoTargetSkill
 import io.lumine.mythic.api.skills.SkillMetadata
@@ -19,7 +19,7 @@ internal object DataUpdateV : INoTargetSkill {
     override fun cast(data: SkillMetadata): SkillResult {
         val target = data.caster.entity.bukkitEntity
         if (target !is LivingEntity || !target.isAlive()) return SkillResult.CONDITION_FAILED
-        target.updateAttr()
+        target.update()
         MythicLogger.debug(
             MythicLogger.DebugLevel.MECHANIC,
             "+ DataUpdate Mechanic fired for {0}",

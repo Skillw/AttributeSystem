@@ -41,7 +41,7 @@ object MessageType : ScriptAnnotation("MessageType", fileAnnotation = true) {
                 first: Boolean,
                 type: Message.Type,
             ): Message {
-                return messageCache.map.getOrPut(key) {
+                return messageCache.computeIfAbsent(key) {
                     object : Message {
                         override val fightData: FightData = fightData
 

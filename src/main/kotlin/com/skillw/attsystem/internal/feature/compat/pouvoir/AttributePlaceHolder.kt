@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.feature.compat.pouvoir
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
+import com.skillw.attsystem.AttributeSystem.compiledAttrDataManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
 import com.skillw.attsystem.AttributeSystem.formulaManager
 import com.skillw.attsystem.api.AttrAPI.getAttrData
@@ -13,7 +14,6 @@ import com.skillw.pouvoir.api.annotation.AutoRegister
 import com.skillw.pouvoir.api.placeholder.PouPlaceHolder
 import com.skillw.pouvoir.util.NumberUtils.format
 import org.bukkit.entity.LivingEntity
-import taboolib.platform.util.isAir
 import java.math.BigDecimal
 
 @AutoRegister
@@ -60,18 +60,17 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
             "equipment" -> {
                 strings.removeAt(0)
                 if (strings.size < 3) return "0.0"
-                val key = strings[0]
-                val subKey = strings[1]
+                val source = strings[0]
+                val slot = strings[1]
                 val attKey = strings[2]
                 strings.removeAt(0)
                 strings.removeAt(0)
                 strings.removeAt(0)
                 val equipment = equipmentDataManager[uuid]
-                if (equipment == null || !equipment.containsKey(key)) return "0.0"
-                val item = equipment[key, subKey] ?: return "0.0"
+                if (equipment == null || !equipment.containsKey(source)) return "0.0"
                 val attribute = attributeManager[attKey] ?: return "0.0"
-                if (item.isAir()) return "0.0"
-                val itemData = equipmentDataManager.readItem(item)
+                val sourceKey = equipmentDataManager.getSource(source, slot)
+                val itemData = compiledAttrDataManager[uuid][sourceKey]?.eval(entity) ?: AttributeDataCompound(entity)
                 return get(itemData, attribute, strings)
             }
 

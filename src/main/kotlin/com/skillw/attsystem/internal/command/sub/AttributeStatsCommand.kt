@@ -75,14 +75,14 @@ object AttributeStatsCommand {
                         AttributeSystem.equipmentDataManager[sender.uniqueId]?.values?.forEach { list.addAll(it.keys) }
                         list
                     }
-                    execute<Player> { sender, context, argument ->
+                    execute<Player> { sender, context, slot ->
                         val player = Bukkit.getPlayer(context.argument(-2))
                         player ?: run {
                             sender.sendLang("command-valid-player", context.argument(-2))
                             return@execute
                         }
-                        val key = context.argument(-1)
-                        val itemStack = AttributeSystem.equipmentDataManager[player.uniqueId]?.get(key, argument)
+                        val source = context.argument(-1)
+                        val itemStack = AttributeSystem.equipmentDataManager[player.uniqueId]?.get(source, slot)
                         itemStack ?: run {
                             sender.soundFail()
                             sender.sendLang("command-valid-item")
@@ -91,13 +91,12 @@ object AttributeStatsCommand {
                         if (itemStack.isAir() || !itemStack.hasLore()) return@execute
                         sender.soundSuccess()
                         submitAsync {
-                            val attributeDataCompound =
-                                AttributeSystem.equipmentDataManager.readItem(
-                                    itemStack,
-                                    player,
-                                    argument
-                                )
-                            sendStatText(adaptPlayer(sender), player, itemStack.getName(), attributeDataCompound, true)
+                            val data =
+                                AttributeSystem.compiledAttrDataManager[player.uniqueId][AttributeSystem.equipmentDataManager.getSource(
+                                    source,
+                                    slot
+                                )]?.eval(player) ?: AttributeDataCompound()
+                            sendStatText(adaptPlayer(sender), player, itemStack.getName(), data, true)
                         }
                     }
                 }

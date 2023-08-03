@@ -6,7 +6,7 @@ import com.skillw.attsystem.api.AttrAPI.readItem
 import com.skillw.attsystem.api.AttrAPI.readItemLore
 import com.skillw.attsystem.api.AttrAPI.readItemNBT
 import com.skillw.attsystem.api.AttrAPI.removeAttribute
-import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.pouvoir.api.annotation.AutoRegister
@@ -94,7 +94,7 @@ internal object FunctionAttribute : PouFunction<Any?>("attr", namespace = "commo
                 }
 
                 "update" -> {
-                    entity.updateAttr()
+                    entity.update()
                     true
                 }
 

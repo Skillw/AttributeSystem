@@ -1,6 +1,6 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.legacy
 
-import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.pouvoir.util.EntityUtils.isAlive
 import io.lumine.xikage.mythicmobs.io.MythicLineConfig
 import io.lumine.xikage.mythicmobs.logging.MythicLogger
@@ -20,7 +20,7 @@ internal class DataUpdateIV(skill: String, mlc: MythicLineConfig) : SkillMechani
     override fun cast(data: SkillMetadata): Boolean {
         val target = data.caster.entity.bukkitEntity
         if (target !is LivingEntity || !target.isAlive()) return false
-        target.updateAttr()
+        target.update()
         MythicLogger.debug(
             MythicLogger.DebugLevel.MECHANIC,
             "+ DataUpdate Mechanic fired for {0}",

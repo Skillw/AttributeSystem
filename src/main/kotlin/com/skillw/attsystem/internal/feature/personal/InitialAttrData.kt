@@ -29,6 +29,6 @@ class InitialAttrData(override val key: UUID, val compound: AttributeDataCompoun
     }
 
     fun serialize(): String {
-        return compound.map.mapValues { it.value.serialize() }.encodeJson()
+        return compound.mapValues { it.value.serialize() }.encodeJson()
     }
 }

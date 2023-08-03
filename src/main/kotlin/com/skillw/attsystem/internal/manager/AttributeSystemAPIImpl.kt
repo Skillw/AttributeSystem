@@ -1,15 +1,14 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.attsystem.api.AttributeSystemAPI
-import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.event.FightEvent
-import com.skillw.attsystem.api.event.StringsReadEvent
 import com.skillw.attsystem.api.fight.FightData
 import com.skillw.attsystem.api.fight.message.MessageData
-import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.attsystem.internal.manager.ASConfig.ignores
+import com.skillw.attsystem.util.Utils.mirrorIfDebug
 import com.skillw.pouvoir.util.EntityUtils.isAlive
+import com.skillw.pouvoir.util.EntityUtils.livingEntity
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.EntityType
@@ -21,9 +20,8 @@ import taboolib.common.platform.Awake
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.function.submitAsync
 import taboolib.common.platform.service.PlatformExecutor
+import taboolib.common.util.sync
 import taboolib.common5.Mirror
-import taboolib.common5.mirrorNow
-import taboolib.module.chat.uncolored
 import java.util.*
 import java.util.function.Consumer
 
@@ -32,10 +30,48 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
     override val key = "AttributeSystemAPI"
     override val priority: Int = 100
     override val subPouvoir = AttributeSystem
-    private var task: PlatformExecutor.PlatformTask? = null
+    private var realizeScheduled: PlatformExecutor.PlatformTask? = null
+
+    private fun createRealizeScheduled(): PlatformExecutor.PlatformTask {
+        return submitAsync(period = ASConfig.realizeSchedule) {
+            val tasks = LinkedList<() -> Unit>()
+            for (uuid in AttributeSystem.attributeDataManager.keys) {
+                val entity = uuid.livingEntity()
+                if (entity == null || !entity.isValid || entity.isDead) {
+                    AttributeSystem.attributeSystemAPI.remove(uuid)
+                    continue
+                }
+
+                entity.update()
+                tasks += RealizeManagerImpl.newRealizeTask(entity)
+            }
+            sync {
+                mirrorIfDebug("realize-attribute-all") {
+                    tasks.forEach { it.invoke() }
+                }
+            }
+        }
+    }
 
     override fun onActive() {
         onReload()
+    }
+
+    override fun onReload() {
+        realizeScheduled?.cancel()
+        realizeScheduled = createRealizeScheduled()
+        submitAsync(delay = 10) {
+            for (uuid in AttributeSystem.attributeDataManager.keys) {
+                val entity = uuid.livingEntity()
+                if (entity == null || !entity.isValid || entity.isDead) {
+                    remove(uuid)
+                    continue
+                }
+                mirrorIfDebug("update-attribute") {
+                    entity.update()
+                }
+            }
+        }
     }
 
     @Awake(LifeCycle.ACTIVE)
@@ -79,17 +115,17 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
             calMessage = message
         }
         val messageData = MessageData()
-        return mirrorNow("fight-$key-cal") {
+        return mirrorIfDebug("fight-$key-cal") {
             val pre = FightEvent.Pre(key, fightData)
             pre.call()
-            if (pre.isCancelled) return@mirrorNow -0.1
+            if (pre.isCancelled) return@mirrorIfDebug -0.1
             val eventFightData = pre.fightData
             AttributeSystem.fightGroupManager[key]!!.run(eventFightData)
             if (message)
                 messageData.addAll(eventFightData.messageData)
             val post = FightEvent.Post(key, eventFightData)
             post.call()
-            if (post.isCancelled) return@mirrorNow -0.1
+            if (post.isCancelled) return@mirrorIfDebug -0.1
             if (message)
                 submitAsync {
                     messageData.send(fightData.attacker as? Player?, fightData.defender as? Player?)
@@ -109,59 +145,17 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
         return runFight(key, FightData(attacker, defender).also { consumer.accept(it) }, true)
     }
 
-    override fun read(
-        strings: Collection<String>,
-        entity: LivingEntity?,
-        slot: String?,
-    ): AttributeData {
-        return mirrorNow("read-strings") {
-            val attributeData = AttributeData()
-            if (!AttributeSystem.conditionManager.conditionStrings(
-                    slot,
-                    entity,
-                    strings
-                )
-            ) {
-                return@mirrorNow attributeData
-            }
-            strings@ for (string in strings) {
-                var toRead = string
-                if (ignores.any { toRead.uncolored().contains(it) }) continue
-                val matcher = ASConfig.lineConditionPattern.matcher(toRead)
-                if (matcher.find()) {
-                    try {
-                        val requirements = matcher.group("requirement")
-                        if (!AttributeSystem.conditionManager.lineConditions(slot, requirements, entity)) continue
-                    } catch (_: IllegalStateException) {
-                    } catch (_: IllegalArgumentException) {
-                    }
-                    toRead = matcher.replaceAll("")
-                }
-
-                att@ for (attribute in AttributeSystem.attributeManager.attributes) {
-                    val read = attribute.readPattern
-                    if (read !is ReadGroup<*>) continue
-                    val status = read.read(toRead, attribute, entity, slot)
-                    if (status != null) {
-                        attributeData.operation(attribute, status)
-                        continue@strings
-                    }
-                }
-            }
-            val event = StringsReadEvent(entity, strings, attributeData)
-            event.call()
-            if (!event.isCancelled) event.attrData else AttributeData()
-        }
-    }
 
     override fun update(entity: LivingEntity) {
         if (!entity.isAlive()) return
-        AttributeSystem.equipmentDataManager.update(entity)
-        //第一次更新无条件的属性
-        AttributeSystem.attributeDataManager.update(entity)
-        //第一次更新有条件的属性（有些条件是以其它属性为基础）
-        AttributeSystem.attributeDataManager.update(entity)
-        AttributeSystem.realizeManager.realize(entity)
+        mirrorIfDebug("update-entity") {
+            mirrorIfDebug("update-equipment") {
+                AttributeSystem.equipmentDataManager.update(entity)
+            }
+            mirrorIfDebug("update-attribute") {
+                AttributeSystem.attributeDataManager.update(entity)
+            }
+        }
     }
 
 
@@ -173,8 +167,7 @@ object AttributeSystemAPIImpl : AttributeSystemAPI {
     override fun remove(uuid: UUID) {
         AttributeSystem.attributeDataManager.remove(uuid)
         AttributeSystem.equipmentDataManager.remove(uuid)
-
-//        AttributeSystem.getShieldDataManager().removeByKey(uuid)
+        AttributeSystem.compiledAttrDataManager.remove(uuid)
     }
 
 }

@@ -58,7 +58,7 @@ object FormulaManagerImpl : FormulaManager() {
         for (key in skapiSection.getKeys(false)) {
             this[key] = skapiSection.getString(key) ?: continue
         }
-        map.replaceAll { _, value -> value.replacement(replacements) }
+        replaceAll { _, value -> value.replacement(replacements) }
         File(AttributeSystem.plugin.dataFolder, "formula").listFiles()?.forEach {
             val yaml = YamlConfiguration.loadConfiguration(it)
             for (key in yaml.getKeys(false)) {
@@ -69,6 +69,6 @@ object FormulaManagerImpl : FormulaManager() {
         this.forEach {
             replacements["{${it.key}}"] = it.value
         }
-        map.replaceAll { _, value -> value.replacement(replacements) }
+        replaceAll { _, value -> value.replacement(replacements) }
     }
 }

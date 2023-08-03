@@ -12,11 +12,11 @@ import com.skillw.attsystem.internal.core.read.ReadGroup
 class NumberStatus(numberReader: ReadGroup<Double>) : GroupStatus<Double>(numberReader) {
 
     override fun clone(): NumberStatus {
-        val attributeStatus = NumberStatus(readGroup)
+        val status = NumberStatus(readGroup)
         this.forEach {
-            attributeStatus.register(it.key, it.value)
+            status.register(it.key, it.value)
         }
-        return attributeStatus
+        return status
     }
 
     override fun get(key: String): Double {

@@ -2,40 +2,99 @@ package com.skillw.attsystem.api.equipment
 
 import com.skillw.pouvoir.api.map.LowerMap
 import org.bukkit.inventory.ItemStack
+import taboolib.module.nms.getItemTag
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Equipment data
  *
  * @constructor Create empty Equipment data
  */
-class EquipmentData : LowerMap<ItemStack> {
+class EquipmentData(var compound: EquipmentDataCompound? = null, var source: String? = null) : LowerMap<ItemStack>() {
 
-    constructor()
-    constructor(release: Boolean) {
-        this.release = release
-    }
+    private val cache = ConcurrentHashMap<String, Int>()
 
-    constructor(equipmentData: EquipmentData, release: Boolean) {
+    constructor(other: EquipmentData, release: Boolean) : this() {
         this.release = release
-        for (key in equipmentData.keys) {
-            this[key] = equipmentData[key]!!.clone()
+        for (key in other.keys) {
+            this[key] = other[key]!!.clone()
         }
     }
+
+    private fun assertValid() {
+        if (compound == null || source == null) {
+            error("Operating owner-less EquipmentData! Please register the EquipmentData first!")
+        }
+    }
+
+    override fun put(key: String, value: ItemStack): ItemStack? {
+        assertValid()
+        return compound?.let { com ->
+            source?.let { sour ->
+                com.set(sour, key, value)
+            }
+        }
+    }
+
+    fun uncheckedPut(key: String, value: ItemStack): ItemStack? {
+        cache[key] = value.getItemTag().toString().hashCode()
+        return super.put(key, value)
+    }
+
+
+    override fun remove(key: String): ItemStack? {
+        assertValid()
+        return compound?.let { com ->
+            source?.let { sour ->
+                com.removeItem(sour, key)
+            }
+        }
+    }
+
+    internal fun uncheckedRemove(key: String): ItemStack? {
+        cache.remove(key)
+        return super.remove(key)
+    }
+
+    override fun clear() {
+        assertValid()
+        compound?.let { com ->
+            source?.let { sour ->
+                com.clear(sour)
+            }
+        }
+    }
+
+    internal fun uncheckedClear() {
+        cache.clear()
+        super.clear()
+    }
+
+    override fun putAll(from: Map<out String, ItemStack>) {
+        assertValid()
+        compound?.let { com ->
+            source?.let { sour ->
+                from.forEach { (slot, item) ->
+                    com[sour, slot] = item
+                }
+            }
+        }
+    }
+
 
     /**
      * Clone
      *
      * @return
      */
-    fun clone(): EquipmentData {
-        val equipmentData = EquipmentData()
+    fun clone(compound: EquipmentDataCompound?, source: String?): EquipmentData {
+        val equipmentData = EquipmentData(compound, source)
         this.forEach {
-            equipmentData.put(it.key, it.value.clone())
+            equipmentData[it.key] = it.value.clone()
         }
         return equipmentData
     }
 
-    constructor(equipmentData: EquipmentData) : this(equipmentData, true)
 
     /** Release */
     var release = false
@@ -63,4 +122,15 @@ class EquipmentData : LowerMap<ItemStack> {
         this.release = false
         return this
     }
+
+    fun free(): EquipmentData {
+        source = null
+        compound = null
+        return this
+    }
+
+    fun hasChanged(item: ItemStack, slot: String): Boolean {
+        return item.getItemTag().toString().hashCode() != cache[slot]
+    }
+
 }

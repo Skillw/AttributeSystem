@@ -2,6 +2,7 @@ package com.skillw.attsystem.api.manager
 
 import com.skillw.pouvoir.api.manager.Manager
 import org.bukkit.entity.Entity
+import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.service.PlatformExecutor
 
 /**
@@ -22,4 +23,5 @@ abstract class RealizeManager : Manager {
 
     /** Health regain scheduled */
     abstract var healthRegainScheduled: PlatformExecutor.PlatformTask?
+    abstract fun newRealizeTask(entity: LivingEntity): () -> Unit
 }

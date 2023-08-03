@@ -11,44 +11,44 @@ import java.util.*
  */
 abstract class FightStatusManager : Manager {
     /**
-     * Is fighting
+     * 是否在战斗状态
      *
      * @param uuid
-     * @return
+     * @return 是否在战斗状态
      */
     abstract fun isFighting(uuid: UUID): Boolean
 
     /**
-     * Is fighting
+     * 是否在战斗状态
      *
      * @param entity
-     * @return
+     * @return 是否在战斗状态
      */
     abstract fun isFighting(entity: Entity): Boolean
 
     /**
-     * Into fighting
+     * 让实体进入战斗状态
      *
      * @param entity
      */
     abstract fun intoFighting(entity: Entity)
 
     /**
-     * Into fighting
+     * 让实体进入战斗状态
      *
      * @param uuid
      */
     abstract fun intoFighting(uuid: UUID)
 
     /**
-     * Out fighting
+     * 让实体脱离战斗状态
      *
      * @param entity
      */
     abstract fun outFighting(entity: Entity)
 
     /**
-     * Out fighting
+     * 让实体脱离战斗状态
      *
      * @param uuid
      */

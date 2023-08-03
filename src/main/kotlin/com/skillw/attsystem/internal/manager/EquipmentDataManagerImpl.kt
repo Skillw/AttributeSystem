@@ -1,30 +1,25 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.AttributeSystem.compiledAttrDataManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
-import com.skillw.attsystem.api.AttrAPI.updateAttr
-import com.skillw.attsystem.api.attribute.compound.AttributeData
-import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
+import com.skillw.attsystem.api.AttrAPI.readItem
+import com.skillw.attsystem.api.AttrAPI.update
+import com.skillw.attsystem.api.compiled.oper.ComplexCompiledData
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
 import com.skillw.attsystem.api.event.ItemLoadEvent
-import com.skillw.attsystem.api.event.ItemReadEvent
 import com.skillw.attsystem.api.manager.EquipmentDataManager
-import com.skillw.pouvoir.api.map.BaseMap
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.util.EntityUtils.isAlive
-import com.skillw.pouvoir.util.EntityUtils.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common5.Coerce
-import taboolib.common5.mirrorNow
-import taboolib.library.reflex.Reflex.Companion.getProperty
-import taboolib.module.chat.uncolored
-import taboolib.module.nms.*
+import taboolib.module.nms.getItemTag
 import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
-import taboolib.platform.util.isNotAir
 import java.util.*
 
 object EquipmentDataManagerImpl : EquipmentDataManager() {
@@ -33,301 +28,195 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
     override val subPouvoir = AttributeSystem
 
 
+    override fun getSource(source: String?, slot: String?) =
+        "!!Equipment" + (if (source != null) "-$source" else "") + (if (slot != null) "-$slot" else "")
+
     override fun get(key: UUID): EquipmentDataCompound? {
-        return super.get(key) ?: kotlin.run { key.livingEntity()?.updateAttr(); super.get(key) }
+        return super.get(key) ?: kotlin.run { key.validEntity().update(); super.get(key) }
+    }
+
+    private fun uncheckedGet(key: UUID): EquipmentDataCompound? {
+        return super.get(key)
+    }
+
+    override fun register(key: UUID, value: EquipmentDataCompound): EquipmentDataCompound? {
+        return super.register(key, value.apply { entity = key.validEntity() })
     }
 
     override fun update(entity: LivingEntity): EquipmentDataCompound? {
         if (!entity.isAlive()) return null
         val uuid = entity.uniqueId
-        var dataCompound =
-            if (containsKey(uuid)) EquipmentDataCompound(this.map[uuid]!!) else EquipmentDataCompound()
-        val pre = EquipmentUpdateEvent.Pre(entity, dataCompound)
+        var data = uncheckedGet(uuid) ?: EquipmentDataCompound(entity)
+        equipmentDataManager.register(uuid, data)
+        val pre = EquipmentUpdateEvent.Pre(entity, data)
         pre.call()
         if (pre.isCancelled) {
-            return dataCompound
+            return data
         }
-        dataCompound = pre.data
-        equipmentDataManager.register(uuid, dataCompound)
-        dataCompound.remove("BASE-EQUIPMENT")
+        data = pre.data
         if (entity is Player) {
-            loadPlayer(entity, dataCompound)
+            loadPlayer(entity, data)
         } else {
-            loadLivingEntity(entity, dataCompound)
+            loadEntity(entity, data)
         }
-        val postEvent = EquipmentUpdateEvent.Post(entity, dataCompound)
+        val postEvent = EquipmentUpdateEvent.Post(entity, data)
         postEvent.call()
         if (postEvent.isCancelled) {
-            return dataCompound
+            return data
         }
-        dataCompound = postEvent.data
-        equipmentDataManager.register(uuid, dataCompound)
-        return dataCompound
+        data = postEvent.data
+        equipmentDataManager.register(uuid, data)
+        return data
     }
 
-    private fun loadLivingEntity(entity: LivingEntity, dataCompound: EquipmentDataCompound) {
-        for ((key, equipmentType) in AttributeSystem.entitySlotManager) {
-            val origin: ItemStack? = equipmentType.getItem(entity)
-            if (origin == null || origin.isAir()) {
-                continue
-            }
-            val event = ItemLoadEvent(entity, origin)
-            val eventItem = event.itemStack
-            event.call()
-            if (event.isCancelled) {
-                return
-            }
-            if (eventItem.isSimilar(origin)) {
-                dataCompound["BASE-EQUIPMENT", key] = eventItem
-                return
-            }
-            if (eventItem.isNotAir())
-                dataCompound["BASE-EQUIPMENT", key] = eventItem
+    private fun loadEntity(entity: LivingEntity, data: EquipmentDataCompound) {
+        for ((slot, equipmentType) in AttributeSystem.entitySlotManager) {
+            val item: ItemStack? = equipmentType.getItem(entity)
+            data.addEquipment(entity, BASE_EQUIPMENT_KEY, slot, item)
         }
     }
 
-    private fun loadPlayer(player: Player, dataCompound: EquipmentDataCompound) {
+    private fun loadPlayer(player: Player, data: EquipmentDataCompound) {
         val inv = player.inventory
         val manager = AttributeSystem.playerSlotManager
         for (playerSlot in manager.values) {
             val equipmentType = playerSlot.bukkitEquipment
-            var origin: ItemStack? = null
+            var item: ItemStack? = null
             val slotStr = playerSlot.slot
-            try {
-                origin = if (equipmentType != null) {
+            runCatching {
+                item = if (equipmentType != null) {
                     equipmentType.getItem(player)
                 } else {
                     val slot = if (slotStr == "held") player.inventory.heldItemSlot else Coerce.toInteger(slotStr)
                     inv.getItem(slot)
                 }
-            } catch (_: NumberFormatException) {
             }
-            if (origin == null || !origin.hasItemMeta() || origin.isAir()) {
-                continue
+            val slot = playerSlot.key
+            data.addEquipment(player, BASE_EQUIPMENT_KEY, slot, item) { itemStack ->
+                playerSlot.requirements.isEmpty() || playerSlot.requirements.any { itemStack.hasLore(it) }
             }
-            if (playerSlot.requirements.isNotEmpty() && !playerSlot.requirements.any { origin.hasLore(it) }) {
-                continue
+        }
+    }
+
+    private const val BASE_EQUIPMENT_KEY = "BASE-EQUIPMENT"
+    private const val IGNORE_KEY = "IGNORE_ATTRIBUTE"
+
+    private fun EquipmentDataCompound.addEquipment(
+        entity: LivingEntity,
+        source: String,
+        slot: String,
+        item: ItemStack?,
+        condition: (ItemStack) -> Boolean = { true },
+    ): EquipmentData? {
+        return item.run {
+            if (isAir() || !condition(this)) {
+                removeItem(source, slot)
+                return@run null
             }
-            val event = ItemLoadEvent(player, origin)
+            val event = ItemLoadEvent(entity, this)
             event.call()
             if (event.isCancelled) {
-                return
+                removeItem(source, slot)
+                return@run null
             }
             val eventItem = event.itemStack
-            if (eventItem.isNotAir() && !eventItem.cacheTag().containsKey("IGNORE_ATTRIBUTE"))
-                dataCompound["BASE-EQUIPMENT", playerSlot.key] = eventItem
-        }
-    }
-
-    private val lores = BaseMap<Int, List<String>>()
-
-    override fun readItemLore(
-        itemStack: ItemStack,
-        entity: LivingEntity?,
-        slot: String?,
-    ): AttributeData? {
-        if (itemStack.hasLore()) {
-            val origin = itemStack.itemMeta?.lore ?: return null
-            val hashcode = itemStack.itemMeta?.getProperty<List<String>>("lore").hashCode()
-            val lore = lores.map.getOrPut(hashcode) {
-                origin.map { it.uncolored() }
+            if (getItemTag().containsKey(IGNORE_KEY)) {
+                removeItem(source, slot)
+                return@run null
             }
-            return AttributeSystem.attributeSystemAPI.read(lore, entity, slot)
-        }
-        return null
-    }
-
-    override fun readItemsLore(
-        itemStacks: Collection<ItemStack>,
-        entity: LivingEntity?,
-        slot: String?,
-    ): AttributeData {
-        return mirrorNow("read-item-lore") {
-            val attributeData = AttributeData()
-            for (item: ItemStack in itemStacks) {
-                attributeData.operation(
-                    readItemLore(item, entity, slot) ?: continue
+            if (!hasChanged(eventItem, source, slot)) return@run null
+            compiledAttrDataManager.addCompiledData(
+                entity.uniqueId,
+                getSource(source, slot),
+                eventItem.readItem(entity, slot) ?: ComplexCompiledData()
+            )
+            return computeIfAbsent(source) { EquipmentData(this@addEquipment, source) }.apply {
+                uncheckedPut(
+                    slot,
+                    eventItem
                 )
             }
-            attributeData
         }
     }
 
-    private fun MutableMap<String, Any>.removeDeep(path: String) {
-        val splits = path.split(".")
-        if (splits.isEmpty()) {
-            this.remove(path)
-            return
-        }
-        var compound = this
-        var temp: MutableMap<String, Any>
-        for (node in splits) {
-            if (node.equals(splits.last(), ignoreCase = true)) {
-                compound.remove(node)
-            }
-            compound[node].also { temp = ((it as MutableMap<String, Any>?) ?: return) }
-            compound = temp
-        }
-    }
-
-
-    private val nbts = BaseMap<Int, HashMap<String, Any>>()
-
-    @JvmStatic
-    private fun ItemTag.toMutableMap(strList: List<String> = emptyList()): MutableMap<String, Any> {
-        return nbts.map.getOrPut(keySet().hashCode() + values().hashCode()) {
-            val map = HashMap<String, Any>()
-            for (it in this) {
-                val key = it.key
-                if (strList.contains(key)) continue
-                val value = it.value.obj()
-                map[key] = value
-            }
-            return map
-        }
-    }
-
-    @Suppress("IMPLICIT_CAST_TO_ANY")
-    @JvmStatic
-    private fun ItemTagData.obj(): Any {
-        val value = when (this.type) {
-            ItemTagType.BYTE -> this.asByte()
-            ItemTagType.SHORT -> this.asShort()
-            ItemTagType.INT -> this.asInt()
-            ItemTagType.LONG -> this.asLong()
-            ItemTagType.FLOAT -> this.asFloat()
-            ItemTagType.DOUBLE -> this.asDouble()
-            ItemTagType.STRING -> this.asString()
-            ItemTagType.BYTE_ARRAY -> this.asByteArray()
-            ItemTagType.INT_ARRAY -> this.asIntArray()
-            ItemTagType.COMPOUND -> this.asCompound()
-            ItemTagType.LIST -> this.asList()
-            else -> this.asString()
-        }
-        return when (value) {
-            is ItemTag -> {
-                value.toMutableMap()
-            }
-
-            is ItemTagList -> {
-                val list = ArrayList<Any>()
-                value.forEach {
-                    list.add(it.obj())
-                }
-                list
-            }
-
-            else -> value
-        }
-    }
-
-    val itemAttrData = BaseMap<Int, AttributeDataCompound>()
-    val tagCache = BaseMap<Int, ItemTag>()
-
-    internal fun ItemStack.cacheTag(): ItemTag {
-        if (isAir()) return ItemTag()
-        return tagCache.getOrPut(hashCode()) { getItemTag() }
-    }
-
-    override fun readItemNBT(
+    override fun addEquipment(
+        entity: LivingEntity,
+        source: String,
+        slot: String,
         itemStack: ItemStack,
-        entity: LivingEntity?, slot: String?,
-    ): AttributeDataCompound? {
-        val itemTag = itemStack.cacheTag()
-        val attributeDataMap = itemTag["ATTRIBUTE_DATA"]?.asCompound()?.toMutableMap() ?: return null
-        val conditionDataMap = itemTag["CONDITION_DATA"]?.asCompound()?.toMutableMap() ?: emptyMap()
-        AttributeSystem.conditionManager.conditionNBT(slot, entity, conditionDataMap).forEach {
-            attributeDataMap.removeDeep(it)
-        }
-
-        return AttributeDataCompound.fromMap(attributeDataMap)
-    }
-
-    override fun readItemsNBT(
-        itemStacks: Collection<ItemStack>,
-        entity: LivingEntity?, slot: String?,
-    ): AttributeDataCompound {
-        return mirrorNow("read-item-nbt") {
-            val attributeDataCompound = AttributeDataCompound(entity)
-            for (item: ItemStack in itemStacks) {
-                attributeDataCompound.operation(
-                    readItemNBT(item, entity) ?: continue
-                )
-            }
-            attributeDataCompound
-        }
-    }
-
-
-    override fun readItem(
-        itemStack: ItemStack,
-        entity: LivingEntity?,
-        slot: String?,
-    ): AttributeDataCompound {
-        val attributeDataCompound = AttributeDataCompound(entity)
-        attributeDataCompound["LORE-ATTRIBUTE"] =
-            readItemLore(itemStack, entity, slot)?.release() ?: AttributeData().release()
-        attributeDataCompound.operation(readItemNBT(itemStack, entity) ?: AttributeDataCompound(entity))
-
-        val event = ItemReadEvent(
-            entity ?: return attributeDataCompound,
-            itemStack,
-            attributeDataCompound,
-            slot
+    ): EquipmentData? {
+        val uuid = entity.uniqueId
+        return computeIfAbsent(uuid) { EquipmentDataCompound().apply { this.entity = entity } }.addEquipment(
+            entity,
+            source,
+            slot,
+            itemStack
         )
-        event.call()
-        return (if (!event.isCancelled) event.dataCompound else AttributeDataCompound(entity)).also {
-            itemAttrData.map.putIfAbsent(itemStack.hashCode() + entity.hashCode(), it)
-        }
     }
 
-
-    override fun readItems(
-
-        itemStacks: Collection<ItemStack>,
-        entity: LivingEntity?,
-        slot: String?,
-    ): AttributeDataCompound {
-        return mirrorNow("read-items") {
-            val attributeDataCompound = AttributeDataCompound(entity)
-            for (item: ItemStack in itemStacks) {
-                attributeDataCompound.operation(
-                    readItem(item, entity)
-                )
+    override fun addEquipData(entity: LivingEntity, source: String, equipments: Map<String, ItemStack>): EquipmentData {
+        val uuid = entity.uniqueId
+        return computeIfAbsent(uuid) { EquipmentDataCompound().apply { this.entity = entity } }.let { compound ->
+            compound.computeIfAbsent(source) { EquipmentData(compound, source) }.apply {
+                val newKeys = equipments.keys
+                compiledAttrDataManager[uuid].apply {
+                    filter { it.key !in newKeys }.map { it.key }.forEach(this::remove)
+                }
+                equipments.forEach { (slot, item) ->
+                    compound.addEquipment(entity, source, slot, item)
+                }
             }
-            attributeDataCompound
         }
     }
 
-    override fun addEquipment(entity: LivingEntity, key: String, equipments: Map<String, ItemStack>): EquipmentData {
-        return addEquipment(entity.uniqueId, key, equipments)
+
+    override fun removeEquipData(entity: LivingEntity, source: String): EquipmentData? {
+        return removeEquipData(entity.uniqueId, source)
     }
 
-    override fun addEquipment(entity: LivingEntity, key: String, equipments: EquipmentData): EquipmentData {
-        return addEquipment(entity.uniqueId, key, equipments)
+    override fun removeItem(entity: LivingEntity, source: String, slot: String): ItemStack? {
+        return removeItem(entity.uniqueId, source, slot)
     }
 
-    override fun addEquipment(uuid: UUID, key: String, equipments: Map<String, ItemStack>): EquipmentData {
-        return addEquipment(uuid, key, EquipmentData().apply { putAll(equipments) })
+    override fun clearEquipData(entity: LivingEntity) {
+        clearEquipData(entity.uniqueId)
     }
 
-
-    override fun addEquipment(uuid: UUID, key: String, equipmentData: EquipmentData): EquipmentData {
-        return getOrPut(uuid) { EquipmentDataCompound() }.let {
-            it[key] = equipmentData
-            equipmentData
-        }
+    override fun clearEquipData(entity: LivingEntity, source: String) {
+        clearEquipData(entity.uniqueId, source)
     }
 
-    override fun removeEquipment(entity: LivingEntity, key: String) {
-        removeEquipment(entity.uniqueId, key)
+    override fun addEquipData(uuid: UUID, source: String, slot: String, itemStack: ItemStack): EquipmentData? {
+        return addEquipment(uuid.validEntity(), source, slot, itemStack)
     }
 
-    override fun removeEquipment(uuid: UUID, key: String) {
-        get(uuid)?.remove(key)
+    override fun addEquipData(uuid: UUID, source: String, equipments: Map<String, ItemStack>): EquipmentData {
+        return addEquipData(uuid.validEntity(), source, equipments)
+    }
+
+    override fun removeEquipData(uuid: UUID, source: String): EquipmentData? {
+        compiledAttrDataManager.removeIfStartWith(uuid, getSource(source))
+        return get(uuid)?.uncheckedRemove(source)
+    }
+
+    override fun removeItem(uuid: UUID, source: String, slot: String): ItemStack? {
+        val compound = this[uuid] ?: return null
+        val data = compound[source] ?: return null
+        compiledAttrDataManager.removeCompiledData(uuid, getSource(source, slot))
+        return data.uncheckedRemove(slot)
+    }
+
+    override fun clearEquipData(uuid: UUID, source: String) {
+        compiledAttrDataManager.removeIfStartWith(uuid, getSource(source))
+        get(uuid)?.get(source)?.uncheckedClear()
+    }
+
+    override fun clearEquipData(uuid: UUID) {
+        compiledAttrDataManager.removeIfStartWith(uuid, getSource())
+        get(uuid)?.uncheckedClear()
     }
 
     override fun put(key: UUID, value: EquipmentDataCompound): EquipmentDataCompound? {
-        return super.put(key, value)?.apply { entity = key.livingEntity() }
+        return super.put(key, value)?.apply { entity = key.validEntity() }
     }
 }

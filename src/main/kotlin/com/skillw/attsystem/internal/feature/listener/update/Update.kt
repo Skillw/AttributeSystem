@@ -1,7 +1,8 @@
 package com.skillw.attsystem.internal.feature.listener.update
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.AttrAPI.updateAttr
+import com.skillw.attsystem.AttributeSystem.realizeManager
+import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.attsystem.api.event.FightEvent
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -19,11 +20,14 @@ import java.util.concurrent.TimeUnit
 internal object Update {
 
 
-    internal val baffle = Baffle.of(200, TimeUnit.MILLISECONDS)
+    internal val baffle = Baffle.of(40, TimeUnit.MILLISECONDS)
     internal fun LivingEntity.updateAsync(delay: Long = 0) {
-        if (baffle.hasNext(uniqueId.toString()))
-            submitAsync(delay = delay) { updateAttr() }
+        if (baffle.hasNext(uniqueId.toString())) {
+            submitAsync(delay = delay) { update() }
+            realizeManager.newRealizeTask(this).invoke()
+        }
     }
+
     @SubscribeEvent
     fun onPlayerJoin(event: PlayerJoinEvent) {
         event.player.updateAsync(2)
@@ -94,7 +98,7 @@ internal object Update {
     }
 
     @SubscribeEvent
-    fun fightPost(event: FightEvent.Post){
+    fun fightPost(event: FightEvent.Post) {
         (event.fightData.attacker as? Player?)?.updateAsync()
         (event.fightData.defender as? Player?)?.updateAsync()
     }

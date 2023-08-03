@@ -7,6 +7,8 @@ import taboolib.platform.type.BukkitProxyEvent
 /**
  * 加载物品事件
  *
+ * 物品被加载到装备栏时触发
+ *
  * @constructor Create empty Item load event
  * @property entity 实体
  * @property itemStack 物品

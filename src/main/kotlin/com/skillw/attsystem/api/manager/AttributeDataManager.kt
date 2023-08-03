@@ -1,9 +1,11 @@
 package com.skillw.attsystem.api.manager
 
+import com.skillw.attsystem.AttributeSystem.compiledAttrDataManager
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.pouvoir.api.manager.Manager
 import com.skillw.pouvoir.api.map.BaseMap
+import com.skillw.pouvoir.util.EntityUtils.livingEntity
 import org.bukkit.entity.LivingEntity
 import java.util.*
 
@@ -16,166 +18,134 @@ abstract class AttributeDataManager : BaseMap<UUID, AttributeDataCompound>(), Ma
 
 
     /**
-     * EntityUpdate
+     * 更新实体的属性数据
      *
      * @param entity 实体
      * @return 属性数据集
      */
     abstract fun update(entity: LivingEntity): AttributeDataCompound?
 
-    /**
-     * Add attribute
-     *
-     * @param entity 实体
-     * @param key 键(源)
-     * @param attributes 字符串集(会据此读取出属性数据)
-     * @return 属性数据
-     */
-    
-    abstract fun addAttrData(
-        entity: LivingEntity,
-        key: String,
-        attributes: Collection<String>
-    ): AttributeData?
 
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param entity 实体
-     * @param key 键(源)
+     * @param source 源
      * @param attributeData 属性数据
      * @return 属性数据
      */
-    
+
     abstract fun addAttrData(
-        entity: LivingEntity, key: String, attributeData: AttributeData
+        entity: LivingEntity, source: String, attributeData: AttributeData,
     ): AttributeData
 
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param uuid UUID
-     * @param key 键(源)
-     * @param attributes 字符串集(会据此读取出属性数据)
-     * @return 属性数据
-     */
-    
-    abstract fun addAttrData(
-        uuid: UUID, key: String, attributes: Collection<String>
-    ): AttributeData?
-
-    /**
-     * Add attribute
-     *
-     * @param uuid UUID
-     * @param key 键(源)
+     * @param source 源
      * @param attributeData 属性数据
      * @return 属性数据
      */
-    
+
     abstract fun addAttrData(
-        uuid: UUID, key: String, attributeData: AttributeData
+        uuid: UUID, source: String, attributeData: AttributeData,
     ): AttributeData
-    
+
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param entity 实体
-     * @param key 键(源)
+     * @param source 源
      * @param attributes 字符串集(会据此读取出属性数据)
      * @param release 是否在下次更新时释放属性数据
      * @return 属性数据
      */
     @Deprecated("addAttrData", ReplaceWith("addAttrData(entity, key, attributes)"))
-     fun addAttribute(
+    fun addAttribute(
         entity: LivingEntity,
-        key: String,
+        source: String,
         attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = addAttrData(entity, key, attributes)
+    ): AttributeData? =
+        compiledAttrDataManager.addCompiledData(entity, source, attributes)?.eval(entity)?.toAttributeData()
 
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param entity 实体
-     * @param key 键(源)
+     * @param source 源
      * @param attributeData 属性数据
      * @param release 是否在下次更新时释放属性数据
      * @return 属性数据
      */
     @Deprecated("addAttrData", ReplaceWith("addAttrData(entity, key, attributeData)"))
     fun addAttribute(
-        entity: LivingEntity, key: String, attributeData: AttributeData,
+        entity: LivingEntity, source: String, attributeData: AttributeData,
         release: Boolean = false,
-    ): AttributeData = addAttrData(entity, key, attributeData)
+    ): AttributeData = addAttrData(entity, source, attributeData)
 
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param uuid UUID
-     * @param key 键(源)
+     * @param source 源
      * @param attributes 字符串集(会据此读取出属性数据)
      * @param release 是否在下次更新时释放属性数据
      * @return 属性数据
      */
     @Deprecated("addAttrData", ReplaceWith("addAttrData(uuid, key, attributes)"))
-     fun addAttribute(
-        uuid: UUID, key: String, attributes: Collection<String>,
+    fun addAttribute(
+        uuid: UUID, source: String, attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = addAttrData(uuid, key, attributes)
+    ): AttributeData? = uuid.livingEntity()?.let { addAttribute(it, source, attributes) }
 
     /**
-     * Add attribute
+     * 给实体添加属性数据
      *
      * @param uuid UUID
-     * @param key 键(源)
+     * @param source 源
      * @param attributeData 属性数据
      * @param release 是否在下次更新时释放属性数据
      * @return 属性数据
      */
     @Deprecated("addAttrData", ReplaceWith("addAttrData(uuid, key, attributeData)"))
-     fun addAttribute(
-        uuid: UUID, key: String, attributeData: AttributeData,
+    fun addAttribute(
+        uuid: UUID, source: String, attributeData: AttributeData,
         release: Boolean = false,
-    ): AttributeData = addAttrData(uuid, key, attributeData)
+    ): AttributeData = addAttrData(uuid, source, attributeData)
 
     /**
-     * Remove attribute
+     * 根据 源 删除实体的属性数据
      *
      * @param entity 实体
-     * @param key 键(源)
+     * @param source 源
      */
     @Deprecated("removeAttrData", ReplaceWith("removeAttrData(entity, key)"))
-     fun removeAttribute(entity: LivingEntity, key: String) = removeAttrData(entity, key)
+    fun removeAttribute(entity: LivingEntity, source: String) = removeAttrData(entity, source)
 
     /**
-     * Remove attribute
+     * 根据 源 删除实体的属性数据
      *
      * @param uuid UUID
-     * @param key 键(源)
+     * @param source 源
      */
     @Deprecated("removeAttrData", ReplaceWith("removeAttrData(uuid, key)"))
-     fun removeAttribute(uuid: UUID, key: String) = removeAttrData(uuid, key)
+    fun removeAttribute(uuid: UUID, source: String) = removeAttrData(uuid, source)
 
     /**
-     * Remove attribute
+     * 根据 源 删除实体的属性数据
      *
      * @param entity 实体
-     * @param key 键(源)
+     * @param source 源
      */
-    abstract fun removeAttrData(entity: LivingEntity, key: String)
+    abstract fun removeAttrData(entity: LivingEntity, source: String): AttributeData?
 
     /**
-     * Remove attribute
+     * 根据 源 删除实体的属性数据
      *
      * @param uuid UUID
-     * @param key 键(源)
+     * @param source 源
      */
-    abstract fun removeAttrData(uuid: UUID, key: String)
-
-    /** Player base attribute */
-    abstract var playerBaseAttribute: AttributeData
-
-    /** Entity base attribute */
-    abstract var entityBaseAttribute: AttributeData
+    abstract fun removeAttrData(uuid: UUID, source: String): AttributeData?
 }

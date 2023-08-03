@@ -77,8 +77,10 @@ function load() {
     Data.put(
         "inertia-task",
         Tool.taskAsyncTimer(10, 1, function (t) {
-            var player = Bukkit.getPlayer("Glom_");
-            cal_velocity(player);
+            var players = Bukkit.getOnlinePlayers()
+            Tool.forEach(function (player) {
+                cal_velocity(player);
+            })
         })
     );
 }

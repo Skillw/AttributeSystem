@@ -1,5 +1,8 @@
 package com.skillw.attsystem.api.manager
 
+import com.skillw.attsystem.api.attribute.compound.AttributeData
+import com.skillw.attsystem.api.compiled.oper.ComplexCompiledData
+import com.skillw.attsystem.api.compiled.oper.StringsCompiledData
 import com.skillw.attsystem.api.condition.BaseCondition
 import com.skillw.pouvoir.api.manager.Manager
 import com.skillw.pouvoir.api.map.LowerKeyMap
@@ -12,58 +15,32 @@ import org.bukkit.entity.LivingEntity
  */
 abstract class ConditionManager : LowerKeyMap<BaseCondition>(), Manager {
     /**
-     * Condition NBT
+     * 构建 NBT预编译属性的构造器
      *
-     * NBT条件
-     *
-     * @param slot 槽位
      * @param entity 实体
-     * @param map NBT
-     * @return 要去除的NBT属性的键
+     * @param nbt NBT
+     * @param slot 槽位
+     * @return NBT条件的构造器
      */
     abstract fun conditionNBT(
-        slot: String? = null,
         entity: LivingEntity?,
-        map: Map<String, Any>
-    ): Set<String>
-
-    /**
-     * Condition line
-     *
-     * 单行条件
-     *
-     * @param slot 槽位
-     * @param entity 实体
-     * @param str 字符串
-     * @return 是否通过
-     */
-    abstract fun conditionLine(slot: String? = null, entity: LivingEntity?, str: String): Boolean
-
-    /**
-     * Condition strings
-     *
-     * 多行条件
-     *
-     * @param slot 槽位
-     * @param entity 实体
-     * @param strings 字符串集
-     * @return 是否通过
-     */
-    abstract fun conditionStrings(
+        nbt: Collection<Any>,
         slot: String? = null,
-        entity: LivingEntity?,
-        strings: Collection<String>
-    ): Boolean
+    ): (MutableMap<String, Any>) -> ComplexCompiledData
+
 
     /**
-     * Line conditions
+     * 构建 字符串预编译属性的构造器
      *
-     * 单行条件
-     *
-     * @param slot 槽位
-     * @param requirements 多个单行条件
      * @param entity 实体
-     * @return 是否通过
+     * @param string 字符串
+     * @param slot 槽位
+     * @return 字符串预编译属性的构造器，若无条件则返回null
      */
-    abstract fun lineConditions(slot: String? = null, requirements: String, entity: LivingEntity?): Boolean
+    abstract fun condition(
+        entity: LivingEntity?,
+        string: String,
+        slot: String? = null,
+    ): ((AttributeData) -> StringsCompiledData)?
+
 }

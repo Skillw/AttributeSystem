@@ -9,7 +9,6 @@ import com.skillw.attsystem.api.manager.RealizeManager
 import com.skillw.attsystem.internal.feature.message.ASHologramGroup
 import com.skillw.attsystem.internal.manager.ASConfig.defaultMaxHealth
 import com.skillw.attsystem.internal.manager.ASConfig.disableRegainOnFight
-import com.skillw.attsystem.internal.manager.ASConfig.isVanillaAttackSpeed
 import com.skillw.attsystem.internal.manager.ASConfig.isVanillaMaxHealth
 import com.skillw.attsystem.internal.manager.ASConfig.isVanillaMovementSpeed
 import com.skillw.attsystem.internal.manager.ASConfig.skillAPI
@@ -57,26 +56,28 @@ object RealizeManagerImpl : RealizeManager() {
     const val ATTACK_DISTANCE = "attack-distance"
     const val LUCK = "luck"
 
-    private fun createHealthRegainScheduled(): PlatformExecutor.PlatformTask {
-        fun calRegain(entity: LivingEntity): Double {
-            val uuid = entity.uniqueId
-            val maxHealth = entity.getAttribute(BukkitAttribute.MAX_HEALTH)?.value ?: return -1.0
-            if (entity.health == maxHealth) return -1.0
-            var healthRegain = formulaManager[uuid, HEALTH_REGAIN]
-            if (healthRegain == -1.0) return -1.0
-            val event = HealthRegainEvent(entity, healthRegain)
-            event.call()
-            if (event.isCancelled) return -1.0
-            val health = entity.health
-            val value = health + event.regain
-            if (value >= maxHealth) {
-                entity.health = maxHealth
-                healthRegain = maxHealth - health
-            } else {
-                entity.health = value
-            }
-            return healthRegain
+    private fun calRegain(entity: LivingEntity): Double {
+        val uuid = entity.uniqueId
+        val maxHealth = entity.getAttribute(BukkitAttribute.MAX_HEALTH)?.value ?: return -1.0
+        if (entity.health == maxHealth) return -1.0
+        var healthRegain = formulaManager[uuid, HEALTH_REGAIN]
+        if (healthRegain == -1.0) return -1.0
+        val event = HealthRegainEvent(entity, healthRegain)
+        event.call()
+        if (event.isCancelled) return -1.0
+        val health = entity.health
+        val value = health + event.regain
+        if (value >= maxHealth) {
+            entity.health = maxHealth
+            healthRegain = maxHealth - health
+        } else {
+            entity.health = value
         }
+        return healthRegain
+    }
+
+    private fun createHealthRegainScheduled(): PlatformExecutor.PlatformTask {
+        //生命回复任务不敢异步
         return submit(period = ASConfig.healthRegainSchedule) {
             for (uuid in AttributeSystem.attributeDataManager.keys) {
                 val entity = uuid.livingEntity()
@@ -110,6 +111,7 @@ object RealizeManagerImpl : RealizeManager() {
             }
         }
     }
+
 
     private fun getSkillAPIHealth(player: Player): Int {
         return if (skillAPI) SkillAPI.getPlayerData(player).classes.stream()
@@ -151,70 +153,86 @@ object RealizeManagerImpl : RealizeManager() {
         }
     }
 
-    private fun realizeHealth(entity: LivingEntity) {
+    private val isLegacy by lazy {
+        MinecraftVersion.minor <= 11300
+    }
+
+    private fun realizeHealth(entity: LivingEntity): (() -> Unit)? {
         var maxHealthValue = formulaManager[entity, MAX_HEALTH]
-        if (maxHealthValue < 0) return
+        if (maxHealthValue < 0) return null
         maxHealthValue += if (entity is Player) getSkillAPIHealth(entity).toDouble() else 0.0
-        if (isVanillaMaxHealth || entity !is Player)
-            realizeAttribute(entity, BukkitAttribute.MAX_HEALTH, maxHealthValue, true)
-        else {
-            entity.apply {
-                getAttribute(BukkitAttribute.MAX_HEALTH)?.apply {
-                    clear()
+        if (entity is Player && (isLegacy || isVanillaMaxHealth)) {
+            maxHealthValue += defaultMaxHealth
+        }
+        if (!changed(entity.uniqueId, BukkitAttribute.MAX_HEALTH, maxHealthValue)) {
+            return null
+        }
+        return if (entity !is Player || (!isLegacy && isVanillaMaxHealth)) {
+            {
+                realizeAttribute(entity, BukkitAttribute.MAX_HEALTH, maxHealthValue, true)
+            }
+        } else {
+            {
+                entity.apply {
+                    getAttribute(BukkitAttribute.MAX_HEALTH)?.apply {
+                        clear()
+                    }
+                    maxHealth = if (maxHealthValue < 0.0) return@apply else maxHealthValue
                 }
-                maxHealthValue += defaultMaxHealth
-                maxHealth = if (maxHealthValue < 0.0) return else maxHealthValue
             }
         }
     }
 
+    private val cache = WeakHashMap<UUID, EnumMap<BukkitAttribute, Double>>()
 
-    private fun realizeAll(entity: LivingEntity) {
-        realizeHealth(entity)
+    private fun changed(uuid: UUID, type: BukkitAttribute, value: Double): Boolean =
+        cache.computeIfAbsent(uuid) { EnumMap(BukkitAttribute::class.java) }
+            .run {
+                return if (get(type) != value) {
+                    put(type, value)
+                    true
+                } else false
+            }
 
+    private fun realizeAll(entity: LivingEntity): List<() -> Unit> {
+        val list = LinkedList<() -> Unit>()
+        realizeHealth(entity)?.let { list.add(it) }
+        val uuid = entity.uniqueId
         val movementSpeed = formulaManager[entity, MOVEMENT_SPEED]
-        entity.setWalkSpeed(movementSpeed)
+        if (changed(uuid, BukkitAttribute.MOVEMENT_SPEED, movementSpeed))
+            list.add { entity.setWalkSpeed(movementSpeed) }
 
         val knockbackResistance = formulaManager[entity, KNOCKBACK_RESISTANCE]
-        realizeAttribute(entity, BukkitAttribute.KNOCKBACK_RESISTANCE, knockbackResistance)
+        if (changed(uuid, BukkitAttribute.KNOCKBACK_RESISTANCE, knockbackResistance))
+            list.add { realizeAttribute(entity, BukkitAttribute.KNOCKBACK_RESISTANCE, knockbackResistance, true) }
 
-        if (entity !is Player) return
-        realizeAttackSpeed(entity)
+
+        if (entity !is Player) return list
+        val attackSpeed = formulaManager[entity, ATTACK_SPEED]
+//        因原版特性，需要时常更新攻击速度
+//        if (changed(uuid, BukkitAttribute.ATTACK_SPEED, attackSpeed))
+        list.add { realizeAttribute(entity, BukkitAttribute.ATTACK_SPEED, attackSpeed) }
 
         val luck = formulaManager[entity, LUCK]
-        realizeAttribute(entity, BukkitAttribute.LUCK, luck)
+        if (changed(uuid, BukkitAttribute.LUCK, luck))
+            list.add { realizeAttribute(entity, BukkitAttribute.LUCK, luck, true) }
+        return list
+    }
+
+    override fun newRealizeTask(entity: LivingEntity): () -> Unit {
+        val tasks = realizeAll(entity)
+        return {
+            if (entity is Player) bypassAntiCheat(entity)
+            tasks.forEach { it.invoke() }
+            if (entity is Player) recoverAntiCheat(entity)
+        }
     }
 
     override fun realize(entity: Entity) {
         if (!entity.isAlive()) return
         entity as LivingEntity
-        if (entity is Player) bypassAntiCheat(entity)
-        if (isPrimaryThread) {
-            realizeAll(entity)
-        } else {
-            sync { realizeAll(entity) }
-        }
-        if (entity is Player) recoverAntiCheat(entity)
-    }
-
-    private fun realizeAttackSpeed(entity: Player) {
-        val value = formulaManager[entity, ATTACK_SPEED]
-        entity.getAttribute(BukkitAttribute.ATTACK_SPEED)?.apply {
-            if (isVanillaAttackSpeed) {
-                if (baseValue != defaultValue)
-                    baseValue = defaultValue
-                realizeAttribute(entity, BukkitAttribute.ATTACK_SPEED, value, true)
-                return
-            }
-            if (value <= 0.0) {
-                if (baseValue != defaultValue)
-                    baseValue = defaultValue
-                return
-            }
-            for (modifier in modifiers) {
-                removeModifier(modifier)
-            }
-            baseValue = value
+        newRealizeTask(entity).apply {
+            if (isPrimaryThread) invoke() else sync { invoke() }
         }
     }
 
@@ -237,8 +255,14 @@ object RealizeManagerImpl : RealizeManager() {
             return this.getAttribute(bukkitAttribute.toBukkit() ?: return null)
         }
     }
-    fun AttributeInstance.toFormatString() : String{
-       return linkedMapOf("default" to defaultValue,"base" to baseValue, "modifiers" to modifiers.map { it.serialize() }, "total" to value).encodeJson()
+
+    fun AttributeInstance.toFormatString(): String {
+        return linkedMapOf(
+            "default" to defaultValue,
+            "base" to baseValue,
+            "modifiers" to modifiers.map { it.serialize() },
+            "total" to value
+        ).encodeJson()
     }
 
     override fun onActive() {

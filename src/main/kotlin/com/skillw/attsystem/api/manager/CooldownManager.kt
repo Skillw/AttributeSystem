@@ -8,7 +8,9 @@ import org.bukkit.inventory.ItemStack
 import java.util.*
 
 /**
- * Cooldown manager
+ * 玩家武器冷却管理器
+ *
+ * 是原版冷却
  *
  * @constructor Create empty Cooldown manager
  */

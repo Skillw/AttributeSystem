@@ -4,8 +4,6 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.pouvoir.api.able.Registrable
 import org.bukkit.entity.LivingEntity
 import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * Base condition
@@ -15,69 +13,14 @@ import java.util.regex.Pattern
  * @property key 键
  * @property type 类型
  */
-abstract class BaseCondition(override val key: String, names: Set<String>, val type: ConditionType) :
-    Registrable<String>, Condition {
-    /** Patterns */
-    val patterns = HashSet<Pattern>()
+abstract class BaseCondition(override val key: String) :
+    Registrable<String>, Condition, ConditionReader {
 
-    init {
-        names.forEach {
-            patterns.add(it.toPattern())
-        }
-    }
-
-    /** Release */
+    /** 是否在下次重载时自动注销 */
     var release = false
 
-    /** Type line */
-    fun typeLine() = type == ConditionType.LINE || type == ConditionType.ALL
 
-    /** Type strings */
-    fun typeStrings() = type == ConditionType.STRINGS || type == ConditionType.ALL
-
-    /** Type all */
-    fun typeAll() = type == ConditionType.ALL
-
-    /**
-     * Is type
-     *
-     * @param type
-     */
-    fun isType(type: ConditionType) = this.type == type || this.typeAll()
-
-    /**
-     * Condition type
-     *
-     * @constructor Create empty Condition type
-     */
-    enum class ConditionType {
-        /**
-         * Line
-         *
-         * 单行条件 (不符合则此行属性不生效)
-         *
-         * @constructor Create empty Line
-         */
-        LINE,
-
-        /**
-         * Strings
-         *
-         * 多行条件 (不符合则整个物品/字符串集合的属性不生效)
-         *
-         * @constructor Create empty Strings
-         */
-        STRINGS,
-
-        /**
-         * All
-         *
-         * 多行数据 兼 单行数据
-         *
-         * @constructor Create empty All
-         */
-        ALL
-    }
+    abstract override fun parameters(text: String): Map<String, Any>?
 
     /**
      * Builder
@@ -86,14 +29,14 @@ abstract class BaseCondition(override val key: String, names: Set<String>, val t
      * @property key 键
      * @property type 类型
      */
-    class Builder(val key: String, val type: ConditionType) {
-        /** Release */
+    class Builder(val key: String) {
+        /** 是否在下次重载时自动注销 */
         var release = false
 
-        /** Names */
-        val names = HashSet<String>()
 
         private val conditions = LinkedList<Condition>()
+
+        private val conditionReaders = LinkedList<ConditionReader>()
 
         /**
          * Condition
@@ -106,27 +49,28 @@ abstract class BaseCondition(override val key: String, names: Set<String>, val t
             conditions.add(condition)
         }
 
+        fun parameters(
+            reader: ConditionReader,
+        ) {
+            conditionReaders.add(reader)
+        }
+
         /**
          * Build
          *
          * @return
          */
         fun build(): BaseCondition {
-            return object : BaseCondition(key, names, type) {
-                override fun condition(
-                    slot: String?,
-                    entity: LivingEntity?,
-                    matcher: Matcher,
-                    text: String,
-                ): Boolean {
-                    return conditions.all {
-                        it.condition(slot, entity, matcher, text)
-                    }
+            return object : BaseCondition(key) {
+                override fun parameters(text: String): Map<String, Any> {
+                    val map = HashMap<String, Any>()
+                    conditionReaders.forEach { it.parameters(text)?.let { it1 -> map.putAll(it1) } }
+                    return map
                 }
 
-                override fun conditionNBT(slot: String?, entity: LivingEntity?, map: Map<String, Any>): Boolean {
+                override fun condition(entity: LivingEntity?, parameters: Map<String, Any>): Boolean {
                     return conditions.all {
-                        it.conditionNBT(slot, entity, map)
+                        it.condition(entity, parameters)
                     }
                 }
 
@@ -141,10 +85,9 @@ abstract class BaseCondition(override val key: String, names: Set<String>, val t
         @JvmStatic
         fun createCondition(
             key: String,
-            type: ConditionType,
             init: Builder.() -> Unit,
         ): BaseCondition {
-            val builder = Builder(key, type)
+            val builder = Builder(key)
             builder.init()
             return builder.build()
         }
@@ -153,5 +96,23 @@ abstract class BaseCondition(override val key: String, names: Set<String>, val t
     override fun register() {
         AttributeSystem.conditionManager.register(this)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is BaseCondition) return false
+
+        if (key != other.key) return false
+        return release == other.release
+    }
+
+    override fun hashCode(): Int {
+        return key.hashCode()
+    }
+
+    override fun toString(): String {
+        return "Condition { key: $key }"
+    }
+
+
 }
 

@@ -11,7 +11,6 @@ import com.skillw.pouvoir.api.map.LowerMap
  */
 abstract class GroupStatus<A : Any>(val readGroup: ReadGroup<A>) : Status<A>, LowerMap<A>() {
 
-
     override fun operation(status: Status<*>): Status<A> {
         status as? GroupStatus<A> ?: return this
         for (key in status.keys) {
@@ -53,7 +52,7 @@ abstract class GroupStatus<A : Any>(val readGroup: ReadGroup<A>) : Status<A>, Lo
      * @return 序列化结果
      */
     override fun serialize(): MutableMap<String, Any> {
-        return HashMap(this.map)
+        return HashMap(this)
     }
 
     /**
@@ -62,8 +61,4 @@ abstract class GroupStatus<A : Any>(val readGroup: ReadGroup<A>) : Status<A>, Lo
      * @return 复制结果
      */
     abstract override fun clone(): GroupStatus<A>
-
-    override fun toString(): String {
-        return map.toString()
-    }
 }

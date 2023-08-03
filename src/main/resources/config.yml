@@ -76,6 +76,8 @@ options:
   attribute:
     #tick
     time:
+      #实现原版属性的间隔
+      realize: 10
       #生命恢复间隔
       health-regain: 10
       #属性数据清理间隔

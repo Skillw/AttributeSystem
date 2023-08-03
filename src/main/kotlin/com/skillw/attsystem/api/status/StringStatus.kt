@@ -10,10 +10,10 @@ import com.skillw.attsystem.internal.core.read.ReadGroup
  */
 class StringStatus(numberReader: ReadGroup<String>) : GroupStatus<String>(numberReader) {
     override fun clone(): StringStatus {
-        val attributeStatus = StringStatus(readGroup)
+        val status = StringStatus(readGroup)
         this.forEach {
-            attributeStatus.register(it.key, it.value)
+            status.register(it.key, it.value)
         }
-        return attributeStatus
+        return status
     }
 }

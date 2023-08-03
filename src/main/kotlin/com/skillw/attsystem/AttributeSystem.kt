@@ -115,6 +115,14 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @PouManager
     lateinit var messageBuilderManager: MessageBuilderManager
 
+    @JvmStatic
+    @PouManager
+    lateinit var readManager: ReadManager
+
+    @JvmStatic
+    @PouManager
+    lateinit var compiledAttrDataManager: CompiledAttrDataManager
+
     override fun onLoad() {
         load()
     }
