@@ -127,6 +127,14 @@ object ReadManagerImpl : ReadManager() {
         return compiledData
     }
 
+    override fun readMap(
+        attrDataMap: MutableMap<String, Any>,
+        conditions: Collection<Any>,
+        entity: LivingEntity?, slot: String?,
+    ): CompiledAttrData {
+        return AttributeSystem.conditionManager.conditionNBT(entity, conditions, slot)(attrDataMap)
+    }
+
     override fun readItemNBT(
         itemStack: ItemStack,
         entity: LivingEntity?, slot: String?,
@@ -136,7 +144,7 @@ object ReadManagerImpl : ReadManager() {
             val itemTag = itemStack.getItemTag()
             val attributeDataMap = itemTag["ATTRIBUTE_DATA"]?.asCompound()?.toMutableMap() ?: return@mirrorIfDebug null
             val conditions = itemTag["CONDITION_DATA"]?.asList()?.toList() ?: emptyList()
-            AttributeSystem.conditionManager.conditionNBT(entity, conditions, slot)(attributeDataMap)
+            readMap(attributeDataMap, conditions, entity, slot)
         }
     }
 

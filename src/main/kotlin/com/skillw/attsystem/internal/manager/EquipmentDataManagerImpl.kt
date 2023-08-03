@@ -159,9 +159,7 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         return computeIfAbsent(uuid) { EquipmentDataCompound().apply { this.entity = entity } }.let { compound ->
             compound.computeIfAbsent(source) { EquipmentData(compound, source) }.apply {
                 val newKeys = equipments.keys
-                compiledAttrDataManager[uuid].apply {
-                    filter { it.key !in newKeys }.map { it.key }.forEach(this::remove)
-                }
+                filter { it.key !in newKeys }.map { it.key }.forEach(this::remove)
                 equipments.forEach { (slot, item) ->
                     compound.addEquipment(entity, source, slot, item)
                 }

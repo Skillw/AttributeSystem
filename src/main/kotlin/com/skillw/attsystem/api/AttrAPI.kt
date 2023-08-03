@@ -11,6 +11,7 @@ import com.skillw.attsystem.api.compiled.CompiledAttrData
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.operation.Operation
+import com.skillw.pouvoir.util.EntityUtils.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -115,15 +116,17 @@ object AttrAPI {
      * @receiver LivingEntity 实体
      */
     @Deprecated(
-        "Use addAttrData",
-        ReplaceWith("addAttrData(key, attributes)", "com.skillw.attsystem.api.AttrAPI.addAttrData")
+        "Use addAttrData", ReplaceWith(
+            "addCompiledData(source, attributes)",
+            "com.skillw.attsystem.api.AttrAPI.addCompiledData"
+        )
     )
     @JvmStatic
     fun LivingEntity.addAttribute(
         source: String,
         attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = AttributeSystem.attributeDataManager.addAttribute(this, source, attributes)
+    ): AttributeData? = addCompiledData(source, attributes)?.eval(this)?.toAttributeData()
 
     /**
      * 给实体添加属性数据
@@ -154,14 +157,16 @@ object AttrAPI {
      * @receiver UUID 实体uuid
      */
     @Deprecated(
-        "Use addAttrData",
-        ReplaceWith("addAttrData(key, attributes)", "com.skillw.attsystem.api.AttrAPI.addAttrData")
+        "Use addAttrData", ReplaceWith(
+            "addCompiledData(source, attributes)",
+            "com.skillw.attsystem.api.AttrAPI.addCompiledData"
+        )
     )
     @JvmStatic
     fun UUID.addAttribute(
         source: String, attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = AttributeSystem.attributeDataManager.addAttribute(this, source, attributes)
+    ): AttributeData? = addCompiledData(source, attributes)?.eval(livingEntity())?.toAttributeData()
 
     /**
      * 给实体添加属性数据

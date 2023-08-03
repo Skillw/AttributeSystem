@@ -105,4 +105,11 @@ abstract class ReadManager : Manager {
     abstract fun readItems(
         itemStacks: Collection<ItemStack>, entity: LivingEntity? = null, slot: String? = null,
     ): CompiledAttrData
+
+    abstract fun readMap(
+        attrDataMap: MutableMap<String, Any>,
+        conditions: Collection<Any>,
+        entity: LivingEntity?,
+        slot: String?,
+    ): CompiledAttrData
 }
