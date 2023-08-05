@@ -6,7 +6,7 @@ import taboolib.platform.type.BukkitProxyEvent
 
 class AttributeUpdateEvent {
     /**
-     * 属性更新前 此时上一次的装备属性数据还没有释放
+     * 属性更新前
      *
      * @property entity 实体
      * @property data 属性数据集
@@ -19,7 +19,7 @@ class AttributeUpdateEvent {
     }
 
     /**
-     * 属性更新中 此时新的装备的属性已经加载 但属性映射还没有计算
+     * 属性更新中 此时新的属性数据已经加载 但属性映射还没有计算
      *
      * @property entity 实体
      * @property data 属性数据集

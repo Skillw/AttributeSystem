@@ -17,7 +17,7 @@ class NMSImpl : NMS() {
     override fun getAttribute(entity: LivingEntity, attribute: BukkitAttribute): AttributeInstance? {
         return if (MinecraftVersion.major <= 4) {
             val craftAttributes = (entity as CraftLivingEntity).handle.craftAttributes
-            val bukkitAtt = attribute.toBukkit()
+            val bukkitAtt = attribute.toBukkit() ?: return null
             craftAttributes.getAttribute(bukkitAtt)
         } else entity.getAttribute(attribute.toBukkit() ?: return null)
     }

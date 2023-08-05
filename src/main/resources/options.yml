@@ -1,16 +1,17 @@
-base-attribute:
+base-attribute-player:
   # strings / nbt
   type: strings
-  values:
+  attributes:
     - "生命恢复: 0.1"
     - "攻击速度: 1.5"
     - "命中几率: 100(%)"
     - "攻击距离: 2.7"
     - "暴击伤害: 150(%)"
-#  type: nbt
-#  values:
-#    HitChance:
-#      percent: 100
+base-attribute-entity:
+  # strings / nbt
+  type: strings
+  attributes:
+    - "命中几率: 100(%)"
 #生命值缩放
 health-scale:
   enable: true
@@ -25,6 +26,9 @@ health-regain:
   #战斗时间禁生命恢复系统
   disable-in-fighting: false
   value: "%as_att:HealthRegain% / 2"
-data-clear:
-  #数据清理间隔(tick)
-  period: 1200
+update:
+  #属性更新任务周期 (tick)
+  period: 10
+  #由事件驱动的玩家更新最低间隔 (ms)
+  #为了防止玩家高频更新属性
+  baffle: 40

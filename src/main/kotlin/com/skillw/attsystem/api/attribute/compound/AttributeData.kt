@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.attribute.compound
 
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.status.Status
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.BaseMap
 import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.ItemTag
@@ -22,8 +22,8 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
     constructor()
     constructor(attributeData: AttributeData) {
         this.release = attributeData.release
-        for (attribute in attributeData.map.keys) {
-            this[attribute] = attributeData.map[attribute]!!.clone()
+        for (attribute in attributeData.keys) {
+            this[attribute] = attributeData[attribute]!!.clone()
         }
     }
 
@@ -77,12 +77,24 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
      *
      * 作运算操作
      *
-     * @param attributeDataArray 属性数据
+     * @param others 属性数据
      * @return 自身(运算后)
      */
-    fun operation(vararg attributeDataArray: AttributeData): AttributeData {
-        for (attributeData in attributeDataArray) {
-            attributeData.map.forEach { (attribute, attributeStatus) ->
+
+    @Deprecated("use combine", ReplaceWith("combine(*others)"))
+    fun operation(vararg others: AttributeData): AttributeData = combine(*others)
+
+    /**
+     * NumberOperation
+     *
+     * 作运算操作
+     *
+     * @param others 属性数据
+     * @return 自身(运算后)
+     */
+    fun combine(vararg others: AttributeData): AttributeData {
+        for (attributeData in others) {
+            attributeData.forEach { (attribute, attributeStatus) ->
                 this.operation(attribute, attributeStatus)
             }
         }
@@ -105,7 +117,7 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
 
 
     override fun toString(): String {
-        return map.toString()
+        return serialize().toString()
     }
 
     /**
@@ -125,7 +137,7 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
      *
      * @return 属性数据
      */
-    fun clone(): AttributeData {
+    public override fun clone(): AttributeData {
         return AttributeData(this)
     }
 
@@ -178,15 +190,14 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
          * @return AttributeData 属性数据
          */
         @JvmStatic
-        fun fromMap(map: Map<String, Any>): AttributeData {
-            val attributeData = AttributeData()
-            for ((attKey, value) in map) {
-                val attribute = attributeManager[attKey] ?: continue
-                val attributeStatus =
-                    attribute.readPattern.readNBT((value as Map<String, Any>), attribute) ?: continue
-                attributeData.register(attribute, attributeStatus)
+        fun fromMap(map: Map<String, Any>): AttributeData =
+            AttributeData().apply {
+                map.forEach { (attKey, value) ->
+                    val attribute = attributeManager[attKey] ?: return@forEach
+                    val status =
+                        attribute.readPattern.readNBT(value as Map<String, Any>, attribute) ?: return@forEach
+                    register(attribute, status)
+                }
             }
-            return attributeData
-        }
     }
 }

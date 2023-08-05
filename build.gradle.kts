@@ -42,8 +42,8 @@ taboolib {
             name("GermPlugin").optional(true)
             name("SkillAPI").optional(true)
             name("DragonCore").optional(true)
-            name("Magic").optional(true)
             name("MythicMobs").optional(true)
+            name("Magic").optional(true)
 
 
         }
@@ -55,8 +55,8 @@ taboolib {
     install("module-nms-util")
     install("module-nms")
     install("module-configuration")
-    install("platform-bukkit")
     install("module-lang")
+    install("platform-bukkit")
 
     install("module-metrics")
     classifier = null
@@ -89,6 +89,9 @@ repositories {
     mavenCentral()
 }
 
+//tasks.withType<Jar> {
+//    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
+//}
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
@@ -115,11 +118,10 @@ tasks.javadoc {
     }
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
+//java {
+//    withJavadocJar()
+//    withSourcesJar()
+//}
 
 
 configure<JavaPluginConvention> {
@@ -140,7 +142,7 @@ publishing {
                 password = project.findProperty("password").toString()
             }
             authentication {
-                create<BasicAuthentication>("basic")
+                create<BasicAuthentication>("base")
             }
         }
         mavenLocal()

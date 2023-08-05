@@ -8,6 +8,7 @@ import com.skillw.attsystem.internal.core.attribute.ConfigAttributeBuilder
 import com.skillw.attsystem.internal.manager.ASConfig.debug
 import com.skillw.pouvoir.api.plugin.SubPouvoir
 import com.skillw.pouvoir.api.plugin.map.BaseMap
+import com.skillw.pouvoir.api.plugin.map.LowerMap
 import com.skillw.pouvoir.util.loadMultiply
 import com.skillw.pouvoir.util.loadYaml
 import com.skillw.pouvoir.util.put
@@ -27,14 +28,10 @@ object AttributeManagerImpl : AttributeManager() {
     private val fileToKeys = BaseMap<File, HashSet<String>>()
     private val folderToKeys = BaseMap<File, HashSet<String>>()
 
-    val nameMap = BaseMap<String, Attribute>()
+    override val nameMap = LowerMap<Attribute>()
 
     override val attributes: MutableList<Attribute> by lazy {
         CopyOnWriteArrayList()
-    }
-
-    override fun get(key: String): Attribute? {
-        return super.get(key) ?: nameMap[key]
     }
 
     override fun onEnable() {
@@ -137,5 +134,10 @@ object AttributeManagerImpl : AttributeManager() {
                 )
             }
         }
+    }
+
+    override operator fun get(key: String): Attribute? {
+        val lower = key.lowercase()
+        return super.get(lower) ?: nameMap[lower]
     }
 }

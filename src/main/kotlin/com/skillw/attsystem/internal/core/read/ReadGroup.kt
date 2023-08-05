@@ -2,10 +2,10 @@ package com.skillw.attsystem.internal.core.read
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.operation.Operation
 import com.skillw.attsystem.api.read.ReadPattern
-import com.skillw.attsystem.api.status.GroupStatus
-import com.skillw.attsystem.api.status.Status
+import com.skillw.attsystem.api.read.operation.Operation
+import com.skillw.attsystem.api.read.status.GroupStatus
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.attsystem.internal.core.read.num.NumberReader
 import com.skillw.attsystem.internal.core.read.str.StringReader
 import com.skillw.attsystem.internal.manager.ASConfig

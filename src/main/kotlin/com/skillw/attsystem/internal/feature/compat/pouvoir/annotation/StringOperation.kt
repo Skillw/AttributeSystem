@@ -1,7 +1,7 @@
 package com.skillw.attsystem.internal.feature.compat.pouvoir.annotation
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.operation.StringOperation
+import com.skillw.attsystem.api.read.operation.StringOperation
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister

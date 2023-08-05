@@ -1,13 +1,10 @@
 package com.skillw.attsystem.api.attribute.compound
 
-import com.skillw.asahi.api.AsahiAPI.asahi
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
-import com.skillw.attsystem.api.AttrAPI
+import com.skillw.attsystem.api.AttrAPI.attribute
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.status.Status
-import com.skillw.attsystem.internal.core.read.ReadGroup
-import com.skillw.pouvoir.api.PouvoirAPI.placeholder
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
@@ -33,14 +30,15 @@ class AttributeDataCompound : LowerMap<AttributeData> {
 
     constructor(compound: AttributeDataCompound) {
         this.entity = compound.entity
-        for (attKey in compound.keys) {
-            val attributeData = compound[attKey] ?: continue
-            this[attKey] = attributeData.clone()
+        for (source in compound.keys) {
+            val attributeData = compound[source] ?: continue
+            this[source] = attributeData.clone()
         }
     }
 
+
     fun release() {
-        filterValues { it.release }.keys.forEach(::remove)
+        filterValues { it.release }.keys.forEach(this::remove)
     }
 
     /**
@@ -48,12 +46,12 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      *
      * @return 属性数据集
      */
-    fun clone(): AttributeDataCompound {
+    public override fun clone(): AttributeDataCompound {
         return AttributeDataCompound(this)
     }
 
     override fun toString(): String {
-        return map.toString()
+        return serialize().toString()
     }
 
     /**
@@ -73,7 +71,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @return 是否存在该属性的数据
      */
     fun hasAttribute(attribute: Attribute): Boolean {
-        return map.any { it.value.containsKey(attribute) }
+        return any { it.value.containsKey(attribute) }
     }
 
     /**
@@ -108,7 +106,14 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @return 状态
      */
     fun getStatus(attribute: Attribute): Status<*>? {
-        return this.getStatus(attribute.key)
+        var status: Status<*>? = null
+        for (attributeData in this.values) {
+            if (status == null)
+                status = attributeData[attribute]?.clone()
+            else
+                attributeData[attribute]?.let { status.operation(it) }
+        }
+        return status
     }
 
     /**
@@ -118,17 +123,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @return 属性状态
      */
     fun getStatus(attributeKey: String): Status<*>? {
-        var attributeStatus: Status<*>? = null
-        for (attributeData in this.values) {
-            for (attribute in attributeData.keys) {
-                if (attribute.key == attributeKey) {
-                    val other = attributeData[attribute.key] ?: continue
-                    if (attributeStatus == null) attributeStatus = other.clone()
-                    else attributeStatus.operation(other)
-                }
-            }
-        }
-        return attributeStatus
+        return attribute(attributeKey)?.let { getStatus(it) }
     }
 
     /**
@@ -141,7 +136,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
     fun toAttributeData(): AttributeData {
         val attributeData = AttributeData()
         this.forEach {
-            attributeData.operation(it.value)
+            attributeData.combine(it.value)
         }
         return attributeData
     }
@@ -151,18 +146,23 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      *
      * 运算操作
      *
-     * @param attributeDataCompound 属性数据集
+     * @param other 属性数据集
      * @return 属性数据集(操作后的)
      */
-    fun operation(attributeDataCompound: AttributeDataCompound): AttributeDataCompound {
-        attributeDataCompound.forEach { (key, attributeData) ->
-            if (this.containsKey(key)) {
-                this[key]!!.operation(attributeData)
-            } else {
-                this[key] = attributeDataCompound[key]!!
-            }
+    @Deprecated("use combine", ReplaceWith("combine(other)"))
+    fun operation(other: AttributeDataCompound): AttributeDataCompound = combine(other)
+
+    fun combine(other: AttributeDataCompound): AttributeDataCompound {
+        other.forEach { (source, attributeData) ->
+            combine(source, attributeData)
         }
         return this
+    }
+
+    fun combine(source: String, attributeData: AttributeData) {
+        this[source]?.combine(attributeData.clone()) ?: run {
+            this[source] = attributeData.clone()
+        }
     }
 
     /**
@@ -188,10 +188,6 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      */
     operator fun get(key: String, attribute: Attribute): Status<*>? {
         return this[key]?.get(attribute)
-    }
-
-    operator fun set(key: String, attribute: Attribute, status: Status<*>): Status<*>? {
-        return this[key]?.set(attribute, status)
     }
 
     /**
@@ -234,13 +230,13 @@ class AttributeDataCompound : LowerMap<AttributeData> {
         fun fromMap(
             map: Map<String, Any>,
         ): AttributeDataCompound {
-            val attributeDataCompound = AttributeDataCompound()
+            val total = AttributeDataCompound()
             for ((key, value) in map) {
                 if (value !is Map<*, *>) continue
-                val subTag = value as Map<String, Any>
-                attributeDataCompound[key] = AttributeData.fromMap(subTag).release()
+                val data = value as Map<String, Any>
+                total[key] = AttributeData.fromMap(data)
             }
-            return attributeDataCompound
+            return total
         }
     }
 
@@ -325,37 +321,39 @@ class AttributeDataCompound : LowerMap<AttributeData> {
                 }
         }
         entity ?: return
-        mappingAttr()
     }
 
-    fun mappingAttr() {
-        filterKeys { it.startsWith("MAP-ATTRIBUTE-") }.forEach { (key, _) ->
-            remove(key)
+    fun allToRelease(): AttributeDataCompound {
+        values.forEach(AttributeData::release)
+        return this
+    }
+
+    fun removeDeep(path: String) {
+        val splits = path.split(".")
+        if (splits.isEmpty()) {
+            remove(path)
+            return
         }
-        attributeManager.attributes.forEach { attribute ->
-            with(attribute) {
-                if (map.isEmpty() || !hasAttribute(this)) return@forEach
-                val attData =
-                    this@AttributeDataCompound.map.computeIfAbsent("MAP-ATTRIBUTE-${key}") { AttributeData().release() }
-                map.forEach inner@{ (key, stringMap) ->
-                    val att = AttrAPI.attribute(key) ?: return@inner
-                    val read = att.readPattern
-                    if (read !is ReadGroup<*>) return@inner
-                    val status =
-                        read.readNBT(
-                            stringMap.mapValues { (_, str) ->
-                                str.placeholder(
-                                    this@AttributeDataCompound.entity!!,
-                                    false
-                                ).asahi().toString()
-                            },
-                            att
-                        )
-                            ?: return@inner
-                    attData.operation(att, status)
-                }
+        val source = splits[0]
+        if (splits.size == 1) {
+            remove(source)
+            return
+        }
+        val attKey = splits[1]
+        if (splits.size == 2) {
+            get(source)?.remove(attribute(attKey))
+            return
+        }
+        var map = get(source)?.get(attribute(attKey)) as? MutableMap<String, Any>? ?: return
+        for (i in 2 until splits.size) {
+            val key = splits[i]
+            if (i == splits.size - 1) {
+                map.remove(key)
+            } else {
+                map = map[key] as? MutableMap<String, Any>? ?: return
             }
         }
     }
+
 
 }

@@ -1,9 +1,8 @@
 package com.skillw.attsystem.internal.feature.compat.mythicmobs.legacy
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.event.AttributeUpdateEvent
-import com.skillw.attsystem.internal.manager.ASConfig
-import io.lumine.xikage.mythicmobs.MythicMobs
+import com.skillw.attsystem.api.AttrAPI.read
+import com.skillw.attsystem.api.AttrAPI.update
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent
 import org.bukkit.entity.LivingEntity
@@ -26,23 +25,16 @@ internal object MMIVListener {
     @SubscribeEvent
     fun onMythicMobsSpawn(event: MythicMobSpawnEvent) {
         val entity = event.entity as? LivingEntity ?: return
-        AttributeSystem.attributeSystemAPI.update(entity)
-    }
-
-    @SubscribeEvent
-    fun onAttributeUpdateEvent(event: AttributeUpdateEvent.Pre) {
-        if (!ASConfig.mythicMobsIV) return
-        val entity = event.entity
-        if (entity !is LivingEntity) return
-        MythicMobs.inst().mobManager.getMythicMobInstance(entity)?.let { mob ->
-            val config = mob.type.config
-            if (!config.isList("Attributes")) return
-            val attributes = config.getStringList("Attributes")
-            if (attributes.isEmpty()) return
-            event.data.register(
+        val attributes = event.mob.type.config.getStringList("Attributes")
+        if (attributes.isNullOrEmpty())
+            return
+        attributes.read(entity)?.let {
+            AttributeSystem.compiledAttrDataManager[entity.uniqueId].register(
                 "MYTHIC-BASE-ATTRIBUTE",
-                AttributeSystem.readManager.read(attributes, entity)
+                it
             )
         }
+        entity.update()
     }
+
 }

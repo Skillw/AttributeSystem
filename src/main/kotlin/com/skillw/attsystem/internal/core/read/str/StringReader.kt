@@ -1,8 +1,8 @@
 package com.skillw.attsystem.internal.core.read.str
 
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.status.GroupStatus
-import com.skillw.attsystem.api.status.StringStatus
+import com.skillw.attsystem.api.read.status.GroupStatus
+import com.skillw.attsystem.api.read.status.StringStatus
 import com.skillw.attsystem.internal.core.read.ReadGroup
 import org.bukkit.entity.LivingEntity
 

@@ -1,18 +1,15 @@
 package com.skillw.attsystem.internal.feature.realizer.slot
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
-import com.skillw.attsystem.api.event.ItemLoadEvent
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.sub.Awakeable
+import com.skillw.attsystem.api.realizer.component.Awakeable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.console
 import taboolib.module.lang.sendLang
-import taboolib.platform.util.isAir
-import taboolib.platform.util.isNotAir
 import taboolib.type.BukkitEquipment
 
 @AutoRegister
@@ -40,27 +37,16 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
     @AutoRegister
     object NormalEquipmentLoader : EquipmentLoader<LivingEntity> {
 
-
         override val key: String = "default"
 
         override val priority: Int = 1000
 
-        override fun loadEquipment(entity: LivingEntity, data: EquipmentDataCompound) {
+        override fun loadEquipment(entity: LivingEntity): Map<String, ItemStack> {
+            val items = HashMap<String, ItemStack>()
             for ((key, equipmentType) in slots) {
-                //获取装备物品
-                val origin = equipmentType.getItem(entity)
-                //判空 第一个判空是为了智能推断
-                if (origin == null || origin.isAir()) continue
-                val event = ItemLoadEvent(entity, origin)
-                //触发事件
-                event.call()
-                if (event.isCancelled) return
-                val eventItem = event.itemStack
-                // 这个isSimilar判断不出物品的NBT改变 所以会导致悲剧发生
-//                if (eventItem.isSimilar(origin)) return
-                if (eventItem.isNotAir())
-                    data["BASE-EQUIPMENT", key] = eventItem
+                items[key] = equipmentType.getItem(entity) ?: continue
             }
+            return items
         }
     }
 }

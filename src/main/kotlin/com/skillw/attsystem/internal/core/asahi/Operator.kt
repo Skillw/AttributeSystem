@@ -4,10 +4,11 @@ import com.skillw.asahi.api.annotation.AsahiGetter
 import com.skillw.asahi.api.annotation.AsahiSetter
 import com.skillw.asahi.api.member.context.AsahiContext
 import com.skillw.attsystem.api.AttrAPI.attribute
+import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
-import com.skillw.attsystem.api.status.GroupStatus
-import com.skillw.attsystem.api.status.Status
+import com.skillw.attsystem.api.read.status.GroupStatus
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.attsystem.internal.core.read.ReadGroup
 import com.skillw.attsystem.internal.feature.compat.pouvoir.AttributePlaceHolder
 
@@ -48,6 +49,15 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
         return key.contains(".") && getOrigin(key.split(".")[0]) is AttributeDataCompound
     }
 
+
+    private fun AttributeDataCompound.put(
+        source: String,
+        attribute: Attribute,
+        data: Status<*>,
+    ) {
+
+    }
+
     override fun AsahiContext.setValue(key: String, value: Any?): Any? {
         val varKey = key.split(".")[0]
         val data = getOrigin(varKey)
@@ -60,25 +70,26 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
                     }
 
                     1 -> {
-                        val subKey = subKeys[0]
-                        data[subKey] = AttributeData.fromMap(value as Map<String, Any>)
+                        val source = subKeys[0]
+                        data[source] = AttributeData.fromMap(value as Map<String, Any>)
                     }
 
                     2 -> {
-                        val subKey = subKeys[0]
+                        val source = subKeys[0]
                         val attribute = attribute(subKeys[1]) ?: return null
                         if (attribute.readPattern !is ReadGroup<*>) return null
-                        data[subKey, attribute] =
-                            attribute.readPattern.readNBT(value as Map<String, Any>, attribute) as Status<*>
+                        val status = attribute.readPattern.readNBT(value as Map<String, Any>, attribute) as Status<*>
+                        data.computeIfAbsent(source) { AttributeData() }[attribute] = status
+
                     }
 
                     else -> {
-                        val subKey = subKeys[0]
+                        val source = subKeys[0]
                         val attribute = attribute(subKeys[1]) ?: return null
                         if (attribute.readPattern !is ReadGroup<*>) return null
                         val matcher = subKeys[2]
-                        value ?: (data[subKey, attribute] as? GroupStatus<Any>)?.remove(matcher)
-                        value?.let { (data[subKey, attribute] as? GroupStatus<Any>)?.set(matcher, it) }
+                        value ?: (data[source, attribute] as? GroupStatus<Any>)?.remove(matcher)
+                        value?.let { (data[source, attribute] as? GroupStatus<Any>)?.set(matcher, it) }
 
                     }
 

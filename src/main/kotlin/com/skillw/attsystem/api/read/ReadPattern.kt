@@ -2,7 +2,7 @@ package com.skillw.attsystem.api.read
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.status.Status
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
 import taboolib.module.chat.TellrawJson

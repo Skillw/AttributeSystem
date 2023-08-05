@@ -1,11 +1,9 @@
 package com.skillw.attsystem.internal.feature.realizer.slot
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
-import com.skillw.attsystem.api.event.ItemLoadEvent
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.sub.Awakeable
+import com.skillw.attsystem.api.realizer.component.Awakeable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
@@ -14,9 +12,6 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.common5.Coerce
 import taboolib.common5.cint
-import taboolib.module.nms.getItemTag
-import taboolib.platform.util.isAir
-import taboolib.platform.util.isNotAir
 import taboolib.type.BukkitEquipment
 
 @AutoRegister
@@ -33,13 +28,12 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
     override fun onReload() {
         slots.clear()
         for (key in config.keys) {
-            val slot: String
             val value = config[key]
-            if (value is Map<*, *>) {
+            val slot = if (value is Map<*, *>) {
                 val section = value as Map<String, Any>
-                slot = section["slot"].toString()
+                section["slot"].toString()
             } else {
-                slot = value.toString()
+                value.toString()
             }
             slots.register(PlayerSlot(key, slot.uppercase()))
         }
@@ -57,17 +51,12 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
             return entity is Player
         }
 
-        override fun loadEquipment(entity: Player, data: EquipmentDataCompound) {
-            for (playerSlot in slots.values) {
-                val origin: ItemStack? = playerSlot.getItem(entity)
-                if (origin == null || origin.isAir() || !origin.hasItemMeta()) continue
-                val event = ItemLoadEvent(entity, origin)
-                event.call()
-                if (event.isCancelled) return
-                val eventItem = event.itemStack
-                if (eventItem.isNotAir() && !eventItem.getItemTag().containsKey("IGNORE_ATTRIBUTE"))
-                    data["BASE-EQUIPMENT", playerSlot.key] = eventItem
+        override fun loadEquipment(entity: Player): Map<String, ItemStack> {
+            val items = HashMap<String, ItemStack>()
+            for ((slot, playerSlot) in slots) {
+                items[slot] = playerSlot.getItem(entity) ?: continue
             }
+            return items
         }
     }
 

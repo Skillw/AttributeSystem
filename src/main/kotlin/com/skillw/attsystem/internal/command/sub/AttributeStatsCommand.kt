@@ -75,14 +75,14 @@ object AttributeStatsCommand {
                         AttributeSystem.equipmentDataManager[sender.uniqueId]?.values?.forEach { list.addAll(it.keys) }
                         list
                     }
-                    execute<Player> { sender, context, argument ->
+                    execute<Player> { sender, context, slot ->
                         val player = Bukkit.getPlayer(context.argument(-2))
                         player ?: run {
                             sender.sendLang("command-valid-player", context.argument(-2))
                             return@execute
                         }
-                        val key = context.argument(-1)
-                        val itemStack = AttributeSystem.equipmentDataManager[player.uniqueId]?.get(key, argument)
+                        val source = context.argument(-1)
+                        val itemStack = AttributeSystem.equipmentDataManager[player.uniqueId]?.get(source, slot)
                         itemStack ?: run {
                             sender.soundFail()
                             sender.sendLang("command-valid-item")
@@ -91,13 +91,12 @@ object AttributeStatsCommand {
                         if (itemStack.isAir() || !itemStack.hasLore()) return@execute
                         sender.soundSuccess()
                         submitAsync {
-                            val attributeDataCompound =
-                                AttributeSystem.readManager.readItem(
-                                    itemStack,
-                                    player,
-                                    argument
-                                )
-                            sendStatText(adaptPlayer(sender), player, itemStack.getName(), attributeDataCompound, true)
+                            val data =
+                                AttributeSystem.compiledAttrDataManager[player.uniqueId][AttributeSystem.equipmentDataManager.getSource(
+                                    source,
+                                    slot
+                                )]?.eval(player) ?: AttributeDataCompound()
+                            sendStatText(adaptPlayer(sender), player, itemStack.getName(), data, true)
                         }
                     }
                 }
@@ -122,7 +121,7 @@ object AttributeStatsCommand {
     }
 
     private fun attributeStatusToJson(
-        attributeDataCompound: AttributeDataCompound,
+        data: AttributeDataCompound,
         livingEntity: LivingEntity,
         item: Boolean = false,
     ): LinkedList<TellrawJson> {
@@ -131,7 +130,7 @@ object AttributeStatsCommand {
         for (index in attributes.indices) {
             val attribute = attributes[index]
             if (!attribute.entity && item) continue
-            val status = attributeDataCompound.getStatus(attribute) ?: continue
+            val status = data.getStatus(attribute) ?: continue
             val json = attribute.readPattern.stat(
                 attribute,
                 status,
@@ -147,7 +146,7 @@ object AttributeStatsCommand {
         entity: LivingEntity,
         name: String = (entity as? Player)?.displayName
             ?: ((if (entity.customName == null) entity.getI18nName() else entity.customName) ?: "null"),
-        attributeDataCompound: AttributeDataCompound = AttributeSystem.attributeDataManager[entity.uniqueId]
+        data: AttributeDataCompound = AttributeSystem.attributeDataManager[entity.uniqueId]
             ?: AttributeDataCompound(),
         item: Boolean = false,
     ) {
@@ -155,7 +154,7 @@ object AttributeStatsCommand {
         sender.sendMessage(" ")
         sender.sendMessage(title)
         sender.sendMessage(" ")
-        attributeStatusToJson(attributeDataCompound, entity, item).forEach {
+        attributeStatusToJson(data, entity, item).forEach {
             it.sendTo(sender)
         }
         sender.sendMessage(" ")

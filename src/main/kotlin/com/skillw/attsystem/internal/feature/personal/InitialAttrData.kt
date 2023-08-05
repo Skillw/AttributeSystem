@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.personal
 
+import com.google.gson.GsonBuilder
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.internal.feature.database.ASContainer
@@ -7,6 +8,7 @@ import com.skillw.pouvoir.api.plugin.map.component.Keyable
 import com.skillw.pouvoir.util.decodeFromString
 import com.skillw.pouvoir.util.encodeJson
 import org.bukkit.entity.Player
+import taboolib.common.util.unsafeLazy
 import java.util.*
 
 /**
@@ -18,9 +20,17 @@ import java.util.*
 class InitialAttrData(override val key: UUID, val compound: AttributeDataCompound = AttributeDataCompound()) :
     Keyable<UUID> {
     companion object {
+        private val gson by unsafeLazy {
+            GsonBuilder().create()
+        }
+
         @JvmStatic
         fun deserialize(uuid: UUID, str: String): InitialAttrData? {
-            return InitialAttrData(uuid, AttributeDataCompound.fromMap(str.decodeFromString() ?: return null))
+
+            return InitialAttrData(
+                uuid,
+                AttributeDataCompound.fromMap(gson.fromJson<Map<String, Any>>(str, Map::class.java) ?: return null)
+            )
         }
 
         @JvmStatic
@@ -43,6 +53,6 @@ class InitialAttrData(override val key: UUID, val compound: AttributeDataCompoun
     }
 
     fun serialize(): String {
-        return compound.map.mapValues { it.value.serialize() }.encodeJson()
+        return gson.toJson(compound.mapValues { it.value.serialize() })
     }
 }

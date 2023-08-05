@@ -18,15 +18,11 @@ ExampleAtt:
   #读取组 不填默认Default
   read-pattern: Default
   #属性映射
-  map:
-    #其他属性, 这里格式和NBT属性一样
-    PhysicalDamage:
-      #其他属性的捕获组
-      #后面可以通过 <占位符公式id> 调用本属性读取组的占位符公式
-      #就像这样: <total>
-      #支持内联函数与占位符
-      value: |-
-        type double '<total>'
+  mapping:
+    type: strings
+    #后面可以通过 <占位符公式id> 调用本属性读取组的占位符公式
+    attributes:
+      - "移动速度: {{<total> * 10}}"
 
 #快速声明一个属性
 快速属性: { }

@@ -79,6 +79,14 @@ object AttributeSystem : Plugin(), SubPouvoir {
     @PouManager
     lateinit var operationManager: OperationManager
 
+    @JvmStatic
+    @PouManager
+    lateinit var compileManager: CompileManager
+
+    @JvmStatic
+    @PouManager
+    lateinit var compiledAttrDataManager: CompiledAttrDataManager
+
     override fun onLoad() {
         load()
     }

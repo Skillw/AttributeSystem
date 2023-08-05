@@ -1,8 +1,11 @@
 #支持 PAPI/PPAPI 字符串内联函数
 #会影响实体的原版属性 / 其它属性
+#
 max-health:
   enable: true
   vanilla: true
+  #玩家默认血量
+  default: 20
   value: "%as_att:MaxHealth%"
 movement-speed:
   enable: true

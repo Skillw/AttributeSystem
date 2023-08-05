@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.manager
 
-import com.skillw.attsystem.api.operation.Operation
+import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.pouvoir.api.manager.Manager
 import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 

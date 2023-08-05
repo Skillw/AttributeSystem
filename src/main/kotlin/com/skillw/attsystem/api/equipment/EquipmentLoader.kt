@@ -3,6 +3,7 @@ package com.skillw.attsystem.api.equipment
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
+import org.bukkit.inventory.ItemStack
 
 /**
  * @className EquipmentLoader
@@ -13,7 +14,7 @@ import org.bukkit.entity.LivingEntity
 interface EquipmentLoader<E : LivingEntity> : Registrable<String>, Comparable<EquipmentLoader<*>> {
     override val key: String
     fun filter(entity: LivingEntity): Boolean = false
-    fun loadEquipment(entity: E, data: EquipmentDataCompound)
+    fun loadEquipment(entity: E): Map<String, ItemStack>
 
     val priority: Int
 

@@ -21,5 +21,4 @@ abstract class NMS {
             nmsProxy<NMS>()
         }
     }
-
 }

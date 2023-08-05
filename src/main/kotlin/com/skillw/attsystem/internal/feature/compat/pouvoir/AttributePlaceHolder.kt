@@ -2,17 +2,17 @@ package com.skillw.attsystem.internal.feature.compat.pouvoir
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
+import com.skillw.attsystem.AttributeSystem.compiledAttrDataManager
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
 import com.skillw.attsystem.api.AttrAPI.getAttrData
-import com.skillw.attsystem.api.AttrAPI.readItem
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
-import com.skillw.attsystem.api.status.GroupStatus
+import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
+import com.skillw.attsystem.api.read.status.GroupStatus
 import com.skillw.attsystem.internal.core.read.ReadGroup
 import com.skillw.pouvoir.api.feature.placeholder.PouPlaceHolder
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
-import taboolib.platform.util.isAir
 
 @AutoRegister
 object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
@@ -58,19 +58,17 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
             "equipment" -> {
                 strings.removeAt(0)
                 if (strings.size < 3) return "0.0"
-                val key = strings[0]
-                val subKey = strings[1]
+                val source = strings[0]
+                val slot = strings[1]
                 val attKey = strings[2]
                 strings.removeAt(0)
                 strings.removeAt(0)
                 strings.removeAt(0)
-                val equipment = equipmentDataManager[uuid]
-                if (equipment == null || !equipment.containsKey(key)) return "0.0"
-                val item = equipment[key, subKey] ?: return "0.0"
                 val attribute = attributeManager[attKey] ?: return "0.0"
-                if (item.isAir()) return "0.0"
-                val itemData = item.readItem(entity, subKey)
-                return get(itemData, attribute, strings)
+                val sourceKey = equipmentDataManager.getSource(source, slot)
+                val compiledData = compiledAttrDataManager[uuid][sourceKey] ?: ComplexCompiledData()
+                val itemAttrData = compiledData.eval(entity)
+                return get(itemAttrData, attribute, strings)
             }
         }
         return "0.0"

@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.event
 
-import com.skillw.attsystem.api.attribute.compound.AttributeData
+import com.skillw.attsystem.api.compiled.CompiledData
 import org.bukkit.entity.LivingEntity
 import taboolib.platform.type.BukkitProxyEvent
 
@@ -10,10 +10,10 @@ import taboolib.platform.type.BukkitProxyEvent
  * @constructor Create empty Strings read event
  * @property entity 实体
  * @property strings 字符串集
- * @property attrData 属性数据
+ * @property compiledData 预编译属性数据
  */
 open class StringsReadEvent(
     val entity: LivingEntity?,
     val strings: Collection<String>,
-    val attrData: AttributeData,
+    val compiledData: CompiledData,
 ) : BukkitProxyEvent()

@@ -2,7 +2,7 @@ package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI
-import com.skillw.attsystem.api.operation.Operation
+import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.pouvoir.Pouvoir
 import com.skillw.pouvoir.api.manager.ConfigManager
 import com.skillw.pouvoir.api.plugin.map.DataMap
@@ -32,7 +32,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
         get() = this["config"].getString("options.condition.line-condition.format") ?: ".*\\/(?<requirement>.*)"
     val lineConditionSeparator: String
         get() = this["config"].getString("options.condition.line-condition.separator") ?: ","
-    
+
     val databaseConfig: DataMap
         get() = DataMap().also { it.putAll(this["config"].getConfigurationSection("database")!!.toMap()) }
 
@@ -65,6 +65,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
             "conditions/weather.js",
             "conditions/ground.js",
             "conditions/attribute.js",
+            "conditions/player.js",
         )
         //兼容1.4.3及之前的脚本
         mapOf(

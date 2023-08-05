@@ -2,19 +2,16 @@ package com.skillw.attsystem.internal.feature.realizer
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
+import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
 import com.skillw.attsystem.api.event.HealthRegainEvent
-import com.skillw.attsystem.api.realizer.*
-import com.skillw.attsystem.api.realizer.component.*
-import com.skillw.attsystem.api.realizer.component.sub.ScheduledRealizer
-import com.skillw.attsystem.api.realizer.component.sub.Switchable
-import com.skillw.attsystem.api.realizer.component.sub.Valuable
-import com.skillw.attsystem.api.realizer.component.sub.Vanillable
+import com.skillw.attsystem.api.realizer.component.ScheduledRealizer
+import com.skillw.attsystem.api.realizer.component.Switchable
+import com.skillw.attsystem.api.realizer.component.Valuable
+import com.skillw.attsystem.api.realizer.component.Vanillable
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
 import com.skillw.fightsystem.api.FightAPI.isFighting
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
-import com.skillw.pouvoir.util.isAlive
-import org.bukkit.Bukkit
-import org.bukkit.entity.Damageable
+import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import taboolib.common.platform.event.SubscribeEvent
@@ -53,22 +50,24 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
     }
 
     @Suppress("DEPRECATION")
-    private fun Damageable.regain(amount: Double) {
+    private fun LivingEntity.regain(amount: Double) {
         val maxHealth = maxHealth
-        if (health == maxHealth) return
+        if (health >= maxHealth) return
         val event = HealthRegainEvent(this, amount).apply { call() }
         if (event.isCancelled) return
-        health = min(maxHealth, health + event.amount)
+        val result = min(maxHealth, health + event.amount)
+        health = result
     }
 
     override fun task() {
-        Bukkit.getWorlds().forEach { world ->
-            world.entities.filterIsInstance<LivingEntity>().forEach entities@{ entity ->
-                if (!attributeDataManager.containsKey(entity.uniqueId)) return
-                if (disableInFight && fightSystem && entity.isFighting()) return
-                if (!entity.isAlive()) return
-                entity.regain(value(entity))
+        for (uuid in attributeDataManager.keys) {
+            val entity = uuid.livingEntity()
+            if (entity == null || !entity.isValid || entity.isDead) {
+                attributeSystemAPI.remove(uuid)
+                continue
             }
+            if (disableInFight && fightSystem && entity.isFighting()) return
+            entity.regain(value(entity))
         }
     }
 

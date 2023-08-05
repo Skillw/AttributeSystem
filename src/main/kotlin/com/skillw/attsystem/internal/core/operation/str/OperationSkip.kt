@@ -1,6 +1,6 @@
 package com.skillw.attsystem.internal.core.operation.str
 
-import com.skillw.attsystem.api.operation.StringOperation
+import com.skillw.attsystem.api.read.operation.StringOperation
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 
 @AutoRegister

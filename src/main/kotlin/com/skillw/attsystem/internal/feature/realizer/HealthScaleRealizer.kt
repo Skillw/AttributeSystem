@@ -2,9 +2,9 @@ package com.skillw.attsystem.internal.feature.realizer
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.sub.Awakeable
-import com.skillw.attsystem.api.realizer.component.sub.Switchable
-import com.skillw.attsystem.api.realizer.component.sub.Valuable
+import com.skillw.attsystem.api.realizer.component.Awakeable
+import com.skillw.attsystem.api.realizer.component.Switchable
+import com.skillw.attsystem.api.realizer.component.Valuable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player

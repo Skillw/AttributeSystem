@@ -1,77 +1,101 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.attribute.Attribute
+import com.skillw.attsystem.AttributeSystem.compileManager
 import com.skillw.attsystem.api.attribute.compound.AttributeData
-import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
-import com.skillw.attsystem.api.event.AttributeRegisterEvent
+import com.skillw.attsystem.api.compiled.CompiledData
+import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
+import com.skillw.attsystem.api.compiled.sub.NBTCompiledData
+import com.skillw.attsystem.api.compiled.sub.StringsCompiledData
 import com.skillw.attsystem.api.event.ItemReadEvent
 import com.skillw.attsystem.api.event.StringsReadEvent
 import com.skillw.attsystem.api.manager.ReadManager
 import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.util.MapUtils.toList
+import com.skillw.attsystem.util.MapUtils.toMutableMap
+import com.skillw.attsystem.util.Utils.mirrorIfDebug
 import com.skillw.pouvoir.api.plugin.map.BaseMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
-import taboolib.common.platform.event.SubscribeEvent
-import taboolib.common5.mirrorNow
 import taboolib.library.reflex.Reflex.Companion.getProperty
 import taboolib.module.chat.uncolored
-import taboolib.module.nms.*
+import taboolib.module.nms.getItemTag
 import taboolib.platform.util.hasLore
+import taboolib.platform.util.isAir
 import java.util.*
 
 object ReadManagerImpl : ReadManager() {
     override val key = "ReadManager"
-    override val priority: Int = 4
+    override val priority: Int = 9
     override val subPouvoir = AttributeSystem
-
     private val lores = BaseMap<Int, List<String>>()
-    private val loreMap = com.skillw.attsystem.util.LoreMap<Attribute>(true, true, true)
 
-    @SubscribeEvent
-    fun regAtt(event: AttributeRegisterEvent) {
-        event.attribute.names.forEach {
-            loreMap.put(it, event.attribute)
+    private fun read(
+        toRead: String,
+        entity: LivingEntity?,
+        slot: String?,
+    ): AttributeData {
+        val attributeData = AttributeData()
+        for (attribute in AttributeSystem.attributeManager.attributes) {
+            val read = attribute.readPattern
+            if (read !is ReadGroup<*>) continue
+            val status = read.read(toRead, attribute, entity, slot)
+            if (status != null) {
+                attributeData.operation(attribute, status)
+                break
+            }
         }
+        return attributeData
     }
-
 
     override fun read(
         strings: Collection<String>,
         entity: LivingEntity?,
         slot: String?,
-    ): AttributeData {
-        return mirrorNow("read-strings") {
-            val attributeData = AttributeData()
-            if (!AttributeSystem.conditionManager.conditionStrings(
-                    slot,
-                    entity,
-                    strings
-                )
-            ) {
-                return@mirrorNow attributeData
-            }
-            strings@ for (string in strings) {
-                if (ASConfig.ignores.any { string.uncolored().contains(it) }) continue
-                val matcher = ASConfig.lineConditionPattern.matcher(string)
-                if (matcher.find()) {
-                    try {
-                        val requirements = matcher.group("requirement")
-                        if (!AttributeSystem.conditionManager.lineConditions(slot, requirements, entity)) continue
-                    } catch (_: IllegalStateException) {
-                    } catch (_: IllegalArgumentException) {
+    ): CompiledData? {
+        return mirrorIfDebug("read-strings") {
+            val restStrings = LinkedList<String>()
+
+            val compiledData = ComplexCompiledData()
+            //单行条件
+            for (string in strings) {
+                var toRead = string
+                if (ASConfig.ignores.any { toRead.uncolored().contains(it) }) continue
+                val matcher = ASConfig.lineConditionPattern.matcher(toRead)
+                if (!matcher.find()) {
+                    restStrings.add(toRead)
+                    continue
+                }
+                val builder: ((AttributeData) -> StringsCompiledData)? = runCatching {
+                    val requirements = matcher.group("requirement")
+                    val builders = requirements.split(ASConfig.lineConditionSeparator)
+                        .mapNotNull { compileManager.compile(entity, it, slot) }
+                    return@runCatching { data: AttributeData ->
+                        val lineConditions = StringsCompiledData(data)
+                        builders.map { it(data) }.forEach(lineConditions::putAllCond)
+                        lineConditions
                     }
+                }.getOrNull()
+                if (builder == null) {
+                    restStrings.add(toRead)
+                    continue
                 }
-                val attribute = loreMap.get(string) ?: continue
-                val read = attribute.readPattern
-                if (read !is ReadGroup<*>) continue
-                read.read(string, attribute, entity, slot)?.let {
-                    attributeData.operation(attribute, it)
-                }
+                toRead = matcher.replaceAll("")
+                val attributeData = read(toRead, entity, slot)
+                compiledData.add(builder.invoke(attributeData))
             }
-            val event = StringsReadEvent(entity, strings, attributeData)
+            //总条件
+            for (string in restStrings) {
+                val attributeData = read(string, entity, slot)
+                compileManager.compile(entity, string, slot)?.let {
+                    compiledData.putAll(it(attributeData))
+                } ?: compiledData.addition.computeIfAbsent("STRINGS-ATTRIBUTE") { AttributeData() }
+                    .combine(attributeData)
+            }
+
+            val event = StringsReadEvent(entity, strings, compiledData)
             event.call()
-            if (!event.isCancelled) event.attrData else AttributeData()
+            if (!event.isCancelled) event.compiledData else null
         }
     }
 
@@ -79,129 +103,81 @@ object ReadManagerImpl : ReadManager() {
         itemStack: ItemStack,
         entity: LivingEntity?,
         slot: String?,
-    ): AttributeData? {
-        if (itemStack.hasLore()) {
-            val origin = itemStack.itemMeta?.lore ?: return null
-            val hashcode = itemStack.itemMeta?.getProperty<List<String>>("lore").hashCode()
-            val lore = lores.map.computeIfAbsent(hashcode) {
-                origin.map { it.uncolored() }
+    ): CompiledData? {
+        return if (itemStack.hasLore()) {
+            mirrorIfDebug("read-item-lore") {
+                val origin = itemStack.itemMeta?.lore ?: return@mirrorIfDebug null
+                val hashcode = itemStack.itemMeta?.getProperty<List<String>>("lore").hashCode()
+                val lore = lores.computeIfAbsent(hashcode) {
+                    origin.map { it.uncolored() }
+                }
+                read(lore, entity, slot)
             }
-            return AttributeSystem.readManager.read(lore, entity, slot)
-        }
-        return null
+        } else null
     }
 
     override fun readItemsLore(
         itemStacks: Collection<ItemStack>,
         entity: LivingEntity?,
         slot: String?,
-    ): AttributeData {
-        return mirrorNow("read-item-lore") {
-            val attributeData = AttributeData()
-            for (item: ItemStack in itemStacks) {
-                attributeData.operation(
-                    readItemLore(item, entity, slot) ?: continue
-                )
-            }
-            attributeData
+    ): CompiledData {
+        val compiledData = ComplexCompiledData()
+        for (item: ItemStack in itemStacks) {
+            compiledData.add(
+                readItemLore(item, entity, slot) ?: continue
+            )
         }
+        return compiledData
     }
 
-    private fun MutableMap<String, Any>.removeDeep(path: String) {
-        val splits = path.split(".")
-        if (splits.isEmpty()) {
-            this.remove(path)
-            return
-        }
-        var compound = this
-        var temp: MutableMap<String, Any>
-        for (node in splits) {
-            if (node.equals(splits.last(), ignoreCase = true)) {
-                compound.remove(node)
-            }
-            compound[node].also { temp = ((it as MutableMap<String, Any>?) ?: return) }
-            compound = temp
-        }
+    override fun readMap(
+        attrDataMap: MutableMap<String, Any>,
+        conditions: Collection<Any>,
+        entity: LivingEntity?, slot: String?,
+    ): NBTCompiledData {
+        return compileManager.compile(entity, conditions, slot)(attrDataMap)
     }
 
+    override fun readMap(map: Map<String, Any>, entity: LivingEntity?, slot: String?): CompiledData? {
+        return when (map["type"].toString()) {
+            "nbt" -> readMap(
+                map["attributes"] as MutableMap<String, Any>,
+                map["conditions"] as Collection<Any>,
+                entity,
+                slot
+            )
 
-    private val nbts = BaseMap<Int, HashMap<String, Any>>()
+            "strings" -> read(map["attributes"] as Collection<String>, entity, slot)
 
-    @JvmStatic
-    private fun ItemTag.toMutableMap(strList: List<String> = emptyList()): MutableMap<String, Any> {
-        return nbts.map.computeIfAbsent(keySet().hashCode() + values().hashCode()) { _ ->
-            val map = HashMap<String, Any>()
-            for (it in this) {
-                val key = it.key
-                if (strList.contains(key)) continue
-                val value = it.value.obj()
-                map[key] = value
-            }
-            return@computeIfAbsent map
+            else -> null
         }
     }
-
-    @Suppress("IMPLICIT_CAST_TO_ANY")
-    @JvmStatic
-    private fun ItemTagData.obj(): Any {
-        val value = when (this.type) {
-            ItemTagType.BYTE -> this.asByte()
-            ItemTagType.SHORT -> this.asShort()
-            ItemTagType.INT -> this.asInt()
-            ItemTagType.LONG -> this.asLong()
-            ItemTagType.FLOAT -> this.asFloat()
-            ItemTagType.DOUBLE -> this.asDouble()
-            ItemTagType.STRING -> this.asString()
-            ItemTagType.BYTE_ARRAY -> this.asByteArray()
-            ItemTagType.INT_ARRAY -> this.asIntArray()
-            ItemTagType.COMPOUND -> this.asCompound()
-            ItemTagType.LIST -> this.asList()
-            else -> this.asString()
-        }
-        return when (value) {
-            is ItemTag -> {
-                value.toMutableMap()
-            }
-
-            is ItemTagList -> {
-                val list = ArrayList<Any>()
-                value.forEach {
-                    list.add(it.obj())
-                }
-                list
-            }
-
-            else -> value
-        }
-    }
-
 
     override fun readItemNBT(
         itemStack: ItemStack,
         entity: LivingEntity?, slot: String?,
-    ): AttributeDataCompound? {
-        val itemTag = itemStack.getItemTag()
-        val attributeDataMap = itemTag["ATTRIBUTE_DATA"]?.asCompound()?.toMutableMap() ?: return null
-        val conditionDataMap = itemTag["CONDITION_DATA"]?.asCompound()?.toMutableMap() ?: emptyMap()
-        AttributeSystem.conditionManager.conditionNBT(slot, entity, conditionDataMap).forEach {
-            attributeDataMap.removeDeep(it)
+    ): CompiledData? {
+        return mirrorIfDebug("read-item-nbt") {
+            if (itemStack.isAir()) return@mirrorIfDebug null
+            val itemTag = itemStack.getItemTag()
+            val attributeDataMap = itemTag["ATTRIBUTE_DATA"]?.asCompound()?.toMutableMap() ?: return@mirrorIfDebug null
+            val conditions = itemTag["CONDITION_DATA"]?.asList()?.toList() ?: emptyList()
+            readMap(attributeDataMap, conditions, entity, slot)
         }
-
-        return AttributeDataCompound.fromMap(attributeDataMap)
     }
 
     override fun readItemsNBT(
         itemStacks: Collection<ItemStack>,
         entity: LivingEntity?, slot: String?,
-    ): AttributeDataCompound {
-        return mirrorNow("read-item-nbt") {
-            val attributeDataCompound = AttributeDataCompound(entity)
+    ): CompiledData {
+        return mirrorIfDebug("read-item-nbt") {
+            val compiledData = ComplexCompiledData()
             for (item: ItemStack in itemStacks) {
-                attributeDataCompound.operation(
+                compiledData.add(
                     readItemNBT(item, entity) ?: continue
                 )
             }
-            attributeDataCompound
+            compiledData
         }
     }
 
@@ -210,20 +186,22 @@ object ReadManagerImpl : ReadManager() {
         itemStack: ItemStack,
         entity: LivingEntity?,
         slot: String?,
-    ): AttributeDataCompound {
-        val attributeDataCompound = AttributeDataCompound(entity)
-        attributeDataCompound["LORE-ATTRIBUTE"] =
-            readItemLore(itemStack, entity, slot)?.release() ?: AttributeData().release()
-        attributeDataCompound.operation(readItemNBT(itemStack, entity) ?: AttributeDataCompound(entity))
+    ): CompiledData? {
+        return mirrorIfDebug("read-item") {
+            val compiledData = ComplexCompiledData()
+            readItemLore(itemStack, entity, slot)?.let { compiledData.putAll(it) }
+            readItemNBT(itemStack, entity, slot)?.let { compiledData.add(it) }
 
-        val event = ItemReadEvent(
-            entity ?: return attributeDataCompound,
-            itemStack,
-            attributeDataCompound,
-            slot
-        )
-        event.call()
-        return (if (!event.isCancelled) event.dataCompound else AttributeDataCompound(entity))
+            val event = ItemReadEvent(
+                entity,
+                itemStack,
+                compiledData,
+                slot
+            )
+            event.call()
+
+            if (!event.isCancelled) event.compiledData else null
+        }
     }
 
 
@@ -232,15 +210,13 @@ object ReadManagerImpl : ReadManager() {
         itemStacks: Collection<ItemStack>,
         entity: LivingEntity?,
         slot: String?,
-    ): AttributeDataCompound {
-        return mirrorNow("read-items") {
-            val attributeDataCompound = AttributeDataCompound(entity)
-            for (item: ItemStack in itemStacks) {
-                attributeDataCompound.operation(
-                    readItem(item, entity)
-                )
-            }
-            attributeDataCompound
+    ): CompiledData {
+        val compiledData = ComplexCompiledData()
+        for (item: ItemStack in itemStacks) {
+            readItem(item, entity, slot)?.let { compiledData.add(it) }
         }
+        return compiledData
     }
+
+
 }

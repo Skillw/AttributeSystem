@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.manager
 
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.sub.Realizable
+import com.skillw.attsystem.api.realizer.component.Realizable
 import com.skillw.pouvoir.api.manager.Manager
 import com.skillw.pouvoir.api.plugin.map.KeyMap
 
@@ -10,4 +10,6 @@ import com.skillw.pouvoir.api.plugin.map.KeyMap
  *
  * @constructor Create empty Realize manager
  */
-abstract class RealizeManager : Manager, KeyMap<String, BaseRealizer>(), Realizable
+abstract class RealizeManager : Manager, KeyMap<String, BaseRealizer>(), Realizable {
+    abstract fun executeSyncTasks()
+}

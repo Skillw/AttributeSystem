@@ -1,6 +1,6 @@
 package com.skillw.attsystem.internal.core.read
 
-import com.skillw.attsystem.api.operation.Operation
+import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.pouvoir.api.plugin.map.component.Keyable
 
 /**

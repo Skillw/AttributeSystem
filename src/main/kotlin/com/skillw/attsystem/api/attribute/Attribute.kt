@@ -35,7 +35,11 @@ class Attribute private constructor(
         AttributeSystem.attributeManager.register(this)
     }
 
-    var map: Map<String, Map<String, String>> = HashMap()
+    var mapping: Mapping? = null
+        set(value) {
+            value?.attribute = this
+            field = value
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,9 +47,7 @@ class Attribute private constructor(
 
         other as Attribute
 
-        if (key != other.key) return false
-
-        return true
+        return key == other.key
     }
 
     override fun hashCode(): Int {
@@ -81,7 +83,8 @@ class Attribute private constructor(
         /** Names */
         val names = LinkedList<String>()
 
-        var map: Map<String, Map<String, String>> = HashMap()
+        var mapping: Mapping? = null
+
 
         init {
             receiver.invoke(this)
@@ -96,7 +99,7 @@ class Attribute private constructor(
             val att = Attribute(key, display ?: names.first, names, readPattern, priority)
             att.config = release
             att.entity = entity
-            att.map = map
+            att.mapping = mapping
             return att
         }
 

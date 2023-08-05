@@ -7,9 +7,13 @@ import com.skillw.attsystem.AttributeSystem.operationManager
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
+import com.skillw.attsystem.api.compiled.CompiledData
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
-import com.skillw.attsystem.api.operation.Operation
+import com.skillw.attsystem.api.read.operation.Operation
+import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
+import com.skillw.fightsystem.FightSystem
+import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -24,22 +28,17 @@ import java.util.*
 
 object AttrAPI {
     /**
-     * 从Map中读取AttributeDataCompound
+     * EntityUpdate
      *
-     * @return AttributeDataCompound
-     * @receiver Map<String, Any>
+     * 更新实体(装备 属性 原版属性实现)
+     *
+     * 建议异步调用
+     *
+     * @receiver LivingEntity 实体
      */
     @JvmStatic
-    fun Map<String, Any>.readAttDataCompound() = AttributeDataCompound.fromMap(this)
-
-    /**
-     * 从Map中读取AttributeData
-     *
-     * @return AttributeData
-     * @receiver Map<String, Any>
-     */
-    @JvmStatic
-    fun Map<String, Any>.readAttData() = AttributeData.fromMap(this)
+    @Deprecated("Use update", ReplaceWith("update()", "com.skillw.attsystem.api.AttrAPI.update"))
+    fun LivingEntity.updateAttr() = update()
 
     /**
      * EntityUpdate
@@ -47,9 +46,11 @@ object AttrAPI {
      * 更新实体(装备 属性 原版属性实现)
      *
      * 建议异步调用
+     *
+     * @receiver LivingEntity 实体
      */
     @JvmStatic
-    fun LivingEntity.updateAttr() {
+    fun LivingEntity.update() {
         attributeSystemAPI.update(this)
     }
 
@@ -123,79 +124,165 @@ object AttrAPI {
     /**
      * 给实体添加属性数据
      *
-     * @param key String 键(源)
+     * @param source String 键(源)
      * @param attributes Collection<String> 字符串集合
      * @param release Boolean 是否在下次更新属性时删除
      * @return AttributeData? 属性数据
      * @receiver LivingEntity 实体
      */
+    @Deprecated(
+        "Use addAttrData", ReplaceWith(
+            "addCompiledData(source, attributes)",
+            "com.skillw.attsystem.api.AttrAPI.addCompiledData"
+        )
+    )
     @JvmStatic
     fun LivingEntity.addAttribute(
-        key: String,
+        source: String,
         attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? {
-        return AttributeSystem.attributeDataManager.addAttribute(this, key, attributes, release)
-    }
+    ): AttributeData? = addCompiledData(source, attributes)?.eval(this)?.toAttributeData()
 
     /**
      * 给实体添加属性数据
      *
-     * @param key String 键(源)
+     * @param source String 键(源)
      * @param attributeData AttributeData 属性数据
      * @param release Boolean 是否在下次更新属性时删除
      * @return AttributeData 属性数据
      * @receiver LivingEntity 实体
      */
+    @Deprecated(
+        "Use addAttrData",
+        ReplaceWith("addAttrData(key, attributeData)", "com.skillw.attsystem.api.AttrAPI.addAttrData")
+    )
     @JvmStatic
     fun LivingEntity.addAttribute(
-        key: String, attributeData: AttributeData,
+        source: String, attributeData: AttributeData,
         release: Boolean = false,
-    ): AttributeData {
-        return AttributeSystem.attributeDataManager.addAttribute(this, key, attributeData, release)
-    }
+    ): AttributeData = addAttrData(source, attributeData)
 
     /**
      * 给实体添加属性数据
      *
-     * @param key String 键(源)
+     * @param source String 键(源)
+     * @param attributes Collection<String> 字符串集合
+     * @param release Boolean 是否在下次更新属性时删除
+     * @return AttributeData? 属性数据
+     * @receiver UUID 实体uuid
+     */
+    @Deprecated(
+        "Use addAttrData", ReplaceWith(
+            "addCompiledData(source, attributes)",
+            "com.skillw.attsystem.api.AttrAPI.addCompiledData"
+        )
+    )
+    @JvmStatic
+    fun UUID.addAttribute(
+        source: String, attributes: Collection<String>,
+        release: Boolean = false,
+    ): AttributeData? = addCompiledData(source, attributes)?.eval(livingEntity())?.toAttributeData()
+
+    /**
+     * 给实体添加属性数据
+     *
+     * @param source String 键(源)
      * @param attributeData AttributeData 属性数据
      * @param release Boolean 是否在下次更新属性时删除
      * @return AttributeData 属性数据
      * @receiver UUID 实体uuid
      */
+    @Deprecated(
+        "Use addAttrData",
+        ReplaceWith("addAttrData(key, attributeData)", "com.skillw.attsystem.api.AttrAPI.addAttrData")
+    )
     @JvmStatic
     fun UUID.addAttribute(
-        key: String, attributeData: AttributeData,
+        source: String, attributeData: AttributeData,
         release: Boolean = false,
-    ): AttributeData {
-        return AttributeSystem.attributeDataManager.addAttribute(this, key, attributeData, release)
-    }
+    ): AttributeData = addAttrData(source, attributeData)
 
     /**
-     * 给实体删除属性数据
+     * 根据 键(源) 删除实体的属性数据
      *
-     * @param key String 键(源)
+     * @param source String 键(源)
+     * @receiver LivingEntity 实体
+     */
+    @Deprecated(
+        "Use removeAttrData",
+        ReplaceWith("removeAttrData(key)", "com.skillw.attsystem.api.AttrAPI.removeAttrData")
+    )
+    @JvmStatic
+    fun LivingEntity.removeAttribute(source: String) = removeAttrData(source)
+
+    /**
+     * 根据 键(源) 删除实体的属性数据
+     *
+     * @param source String
+     * @receiver UUID
+     */
+    @Deprecated(
+        "Use removeAttrData",
+        ReplaceWith("removeAttrData(key)", "com.skillw.attsystem.api.AttrAPI.removeAttrData")
+    )
+    @JvmStatic
+    fun UUID.removeAttribute(source: String) = removeAttrData(source)
+
+    /**
+     * 给实体添加属性数据
+     *
+     * @param source String 键(源)
+     * @param attributeData AttributeData 属性数据
+     * @return AttributeData 属性数据
      * @receiver LivingEntity 实体
      */
     @JvmStatic
-    fun LivingEntity.removeAttribute(key: String) {
-        AttributeSystem.attributeDataManager.removeAttribute(this, key)
+    fun LivingEntity.addAttrData(
+        source: String, attributeData: AttributeData,
+    ): AttributeData {
+        return AttributeSystem.attributeDataManager.addAttrData(this, source, attributeData)
     }
 
     /**
-     * 给实体删除属性数据
+     * 给实体添加属性数据
      *
-     * @param key String
+     * @param source String 键(源)
+     * @param attributeData AttributeData 属性数据
+     * @return AttributeData 属性数据
+     * @receiver UUID 实体uuid
+     */
+    @JvmStatic
+    fun UUID.addAttrData(
+        source: String, attributeData: AttributeData,
+    ): AttributeData {
+        return AttributeSystem.attributeDataManager.addAttrData(this, source, attributeData)
+    }
+
+    /**
+     * 根据 键(源) 删除实体的属性数据
+     *
+     * @param source String 键(源)
+     * @receiver LivingEntity 实体
+     */
+    @JvmStatic
+    fun LivingEntity.removeAttrData(source: String) {
+        AttributeSystem.attributeDataManager.removeAttrData(this, source)
+    }
+
+    /**
+     * 根据 键(源) 删除实体的属性数据
+     *
+     * @param source String
      * @receiver UUID
      */
     @JvmStatic
-    fun UUID.removeAttribute(key: String) {
-        AttributeSystem.attributeDataManager.removeAttribute(this, key)
+    fun UUID.removeAttrData(source: String) {
+        AttributeSystem.attributeDataManager.removeAttrData(this, source)
     }
 
+
     /**
-     * 读取物品lore属性
+     * 读取物品lore上的属性
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -205,12 +292,12 @@ object AttrAPI {
     @JvmStatic
     fun ItemStack.readItemLore(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeData? {
+    ): CompiledData? {
         return AttributeSystem.readManager.readItemLore(this, entity, slot)
     }
 
     /**
-     * 读取物品lore属性
+     * 读取物品lore上的属性
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -220,12 +307,12 @@ object AttrAPI {
     @JvmStatic
     fun Collection<ItemStack>.readItemsLore(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeData? {
+    ): CompiledData {
         return AttributeSystem.readManager.readItemsLore(this, entity, slot)
     }
 
     /**
-     * 读取物品NBT属性
+     * 读取物品NBT上的属性
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -235,12 +322,12 @@ object AttrAPI {
     @JvmStatic
     fun ItemStack.readItemNBT(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeDataCompound? {
+    ): CompiledData? {
         return AttributeSystem.readManager.readItemNBT(this, entity, slot)
     }
 
     /**
-     * 读取物品NBT属性
+     * 读取物品NBT上的属性
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -250,12 +337,12 @@ object AttrAPI {
     @JvmStatic
     fun Collection<ItemStack>.readItemsNBT(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeDataCompound? {
+    ): CompiledData {
         return AttributeSystem.readManager.readItemsNBT(this, entity, slot)
     }
 
     /**
-     * 读取物品属性
+     * 读取物品属性 （lore 与 nbt） 都读
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -265,12 +352,12 @@ object AttrAPI {
     @JvmStatic
     fun ItemStack.readItem(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeDataCompound {
+    ): CompiledData? {
         return AttributeSystem.readManager.readItem(this, entity, slot)
     }
 
     /**
-     * 读取物品属性
+     * 读取物品属性 （lore 与 nbt） 都读
      *
      * @param entity LivingEntity? 实体
      * @param slot String? 槽位
@@ -280,7 +367,7 @@ object AttrAPI {
     @JvmStatic
     fun Collection<ItemStack>.readItems(
         entity: LivingEntity? = null, slot: String? = null,
-    ): AttributeDataCompound {
+    ): CompiledData {
         return AttributeSystem.readManager.readItems(this, entity, slot)
     }
 
@@ -293,41 +380,208 @@ object AttrAPI {
      * @receiver Collection<String> 字符串集合
      */
     @JvmStatic
-    fun Collection<String>.read(entity: LivingEntity? = null, slot: String? = null): AttributeData {
+    fun Collection<String>.read(entity: LivingEntity? = null, slot: String? = null): CompiledData? {
         return AttributeSystem.readManager.read(this, entity, slot)
     }
 
 
     /**
-     * Add equipment
+     * 给实体添加装备数据
      *
-     * @param key 键(源)
+     * @param source 键(源)
      * @param equipments 装备数据（槽位 to 物品）
      * @return 装备数据
      * @receiver entity 实体
      */
     @JvmStatic
+    @Deprecated(
+        "use addEquipData",
+        ReplaceWith("addEquipData(key, equipments)", "com.skillw.attsystem.api.AttrAPI.addEquipData")
+    )
     fun LivingEntity.addEquipment(
-        key: String,
+        source: String,
         equipments: Map<String, ItemStack>,
-    ): EquipmentData {
-        return AttributeSystem.equipmentDataManager.addEquipment(this, key, equipments)
-    }
+    ): EquipmentData = addEquipData(source, equipments)
 
     /**
-     * Add equipment
+     * 给实体添加装备数据
      *
-     * @param key 键(源)
+     * @param source 键(源)
      * @param equipmentData 装备数据
      * @return 装备数据
      * @receiver entity 实体
      */
     @JvmStatic
+    @Deprecated(
+        "use addEquipData",
+        ReplaceWith("addEquipData(key, equipmentData)", "com.skillw.attsystem.api.AttrAPI.addEquipData")
+    )
     fun LivingEntity.addEquipment(
-        key: String, equipmentData: EquipmentData,
+        source: String, equipmentData: EquipmentData,
+    ): EquipmentData = addEquipData(source, equipmentData)
+
+
+    /**
+     * 根据 键(源) 删除实体的装备数据
+     *
+     * @param source 键(源)
+     * @return 装备数据
+     * @receiver entity 实体
+     */
+    @JvmStatic
+    @Deprecated(
+        "use removeEquipData",
+        ReplaceWith("removeEquipData(key)", "com.skillw.attsystem.api.AttrAPI.removeEquipData")
+    )
+    fun LivingEntity.removeEquipment(
+        source: String,
+    ) = removeEquipData(source)
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipments 装备数据（槽位 to 物品）
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    @Deprecated(
+        "use addEquipData",
+        ReplaceWith("addEquipData(key, equipments)", "com.skillw.attsystem.api.AttrAPI.addEquipData")
+    )
+    fun UUID.addEquipment(
+        source: String,
+        equipments: Map<String, ItemStack>,
+    ): EquipmentData = addEquipData(source, equipments)
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipmentData 装备数据
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    @Deprecated(
+        "use addEquipData",
+        ReplaceWith("addEquipData(key, equipmentData)", "com.skillw.attsystem.api.AttrAPI.addEquipData")
+    )
+    fun UUID.addEquipment(
+        source: String, equipmentData: EquipmentData,
+    ): EquipmentData = addEquipData(source, equipmentData)
+
+
+    /**
+     * 根据 键(源) 删除实体的装备数据
+     *
+     * @param source 键(源)
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    @Deprecated(
+        "use removeEquipData",
+        ReplaceWith("removeEquipData(key)", "com.skillw.attsystem.api.AttrAPI.removeEquipData")
+    )
+    fun UUID.removeEquipment(
+        source: String,
+    ) = removeEquipData(source)
+
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipments 装备数据（槽位 to 物品）
+     * @return 装备数据
+     * @receiver entity 实体
+     */
+    @JvmStatic
+    fun LivingEntity.addEquipData(
+        source: String,
+        equipments: Map<String, ItemStack>,
     ): EquipmentData {
-        return AttributeSystem.equipmentDataManager.addEquipment(this, key, equipmentData)
+        return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipments)
     }
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipmentData 装备数据
+     * @return 装备数据
+     * @receiver entity 实体
+     */
+    @JvmStatic
+    fun LivingEntity.addEquipData(
+        source: String, equipmentData: EquipmentData,
+    ): EquipmentData {
+        return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipmentData)
+    }
+
+
+    /**
+     * 根据 键(源) 删除实体的装备数据
+     *
+     * @param source 键(源)
+     * @return 装备数据
+     * @receiver entity 实体
+     */
+    @JvmStatic
+    fun LivingEntity.removeEquipData(
+        source: String,
+    ) {
+        AttributeSystem.equipmentDataManager.removeEquipData(this, source)
+    }
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipments 装备数据（槽位 to 物品）
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    fun UUID.addEquipData(
+        source: String,
+        equipments: Map<String, ItemStack>,
+    ): EquipmentData {
+        return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipments)
+    }
+
+    /**
+     * 给实体添加装备数据
+     *
+     * @param source 键(源)
+     * @param equipmentData 装备数据
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    fun UUID.addEquipData(
+        source: String, equipmentData: EquipmentData,
+    ): EquipmentData {
+        return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipmentData)
+    }
+
+
+    /**
+     * 根据 键(源) 删除实体的装备数据
+     *
+     * @param source 键(源)
+     * @return 装备数据
+     * @receiver UUID 实体的uuid
+     */
+    @JvmStatic
+    fun UUID.removeEquipData(
+        source: String,
+    ) {
+        AttributeSystem.equipmentDataManager.removeEquipData(this, source)
+    }
+
 
     /**
      * 判断实体是否有属性数据
@@ -338,14 +592,118 @@ object AttrAPI {
     @JvmStatic
     fun LivingEntity.hasData(): Boolean = AttributeSystem.attributeDataManager.containsKey(uniqueId)
 
+
     /**
-     * 让AS重新计算并给予实体的原版属性
+     * 给实体添加预编译属性数据
+     *
+     * @param source 源
+     * @param attributes 字符串集(会据此读取出预编译属性数据)
+     * @return 预编译属性数据
+     * @receiver entity 实体
+     */
+
+    fun LivingEntity.addCompiledData(
+        source: String,
+        attributes: Collection<String>,
+    ): CompiledData? = uniqueId.addCompiledData(source, attributes)
+
+    /**
+     * 给实体添加预编译属性数据
+     *
+     * @param source 源
+     * @param compiledData 预编译属性数据
+     * @return 预编译属性数据
+     * @receiver entity 实体
+     */
+
+    fun LivingEntity.addCompiledData(
+        source: String, compiledData: CompiledData,
+    ): CompiledData = uniqueId.addCompiledData(source, compiledData)
+
+    /**
+     * 给实体添加预编译属性数据
+     *
+     * @param source 源
+     * @param attributes 字符串集(会据此读取出预编译属性数据)
+     * @return 预编译属性数据
+     * @receiver uuid UUID
+     */
+
+    fun UUID.addCompiledData(
+        source: String, attributes: Collection<String>,
+    ): CompiledData? {
+        return AttributeSystem.compiledAttrDataManager.addCompiledData(this, source, attributes)
+    }
+
+    /**
+     * 给实体添加预编译属性数据
+     *
+     * @param source 源
+     * @param compiledData 预编译属性数据
+     * @return 预编译属性数据
+     * @receiver uuid UUID
+     */
+
+    fun UUID.addCompiledData(
+        source: String, compiledData: CompiledData,
+    ): CompiledData {
+        return AttributeSystem.compiledAttrDataManager.addCompiledData(this, source, compiledData)
+    }
+
+
+    /**
+     * 根据 键(源) 删除实体的预编译属性数据
+     *
+     * @param source 键(源)
+     * @receiver entity 实体
+     */
+    fun LivingEntity.removeCompiledData(source: String): CompiledData? {
+        return uniqueId.removeCompiledData(source)
+    }
+
+    /**
+     * 根据 键(源) 删除实体的预编译属性数据
+     *
+     * @param source 键(源)
+     * @receiver uuid UUID
+     */
+    fun UUID.removeCompiledData(source: String): CompiledData? {
+        return AttributeSystem.compiledAttrDataManager.removeCompiledData(this, source)
+    }
+
+    /**
+     * 实体是否在战斗
+     *
+     * @return Boolean 是否在战斗
+     * @receiver LivingEntity 实体
+     */
+    @JvmStatic
+    @Deprecated("Use FightAPI")
+    fun LivingEntity.isFighting(): Boolean {
+        return !fightSystem || FightSystem.fightStatusManager.isFighting(this)
+    }
+
+    /**
+     * 让实体进入战斗状态
      *
      * @receiver LivingEntity 实体
      */
     @JvmStatic
-    fun LivingEntity.realize() {
-        AttributeSystem.realizerManager.realize(this)
+    @Deprecated("Use FightAPI")
+    fun LivingEntity.intoFighting() {
+        if (!fightSystem) return
+        FightSystem.fightStatusManager.intoFighting(this)
     }
 
+    /**
+     * 让实体退出战斗状态
+     *
+     * @receiver LivingEntity 实体
+     */
+    @JvmStatic
+    @Deprecated("Use FightAPI")
+    fun LivingEntity.outFighting() {
+        if (!fightSystem) return
+        FightSystem.fightStatusManager.outFighting(this)
+    }
 }

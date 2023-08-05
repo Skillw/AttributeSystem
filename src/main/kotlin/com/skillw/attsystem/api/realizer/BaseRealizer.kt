@@ -15,6 +15,7 @@ abstract class BaseRealizer(final override val key: String) : Registrable<String
 
     @Deprecated("无用")
     val defaultConfig = LinkedHashMap<String, Any>()
+
     abstract val file: File
     override fun register() {
         realizerManager.register(this)

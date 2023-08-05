@@ -2,8 +2,9 @@ package com.skillw.attsystem.internal.core.attribute
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
+import com.skillw.attsystem.api.attribute.Mapping
 import com.skillw.attsystem.api.read.ReadPattern
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.attribute.mapping.DefaultMapping
 import com.skillw.pouvoir.api.plugin.`object`.BaseObject
 import com.skillw.pouvoir.util.toMap
 import org.bukkit.Bukkit
@@ -20,7 +21,7 @@ class ConfigAttributeBuilder(
     private val names: List<String>,
     private val readPattern: ReadPattern<*>,
     private val isEntity: Boolean,
-    private val map: Map<String, Map<String, String>> = HashMap(),
+    private val mapping: Mapping?,
 ) : BaseObject {
     override fun register() {
         AttributeSystem.attributeManager.register(
@@ -30,7 +31,7 @@ class ConfigAttributeBuilder(
                 priority = this@ConfigAttributeBuilder.priority
                 entity = this@ConfigAttributeBuilder.isEntity
                 names.addAll(this@ConfigAttributeBuilder.names)
-                map = this@ConfigAttributeBuilder.map
+                this@ConfigAttributeBuilder.mapping?.let { mapping = it }
             }
         )
     }
@@ -53,26 +54,9 @@ class ConfigAttributeBuilder(
                     console().sendLang("invalid-read-pattern", attKey, readPatternKey)
                     return null
                 }
-                val map = HashMap<String, Map<String, String>>()
-                if (readPattern is ReadGroup<*>)
-                    section.getConfigurationSection("map")?.getKeys(false)?.forEach {
-                        map[it] =
-                            section.getConfigurationSection("map.$it")?.toMap()
-                                ?.mapValues { (_, value) ->
-                                    var temp = value.toString()
-                                    readPattern.placeholderKeys.forEach key@{ key ->
-                                        if (temp.contains("<$key>", true)) {
-                                            temp = temp.replace(
-                                                "<$key>",
-                                                "%as_att:${attKey}_$key%",
-                                                true
-                                            )
-                                        }
-                                    }
-                                    temp
-                                } ?: return@forEach
-                    }
-                return ConfigAttributeBuilder(attKey, priority, display, names, readPattern, isEntity, map = map)
+                val map = section.getConfigurationSection("mapping")?.toMap()
+                val mapping = map?.let { DefaultMapping(it) }
+                return ConfigAttributeBuilder(attKey, priority, display, names, readPattern, isEntity, mapping)
             } catch (e: Throwable) {
                 Bukkit.getConsoleSender().sendLang("error.attribute-load", section["key"].toString())
                 e.printStackTrace()
