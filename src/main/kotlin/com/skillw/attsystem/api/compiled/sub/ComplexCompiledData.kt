@@ -13,6 +13,7 @@ import java.util.*
  */
 class ComplexCompiledData : CompiledData() {
     private val children = LinkedList<CompiledData>()
+    var base: CompiledData? = null
     val addition = AttributeDataCompound()
     fun add(compiled: CompiledData) {
         if (compiled is NBTCompiledData) {
@@ -50,6 +51,7 @@ class ComplexCompiledData : CompiledData() {
     override fun eval(entity: LivingEntity?): AttributeDataCompound {
         if (!condition(entity)) return AttributeDataCompound()
         val total = AttributeDataCompound(entity)
+        base?.eval(entity)?.let { total.combine(it) }
         if (addition.isNotEmpty()) {
             total.combine(addition.clone())
         }

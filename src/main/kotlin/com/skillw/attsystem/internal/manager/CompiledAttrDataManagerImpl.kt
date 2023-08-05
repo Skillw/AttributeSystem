@@ -6,7 +6,6 @@ import com.skillw.attsystem.api.compiled.CompiledAttrDataCompound
 import com.skillw.attsystem.api.compiled.CompiledData
 import com.skillw.attsystem.api.manager.CompiledAttrDataManager
 import com.skillw.attsystem.util.Utils.validEntity
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import java.util.*
 
@@ -19,7 +18,7 @@ object CompiledAttrDataManagerImpl : CompiledAttrDataManager() {
     }
 
     override fun hasCompiledData(uuid: UUID, source: String): Boolean {
-        return get(uuid).containsKey(source)
+        return get(uuid)?.containsKey(source) == true
     }
 
     override fun addCompiledData(
@@ -47,7 +46,7 @@ object CompiledAttrDataManagerImpl : CompiledAttrDataManager() {
         attributes: Collection<String>,
         slot: String?,
     ): CompiledData? {
-        return readManager.read(attributes, uuid.livingEntity(), slot)?.let {
+        return readManager.read(attributes, uuid.validEntity(), slot)?.let {
             this.addCompiledData(
                 uuid,
                 source,
@@ -56,8 +55,8 @@ object CompiledAttrDataManagerImpl : CompiledAttrDataManager() {
         }
     }
 
-    override fun addCompiledData(uuid: UUID, source: String, compiledData: CompiledData): CompiledData {
-        return addCompiledData(uuid.validEntity(), source, compiledData)
+    override fun addCompiledData(uuid: UUID, source: String, compiledData: CompiledData): CompiledData? {
+        return uuid.validEntity()?.let { addCompiledData(it, source, compiledData) }
     }
 
     override fun removeCompiledData(entity: LivingEntity, source: String): CompiledData? {
@@ -65,7 +64,7 @@ object CompiledAttrDataManagerImpl : CompiledAttrDataManager() {
     }
 
     override fun removeCompiledData(uuid: UUID, source: String): CompiledData? {
-        return this[uuid].run {
+        return this[uuid]?.run {
             remove(source)
         }
     }
@@ -74,13 +73,14 @@ object CompiledAttrDataManagerImpl : CompiledAttrDataManager() {
         return removeIfStartWith(entity.uniqueId, prefix)
     }
 
-    override fun get(key: UUID): CompiledAttrDataCompound {
-        return computeIfAbsent(key) { CompiledAttrDataCompound(key.validEntity()) }
+    override fun get(key: UUID): CompiledAttrDataCompound? {
+        val entity = key.validEntity() ?: return null
+        return computeIfAbsent(key) { CompiledAttrDataCompound(entity) }
     }
 
     override fun removeIfStartWith(uuid: UUID, prefix: String) {
         val lower = prefix.lowercase()
-        this[uuid].run {
+        this[uuid]?.run {
             filterKeys { it.startsWith(lower) }.map { it.key }.forEach(this::remove)
         }
     }

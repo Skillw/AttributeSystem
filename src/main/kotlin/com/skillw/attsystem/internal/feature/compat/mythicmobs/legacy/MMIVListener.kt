@@ -29,7 +29,7 @@ internal object MMIVListener {
         if (attributes.isNullOrEmpty())
             return
         attributes.read(entity)?.let {
-            AttributeSystem.compiledAttrDataManager[entity.uniqueId].register(
+            AttributeSystem.compiledAttrDataManager[entity.uniqueId]?.register(
                 "MYTHIC-BASE-ATTRIBUTE",
                 it
             )

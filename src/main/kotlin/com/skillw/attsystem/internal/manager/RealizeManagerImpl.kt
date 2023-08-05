@@ -29,15 +29,19 @@ object RealizeManagerImpl : RealizeManager() {
     private val syncs = LinkedList<Sync>()
 
     override fun onLoad() {
-        onReload()
         values.filterIsInstance<Realizable>().forEach(realizables::add)
         values.filterIsInstance<Sync>().forEach(syncs::add)
         values.filterIsInstance<Awakeable>().forEach(awakeables::add)
-        awakeables.forEach(Awakeable::onLoad)
+        onReload()
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onLoad)
     }
 
     override fun onEnable() {
-        awakeables.forEach(Awakeable::onEnable)
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onEnable)
+    }
+
+    override fun onActive() {
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onActive)
     }
 
     private val watcher = FileWatcher()
@@ -80,7 +84,7 @@ object RealizeManagerImpl : RealizeManager() {
                 else realizer.whenDisable()
             }
         }
-        awakeables.forEach(Awakeable::onReload)
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onReload)
     }
 
     private fun realizable(func: (Realizable) -> Unit) {
@@ -124,11 +128,11 @@ object RealizeManagerImpl : RealizeManager() {
 
     @Awake(LifeCycle.DISABLE)
     fun disable() {
-        awakeables.forEach(Awakeable::onDisable)
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onDisable)
     }
 
     override fun onDisable() {
-        awakeables.forEach(Awakeable::onDisable)
+        awakeables.filter { it !is Switchable || it.isEnable() }.forEach(Awakeable::onDisable)
     }
 
 

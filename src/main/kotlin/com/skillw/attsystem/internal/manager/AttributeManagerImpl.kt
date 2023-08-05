@@ -34,6 +34,15 @@ object AttributeManagerImpl : AttributeManager() {
         CopyOnWriteArrayList()
     }
 
+
+    override fun addSubPouvoir(subPouvoir: SubPouvoir) {
+        val folder = subPouvoir.plugin.dataFolder
+        addDataFolders(folder)
+        subPouvoir.managerData.onReload {
+            reloadFolder(folder)
+        }
+    }
+
     override fun onEnable() {
         addSubPouvoir(AttributeSystem)
         onReload()
@@ -61,7 +70,7 @@ object AttributeManagerImpl : AttributeManager() {
         fileToKeys[file]?.let {
             it.forEach(::unregister)
             fileToKeys.remove(file)
-            val yaml = file.loadYaml() ?: return
+            val yaml = runCatching { file.loadYaml() }.getOrNull() ?: return
             yaml.apply {
                 getKeys(false).forEach { key ->
                     ConfigAttributeBuilder.deserialize(getConfigurationSection(key)!!)?.register()
@@ -85,14 +94,6 @@ object AttributeManagerImpl : AttributeManager() {
     override fun addDataFolders(folder: File) {
         dataFolders.add(folder)
         onReload()
-    }
-
-    override fun addSubPouvoir(subPouvoir: SubPouvoir) {
-        val folder = subPouvoir.plugin.dataFolder
-        addDataFolders(folder)
-        subPouvoir.managerData.onReload {
-            reloadFolder(folder)
-        }
     }
 
     override fun onReload() {

@@ -89,9 +89,9 @@ repositories {
     mavenCentral()
 }
 
-//tasks.withType<Jar> {
-//    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
-//}
+tasks.withType<Jar> {
+    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
+}
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")

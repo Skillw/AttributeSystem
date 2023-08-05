@@ -9,9 +9,9 @@ import com.skillw.attsystem.api.realizer.component.Switchable
 import com.skillw.attsystem.api.realizer.component.Valuable
 import com.skillw.attsystem.api.realizer.component.Vanillable
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.fightsystem.api.FightAPI.isFighting
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import taboolib.common.platform.event.SubscribeEvent
@@ -61,7 +61,7 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
 
     override fun task() {
         for (uuid in attributeDataManager.keys) {
-            val entity = uuid.livingEntity()
+            val entity = uuid.validEntity()
             if (entity == null || !entity.isValid || entity.isDead) {
                 attributeSystemAPI.remove(uuid)
                 continue

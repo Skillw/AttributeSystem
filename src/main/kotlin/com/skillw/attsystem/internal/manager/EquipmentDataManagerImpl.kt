@@ -174,11 +174,11 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
     }
 
     override fun addEquipData(uuid: UUID, source: String, slot: String, itemStack: ItemStack): EquipmentData? {
-        return addEquipment(uuid.validEntity(), source, slot, itemStack)
+        return uuid.validEntity()?.let { addEquipment(it, source, slot, itemStack) }
     }
 
-    override fun addEquipData(uuid: UUID, source: String, equipments: Map<String, ItemStack>): EquipmentData {
-        return addEquipData(uuid.validEntity(), source, equipments)
+    override fun addEquipData(uuid: UUID, source: String, equipments: Map<String, ItemStack>): EquipmentData? {
+        return uuid.validEntity()?.let { addEquipData(it, source, equipments) }
     }
 
     override fun removeEquipData(uuid: UUID, source: String): EquipmentData? {

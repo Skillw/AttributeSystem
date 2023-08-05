@@ -9,10 +9,10 @@ import java.util.*
 
 object Utils {
     @JvmStatic
-    fun UUID.validEntity(): LivingEntity {
+    fun UUID.validEntity(): LivingEntity? {
         return livingEntity() ?: run {
             attributeSystemAPI.remove(this)
-            error("UUID is invalid!")
+            null
         }
     }
 

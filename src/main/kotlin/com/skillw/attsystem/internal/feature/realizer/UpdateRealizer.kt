@@ -7,8 +7,8 @@ import com.skillw.attsystem.AttributeSystem.realizerManager
 import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.attsystem.api.realizer.component.ScheduledRealizer
 import com.skillw.attsystem.internal.manager.AttributeSystemAPIImpl.remove
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
@@ -32,7 +32,7 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
 
     override fun task() {
         for (uuid in attributeDataManager.keys) {
-            val entity = uuid.livingEntity()
+            val entity = uuid.validEntity()
             if (entity == null || !entity.isValid || entity.isDead) {
                 remove(uuid)
                 continue

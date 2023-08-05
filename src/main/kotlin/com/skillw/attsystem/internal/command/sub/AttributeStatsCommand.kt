@@ -92,10 +92,12 @@ object AttributeStatsCommand {
                         sender.soundSuccess()
                         submitAsync {
                             val data =
-                                AttributeSystem.compiledAttrDataManager[player.uniqueId][AttributeSystem.equipmentDataManager.getSource(
-                                    source,
-                                    slot
-                                )]?.eval(player) ?: AttributeDataCompound()
+                                AttributeSystem.compiledAttrDataManager[player.uniqueId]?.get(
+                                    AttributeSystem.equipmentDataManager.getSource(
+                                        source,
+                                        slot
+                                    )
+                                )?.eval(player) ?: AttributeDataCompound()
                             sendStatText(adaptPlayer(sender), player, itemStack.getName(), data, true)
                         }
                     }
@@ -122,7 +124,7 @@ object AttributeStatsCommand {
 
     private fun attributeStatusToJson(
         data: AttributeDataCompound,
-        livingEntity: LivingEntity,
+        entity: LivingEntity,
         item: Boolean = false,
     ): LinkedList<TellrawJson> {
         val attributes = AttributeSystem.attributeManager.attributes
@@ -134,7 +136,7 @@ object AttributeStatsCommand {
             val json = attribute.readPattern.stat(
                 attribute,
                 status,
-                livingEntity
+                entity
             )
             list.add(json)
         }

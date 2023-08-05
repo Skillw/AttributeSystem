@@ -12,8 +12,8 @@ import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.fightsystem.FightSystem
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import java.util.*
@@ -181,7 +181,7 @@ object AttrAPI {
     fun UUID.addAttribute(
         source: String, attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = addCompiledData(source, attributes)?.eval(livingEntity())?.toAttributeData()
+    ): AttributeData? = addCompiledData(source, attributes)?.eval(validEntity())?.toAttributeData()
 
     /**
      * 给实体添加属性数据
@@ -453,7 +453,7 @@ object AttrAPI {
     fun UUID.addEquipment(
         source: String,
         equipments: Map<String, ItemStack>,
-    ): EquipmentData = addEquipData(source, equipments)
+    ): EquipmentData? = addEquipData(source, equipments)
 
     /**
      * 给实体添加装备数据
@@ -470,7 +470,7 @@ object AttrAPI {
     )
     fun UUID.addEquipment(
         source: String, equipmentData: EquipmentData,
-    ): EquipmentData = addEquipData(source, equipmentData)
+    ): EquipmentData? = addEquipData(source, equipmentData)
 
 
     /**
@@ -548,7 +548,7 @@ object AttrAPI {
     fun UUID.addEquipData(
         source: String,
         equipments: Map<String, ItemStack>,
-    ): EquipmentData {
+    ): EquipmentData? {
         return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipments)
     }
 
@@ -563,7 +563,7 @@ object AttrAPI {
     @JvmStatic
     fun UUID.addEquipData(
         source: String, equipmentData: EquipmentData,
-    ): EquipmentData {
+    ): EquipmentData? {
         return AttributeSystem.equipmentDataManager.addEquipData(this, source, equipmentData)
     }
 
@@ -618,7 +618,7 @@ object AttrAPI {
 
     fun LivingEntity.addCompiledData(
         source: String, compiledData: CompiledData,
-    ): CompiledData = uniqueId.addCompiledData(source, compiledData)
+    ): CompiledData? = uniqueId.addCompiledData(source, compiledData)
 
     /**
      * 给实体添加预编译属性数据
@@ -646,7 +646,7 @@ object AttrAPI {
 
     fun UUID.addCompiledData(
         source: String, compiledData: CompiledData,
-    ): CompiledData {
+    ): CompiledData? {
         return AttributeSystem.compiledAttrDataManager.addCompiledData(this, source, compiledData)
     }
 

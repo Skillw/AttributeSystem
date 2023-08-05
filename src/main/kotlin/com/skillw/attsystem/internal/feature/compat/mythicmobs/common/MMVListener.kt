@@ -2,9 +2,6 @@ package com.skillw.attsystem.internal.feature.compat.mythicmobs.common
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
-import com.skillw.attsystem.api.event.AttributeUpdateEvent
-import com.skillw.attsystem.internal.manager.ASConfig
-import io.lumine.mythic.bukkit.MythicBukkit
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.mythic.bukkit.events.MythicMobSpawnEvent
 import org.bukkit.entity.LivingEntity
@@ -31,7 +28,7 @@ internal object MMVListener {
         if (!attributes.isNullOrEmpty())
             submit(delay = 5) {
                 attributes.read(entity)?.let {
-                    AttributeSystem.compiledAttrDataManager[entity.uniqueId].register(
+                    AttributeSystem.compiledAttrDataManager[entity.uniqueId]?.register(
                         "MYTHIC-BASE-ATTRIBUTE",
                         it
                     )

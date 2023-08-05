@@ -86,7 +86,7 @@ abstract class CompiledAttrDataManager : BaseMap<UUID, CompiledAttrDataCompound>
 
     abstract fun addCompiledData(
         uuid: UUID, source: String, compiledData: CompiledData,
-    ): CompiledData
+    ): CompiledData?
 
 
     /**
@@ -121,5 +121,5 @@ abstract class CompiledAttrDataManager : BaseMap<UUID, CompiledAttrDataCompound>
      */
     abstract fun removeIfStartWith(entity: LivingEntity, prefix: String)
 
-    abstract override fun get(key: UUID): CompiledAttrDataCompound
+    abstract override fun get(key: UUID): CompiledAttrDataCompound?
 }

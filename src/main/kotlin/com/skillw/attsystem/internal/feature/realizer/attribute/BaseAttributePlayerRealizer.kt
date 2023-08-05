@@ -3,7 +3,6 @@ package com.skillw.attsystem.internal.feature.realizer.attribute
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
 import com.skillw.attsystem.api.compiled.CompiledAttrDataCompound
-import com.skillw.attsystem.api.compiled.CompiledData
 import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
 import com.skillw.attsystem.api.realizer.BaseRealizer
 import com.skillw.attsystem.api.realizer.component.Awakeable
@@ -34,10 +33,14 @@ object BaseAttributePlayerRealizer : BaseRealizer("base-attribute-player"), Awak
 
     private const val KEY = "BASIC-ATTRIBUTE"
 
-    private var compiledBaseData: CompiledData = ComplexCompiledData()
+    var baseData: ComplexCompiledData = ComplexCompiledData()
 
 
     override fun onEnable() {
+        onReload()
+    }
+
+    override fun onActive() {
         onReload()
     }
 
@@ -51,13 +54,11 @@ object BaseAttributePlayerRealizer : BaseRealizer("base-attribute-player"), Awak
 
             else -> attrData?.asList()?.read()
         }
-        base?.let {
-            compiledBaseData = it
-        }
+        baseData.base = base
     }
 
     fun CompiledAttrDataCompound.basePlayer(): CompiledAttrDataCompound {
-        this[KEY] = compiledBaseData
+        this[KEY] = baseData
         return this
     }
 

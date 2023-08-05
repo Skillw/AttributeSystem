@@ -3,9 +3,9 @@ package com.skillw.attsystem.api.manager
 import com.skillw.attsystem.AttributeSystem.compiledAttrDataManager
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.api.manager.Manager
 import com.skillw.pouvoir.api.plugin.map.BaseMap
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import java.util.*
 
@@ -97,7 +97,7 @@ abstract class AttributeDataManager : BaseMap<UUID, AttributeDataCompound>(), Ma
     fun addAttribute(
         uuid: UUID, source: String, attributes: Collection<String>,
         release: Boolean = false,
-    ): AttributeData? = uuid.livingEntity()?.let { addAttribute(it, source, attributes) }
+    ): AttributeData? = uuid.validEntity()?.let { addAttribute(it, source, attributes) }
 
     /**
      * 给实体添加属性数据

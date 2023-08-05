@@ -9,8 +9,8 @@ import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.event.AttributeUpdateEvent
 import com.skillw.attsystem.api.manager.AttributeDataManager
 import com.skillw.attsystem.internal.feature.personal.InitialAttrData.Companion.pullAttrData
+import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.util.isAlive
-import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import java.util.*
 
@@ -40,7 +40,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
         attrData.release()
         //PROCESS
 
-        compiledAttrDataManager[uuid].apply {
+        compiledAttrDataManager[uuid]?.apply {
             attrData.combine(eval(entity))
         }
 
@@ -83,7 +83,7 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     }
 
     override fun addAttrData(uuid: UUID, source: String, attributeData: AttributeData): AttributeData {
-        return uuid.livingEntity()?.let { addAttrData(it, source, attributeData) } ?: AttributeData()
+        return uuid.validEntity()?.let { addAttrData(it, source, attributeData) } ?: AttributeData()
     }
 
     override fun removeAttrData(entity: LivingEntity, source: String): AttributeData? {
@@ -94,12 +94,12 @@ object AttributeDataManagerImpl : AttributeDataManager() {
     }
 
     override fun removeAttrData(uuid: UUID, source: String): AttributeData? {
-        return uuid.livingEntity()?.let { removeAttrData(it, source) }
+        return uuid.validEntity()?.let { removeAttrData(it, source) }
     }
 
 
     override fun put(key: UUID, value: AttributeDataCompound): AttributeDataCompound? {
-        return super.put(key, value)?.apply { entity = key.livingEntity() }
+        return super.put(key, value)?.apply { entity = key.validEntity() }
     }
 
 }

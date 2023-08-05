@@ -3,7 +3,6 @@ package com.skillw.attsystem.internal.feature.realizer.attribute
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
 import com.skillw.attsystem.api.compiled.CompiledAttrDataCompound
-import com.skillw.attsystem.api.compiled.CompiledData
 import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
 import com.skillw.attsystem.api.realizer.BaseRealizer
 import com.skillw.attsystem.api.realizer.component.Awakeable
@@ -20,7 +19,7 @@ import taboolib.module.configuration.util.asMap
  * @date 2023/1/6 7:05 Copyright 2022 user. All rights reserved.
  */
 @AutoRegister
-internal object BaseAttributeEntityRealizer : BaseRealizer("base-attribute-entity"), Awakeable {
+object BaseAttributeEntityRealizer : BaseRealizer("base-attribute-entity"), Awakeable {
 
     override val file by lazy {
         AttributeSystem.options.file!!
@@ -34,10 +33,14 @@ internal object BaseAttributeEntityRealizer : BaseRealizer("base-attribute-entit
 
     private const val KEY = "BASIC-ATTRIBUTE"
 
-    private var compiledBaseData: CompiledData = ComplexCompiledData()
+    var baseData: ComplexCompiledData = ComplexCompiledData()
 
 
     override fun onEnable() {
+        onReload()
+    }
+
+    override fun onActive() {
         onReload()
     }
 
@@ -51,13 +54,11 @@ internal object BaseAttributeEntityRealizer : BaseRealizer("base-attribute-entit
 
             else -> attrData?.asList()?.read()
         }
-        base?.let {
-            compiledBaseData = it
-        }
+        baseData.base = base
     }
 
     fun CompiledAttrDataCompound.baseEntity(): CompiledAttrDataCompound {
-        this[KEY] = compiledBaseData
+        this[KEY] = baseData
         return this
     }
 

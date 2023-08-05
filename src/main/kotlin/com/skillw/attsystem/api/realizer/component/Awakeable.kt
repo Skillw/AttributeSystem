@@ -10,6 +10,8 @@ package com.skillw.attsystem.api.realizer.component
 interface Awakeable {
     fun onLoad() {}
     fun onEnable() {}
+    fun onActive() {}
     fun onReload() {}
+
     fun onDisable() {}
 }

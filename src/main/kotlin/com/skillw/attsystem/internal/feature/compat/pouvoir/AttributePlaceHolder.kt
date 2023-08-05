@@ -66,7 +66,7 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
                 strings.removeAt(0)
                 val attribute = attributeManager[attKey] ?: return "0.0"
                 val sourceKey = equipmentDataManager.getSource(source, slot)
-                val compiledData = compiledAttrDataManager[uuid][sourceKey] ?: ComplexCompiledData()
+                val compiledData = compiledAttrDataManager[uuid]?.get(sourceKey) ?: ComplexCompiledData()
                 val itemAttrData = compiledData.eval(entity)
                 return get(itemAttrData, attribute, strings)
             }

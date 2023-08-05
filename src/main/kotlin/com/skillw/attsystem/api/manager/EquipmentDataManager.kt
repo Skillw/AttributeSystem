@@ -1,6 +1,5 @@
 package com.skillw.attsystem.api.manager
 
-import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
 import com.skillw.attsystem.api.equipment.EquipmentLoader
@@ -64,7 +63,7 @@ abstract class EquipmentDataManager : BaseMap<UUID, EquipmentDataCompound>(), Ma
     @Deprecated("Use addEquipData", ReplaceWith("addEquipData(uuid, key, equipments)"))
     fun addEquipment(
         uuid: UUID, source: String, equipments: Map<String, ItemStack>,
-    ): EquipmentData = addEquipData(uuid, source, equipments)
+    ): EquipmentData? = addEquipData(uuid, source, equipments)
 
     /**
      * 给实体添加装备数据
@@ -77,7 +76,7 @@ abstract class EquipmentDataManager : BaseMap<UUID, EquipmentDataCompound>(), Ma
     @Deprecated("Use addEquipData", ReplaceWith("addEquipData(uuid, key, equipmentData)"))
     fun addEquipment(
         uuid: UUID, source: String, equipmentData: EquipmentData,
-    ): EquipmentData = addEquipData(uuid, source, equipmentData)
+    ): EquipmentData? = addEquipData(uuid, source, equipmentData)
 
     /**
      * 根据 源 删除实体的装备数据
@@ -122,7 +121,7 @@ abstract class EquipmentDataManager : BaseMap<UUID, EquipmentDataCompound>(), Ma
      */
     abstract fun addEquipData(
         uuid: UUID, source: String, equipments: Map<String, ItemStack>,
-    ): EquipmentData
+    ): EquipmentData?
 
     /**
      * 根据 源 删除实体的装备数据
