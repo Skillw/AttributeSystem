@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack
 interface EquipmentLoader<E : LivingEntity> : Registrable<String>, Comparable<EquipmentLoader<*>> {
     override val key: String
     fun filter(entity: LivingEntity): Boolean = false
-    fun loadEquipment(entity: E): Map<String, ItemStack>
+    fun loadEquipment(entity: E): Map<String, ItemStack?>
 
     val priority: Int
 

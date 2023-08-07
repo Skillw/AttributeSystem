@@ -55,6 +55,20 @@ object AttrAPI {
     }
 
     /**
+     * EntityUpdate
+     *
+     * 更新实体(装备 属性 原版属性实现)
+     *
+     * 建议异步调用
+     *
+     * @receiver UUID 实体UUID
+     */
+    @JvmStatic
+    fun UUID.update() {
+        validEntity()?.let { attributeSystemAPI.update(it) }
+    }
+
+    /**
      * 获取Operation<*>对象
      *
      * @param key String Operation名称

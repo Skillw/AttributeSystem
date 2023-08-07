@@ -93,7 +93,7 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         condition: (ItemStack) -> Boolean = { true },
     ): EquipmentData? {
         return item.run {
-            if (isAir() || !condition(this)) {
+            if (item == null || isAir() || !condition(this)) {
                 removeItem(source, slot)
                 return@run null
             }
@@ -119,6 +119,10 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
                 compiledSource,
                 eventItem.readItem(entity, slot) ?: ComplexCompiledData()
             )
+            if (eventItem.isAir()) {
+                removeItem(source, slot)
+                return@run null
+            }
             return computeIfAbsent(source) { EquipmentData(this@addEquipment, source) }.apply {
                 uncheckedPut(
                     slot,

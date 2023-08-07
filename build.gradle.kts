@@ -33,6 +33,9 @@ taboolib {
     if (project.version.toString().contains("-api")) {
         options("skip-kotlin-relocate", "keep-kotlin-module")
     }
+//    if (project.version.toString().contains("-no-ktmod")) {
+//        options.remove("keep-kotlin-module")
+//    }
     description {
         contributors {
             name("Glom_")
@@ -72,7 +75,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 
 tasks.dokkaJavadoc.configure {
-    outputDirectory.set(File("C:\\Users\\Administrator\\Desktop\\Doc\\attsystem"))
+    outputDirectory.set(File("E:\\code\\git\\Javadoc\\attsystem\\new"))
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
@@ -89,9 +92,9 @@ repositories {
     mavenCentral()
 }
 
-//tasks.withType<Jar> {
-//    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
-//}
+tasks.withType<Jar> {
+    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
+}
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
     dokkaHtmlPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.6.10")
@@ -118,10 +121,10 @@ tasks.javadoc {
     }
 }
 
-//java {
+java {
 //    withJavadocJar()
 //    withSourcesJar()
-//}
+}
 
 
 configure<JavaPluginConvention> {

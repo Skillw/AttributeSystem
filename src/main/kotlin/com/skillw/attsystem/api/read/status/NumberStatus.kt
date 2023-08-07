@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.read.status
 
 import com.skillw.attsystem.api.read.operation.NumberOperation
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 
 /**
  * Number status
@@ -9,7 +9,7 @@ import com.skillw.attsystem.internal.core.read.ReadGroup
  * @constructor Create empty Number status
  * @property numberReader
  */
-class NumberStatus(numberReader: ReadGroup<Double>) : GroupStatus<Double>(numberReader) {
+class NumberStatus(numberReader: BaseReadGroup<Double>) : Status<Double>(numberReader) {
 
     override fun clone(): NumberStatus {
         val attributeStatus = NumberStatus(readGroup)
@@ -41,6 +41,4 @@ class NumberStatus(numberReader: ReadGroup<Double>) : GroupStatus<Double>(number
         }
         return this
     }
-
-
 }

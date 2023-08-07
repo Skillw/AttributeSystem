@@ -7,9 +7,8 @@ import com.skillw.attsystem.api.AttrAPI.attribute
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
-import com.skillw.attsystem.api.read.status.GroupStatus
 import com.skillw.attsystem.api.read.status.Status
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.attsystem.internal.feature.compat.pouvoir.AttributePlaceHolder
 
 /**
@@ -77,8 +76,8 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
                     2 -> {
                         val source = subKeys[0]
                         val attribute = attribute(subKeys[1]) ?: return null
-                        if (attribute.readPattern !is ReadGroup<*>) return null
-                        val status = attribute.readPattern.readNBT(value as Map<String, Any>, attribute) as Status<*>
+                        val status =
+                            attribute.readPattern.readNBT(value as Map<String, Any>, attribute) as Status<*>
                         data.computeIfAbsent(source) { AttributeData() }[attribute] = status
 
                     }
@@ -86,10 +85,10 @@ object DataSetter : AsahiContext.Setter("attribute-data", 1) {
                     else -> {
                         val source = subKeys[0]
                         val attribute = attribute(subKeys[1]) ?: return null
-                        if (attribute.readPattern !is ReadGroup<*>) return null
+                        if (attribute.readPattern !is BaseReadGroup<*>) return null
                         val matcher = subKeys[2]
-                        value ?: (data[source, attribute] as? GroupStatus<Any>)?.remove(matcher)
-                        value?.let { (data[source, attribute] as? GroupStatus<Any>)?.set(matcher, it) }
+                        value ?: (data[source, attribute] as? Status<Any>)?.remove(matcher)
+                        value?.let { (data[source, attribute] as? Status<Any>)?.set(matcher, it) }
 
                     }
 

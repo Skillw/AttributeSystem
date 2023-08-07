@@ -10,7 +10,7 @@ import com.skillw.attsystem.api.compiled.sub.StringsCompiledData
 import com.skillw.attsystem.api.event.ItemReadEvent
 import com.skillw.attsystem.api.event.StringsReadEvent
 import com.skillw.attsystem.api.manager.ReadManager
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.attsystem.util.MapUtils.toList
 import com.skillw.attsystem.util.MapUtils.toMutableMap
 import com.skillw.attsystem.util.Utils.mirrorIfDebug
@@ -38,7 +38,7 @@ object ReadManagerImpl : ReadManager() {
         val attributeData = AttributeData()
         for (attribute in AttributeSystem.attributeManager.attributes) {
             val read = attribute.readPattern
-            if (read !is ReadGroup<*>) continue
+            if (read !is BaseReadGroup<*>) continue
             val status = read.read(toRead, attribute, entity, slot)
             if (status != null) {
                 attributeData.operation(attribute, status)

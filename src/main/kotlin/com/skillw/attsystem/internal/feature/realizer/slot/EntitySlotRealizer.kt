@@ -41,10 +41,10 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
 
         override val priority: Int = 1000
 
-        override fun loadEquipment(entity: LivingEntity): Map<String, ItemStack> {
-            val items = HashMap<String, ItemStack>()
+        override fun loadEquipment(entity: LivingEntity): Map<String, ItemStack?> {
+            val items = HashMap<String, ItemStack?>()
             for ((key, equipmentType) in slots) {
-                items[key] = equipmentType.getItem(entity) ?: continue
+                items[key] = equipmentType.getItem(entity)
             }
             return items
         }

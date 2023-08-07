@@ -22,6 +22,9 @@ command-valid-item: '&d[&9AttributeSystem&d] &cThe item is not exists!'
 command-valid-entity: '&d[&9AttributeSystem&d] &cYou have to look at a Entity!'
 command-disable-warning: '&d[&9AttributeSystem&d] &cAre you sure to disable &9AttributeSystem &c? Type &6/as disable confirm &cif you really wanna disable it! &4:('
 command-disable: '&d[&9AttributeSystem&d] &cYou disabled &9AttributeSystem &c！Please stop the server then delete this plugin &4:('
+command-debug-on: '&d[&9AttributeSystem&d] &aTurn on &bDebug Mode&a.'
+command-debug-off: '&d[&9AttributeSystem&d] &cTurn off &bDebug Mode&c.'
+
 
 fight-in: '&d[&9AttributeSystem&d] &eInto fighting!'
 fight-out: '&d[&9AttributeSystem&d] &eOut of fighting!'

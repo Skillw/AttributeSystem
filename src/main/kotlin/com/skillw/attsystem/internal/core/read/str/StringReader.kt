@@ -1,9 +1,9 @@
 package com.skillw.attsystem.internal.core.read.str
 
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.read.status.GroupStatus
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.attsystem.api.read.status.StringStatus
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import org.bukkit.entity.LivingEntity
 
 /**
@@ -22,7 +22,7 @@ class StringReader(
     matchers: Map<String, String>,
     patternStrings: List<String>,
     placeholders: Map<String, String>,
-) : ReadGroup<String>(key, matchers, patternStrings, placeholders) {
+) : BaseReadGroup<String>(key, matchers, patternStrings, placeholders) {
 
     override fun read(string: String, attribute: Attribute, entity: LivingEntity?, slot: String?): StringStatus? {
         if ((attribute.names.none { string.contains(it) })) return null
@@ -53,7 +53,7 @@ class StringReader(
     override fun onPlaceholder(
         key: String,
         attribute: Attribute,
-        status: GroupStatus<String>,
+        status: Status<String>,
         entity: LivingEntity?,
     ): String? {
         return replacePlaceholder(key, status, entity)

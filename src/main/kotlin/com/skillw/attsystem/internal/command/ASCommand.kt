@@ -3,6 +3,7 @@ package com.skillw.attsystem.internal.command
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.internal.command.sub.AttributeStatsCommand
 import com.skillw.attsystem.internal.command.sub.MirrorCommand
+import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.util.soundClick
 import com.skillw.pouvoir.util.soundFail
 import com.skillw.pouvoir.util.soundSuccess
@@ -52,6 +53,15 @@ object ASCommand {
         execute<ProxyCommandSender> { sender, _, _ ->
             sender.soundSuccess()
             sender.sendLang("command-info")
+        }
+    }
+
+    @CommandBody(permission = "as.command.debug")
+    val debug = subCommand {
+        execute<ProxyCommandSender> { sender, _, _ ->
+            sender.soundSuccess()
+            ASConfig.debugMode = !ASConfig.debugMode
+            sender.sendLang("command-debug-${if (ASConfig.debugMode) "on" else "off"}")
         }
     }
 

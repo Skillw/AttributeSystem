@@ -115,6 +115,12 @@ object ASConfig : ConfigManager(AttributeSystem) {
     val dragonCore by lazy {
         Bukkit.getPluginManager().isPluginEnabled("DragonCore")
     }
+    val dragonCoreLegacy by lazy {
+        Bukkit.getPluginManager().getPlugin("DragonCore")?.description?.version?.startsWith("2") == true
+    }
+    val dragonCoreNew by lazy {
+        !dragonCoreLegacy
+    }
     val dungeonPlus by lazy {
         Bukkit.getPluginManager().isPluginEnabled("DungeonPlus")
     }
@@ -145,9 +151,10 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     private val scripts = File(getDataFolder(), "scripts")
 
+    var debugMode: Boolean = false
 
     val debug: Boolean
-        get() = this["config"].getBoolean("options.debug")
+        get() = debugMode || this["config"].getBoolean("options.debug")
     val numberPattern: String
         get() = this["config"].getString("options.read.number-pattern")
             ?: "(?<value>(\\\\+|\\\\-)?(\\\\d+(?:(\\\\.\\\\d+))?))"

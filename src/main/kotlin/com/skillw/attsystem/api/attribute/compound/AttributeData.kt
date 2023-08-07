@@ -2,7 +2,6 @@ package com.skillw.attsystem.api.attribute.compound
 
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.BaseMap
 import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.ItemTag
@@ -17,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap
  *
  * @constructor Create empty Attribute data
  */
-class AttributeData : BaseMap<Attribute, Status<*>> {
+class AttributeData : BaseMap<Attribute, GroupStatus<*>> {
 
     constructor()
     constructor(attributeData: AttributeData) {
@@ -63,7 +62,7 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
      * @param status 属性状态
      * @return 自身
      */
-    fun operation(attribute: Attribute, status: Status<*>): AttributeData {
+    fun operation(attribute: Attribute, status: GroupStatus<*>): AttributeData {
         if (!this.containsKey(attribute)) {
             this.register(attribute, status)
         } else {
@@ -126,7 +125,7 @@ class AttributeData : BaseMap<Attribute, Status<*>> {
      * @param attributeKey 属性键
      * @return 属性状态
      */
-    operator fun get(attributeKey: String): Status<*>? {
+    operator fun get(attributeKey: String): GroupStatus<*>? {
         return this[attributeManager[attributeKey] ?: return null]
     }
 

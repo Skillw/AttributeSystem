@@ -2,7 +2,7 @@ package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.manager.ReadPatternManager
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.attsystem.internal.manager.ASConfig.debug
 import com.skillw.pouvoir.util.loadMultiply
 import taboolib.common.platform.function.console
@@ -23,7 +23,7 @@ object ReadPatternManagerImpl : ReadPatternManager() {
         this.entries.filter { it.value.release }.forEach { (key, _) ->
             this.remove(key)?.also {
                 debug {
-                    if (it is ReadGroup<*>)
+                    if (it is BaseReadGroup<*>)
                         console().sendLang(
                             "group-reader-unregister",
                             key,
@@ -32,7 +32,7 @@ object ReadPatternManagerImpl : ReadPatternManager() {
             }
         }
         loadMultiply(
-            File(AttributeSystem.plugin.dataFolder, "reader"), ReadGroup::class.java
+            File(AttributeSystem.plugin.dataFolder, "reader"), BaseReadGroup::class.java
         ).forEach {
             debug {
                 console().sendLang(

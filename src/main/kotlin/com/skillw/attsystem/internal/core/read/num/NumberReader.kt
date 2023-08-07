@@ -1,9 +1,9 @@
 package com.skillw.attsystem.internal.core.read.num
 
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.read.status.GroupStatus
 import com.skillw.attsystem.api.read.status.NumberStatus
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.api.read.status.Status
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.util.calculateDouble
 import org.bukkit.entity.LivingEntity
@@ -21,12 +21,12 @@ import taboolib.common5.Coerce
  * @param placeholders 占位符
  * @constructor
  */
-class NumberReader(
+open class NumberReader(
     key: String,
     matchers: Map<String, String>,
     patternStrings: List<String>,
     placeholders: Map<String, String>,
-) : ReadGroup<Double>(key, matchers, patternStrings, placeholders, ASConfig.numberPattern) {
+) : BaseReadGroup<Double>(key, matchers, patternStrings, placeholders, ASConfig.numberPattern) {
 
     override fun read(string: String, attribute: Attribute, entity: LivingEntity?, slot: String?): NumberStatus? {
         if ((attribute.names.none { string.contains(it) })) return null
@@ -59,7 +59,7 @@ class NumberReader(
     override fun onPlaceholder(
         key: String,
         attribute: Attribute,
-        status: GroupStatus<Double>,
+        status: Status<Double>,
         entity: LivingEntity?,
     ): Double? {
         return replacePlaceholder(key, status, entity)?.calculateDouble()

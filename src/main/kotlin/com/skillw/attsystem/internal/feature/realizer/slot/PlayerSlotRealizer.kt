@@ -51,10 +51,10 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
             return entity is Player
         }
 
-        override fun loadEquipment(entity: Player): Map<String, ItemStack> {
-            val items = HashMap<String, ItemStack>()
+        override fun loadEquipment(entity: Player): Map<String, ItemStack?> {
+            val items = HashMap<String, ItemStack?>()
             for ((slot, playerSlot) in slots) {
-                items[slot] = playerSlot.getItem(entity) ?: continue
+                items[slot] = playerSlot.getItem(entity)
             }
             return items
         }

@@ -20,7 +20,8 @@ command-valid-item: '&d[&9属性系统&d] &c物品不存在!'
 command-valid-entity: '&d[&9属性系统&d] &c你必须看向一个实体!'
 command-disable-warning: '&d[&9属性系统&d] &c你确定要关闭 &9属性系统 &c吗？ 这将导致其所有属性实现失效！如果你确定要关闭，请输入 &6/as disable confirm &c! &4:('
 command-disable: '&d[&9属性系统&d] &c你关闭了 &9属性系统 &c！请重启服务器并删除插件！ &4:('
-
+command-debug-on: '&d[&9属性系统&d] &a你开启了 &b调试模式&a.'
+command-debug-off: '&d[&9属性系统&d] &c你关闭了 &b调试模式&c.'
 fight-in: '&d[&9属性系统&d] &e你已进入战斗状态!'
 fight-out: '&d[&9属性系统&d] &e你已离开战斗状态!'
 

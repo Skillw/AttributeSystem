@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.read.status
 
-import com.skillw.attsystem.internal.core.read.ReadGroup
+import com.skillw.attsystem.internal.core.read.BaseReadGroup
 
 /**
  * Number status
@@ -8,7 +8,7 @@ import com.skillw.attsystem.internal.core.read.ReadGroup
  * @constructor Create empty Number status
  * @property numberReader
  */
-class StringStatus(numberReader: ReadGroup<String>) : GroupStatus<String>(numberReader) {
+class StringStatus(numberReader: BaseReadGroup<String>) : Status<String>(numberReader) {
     override fun clone(): StringStatus {
         val attributeStatus = StringStatus(readGroup)
         this.forEach {

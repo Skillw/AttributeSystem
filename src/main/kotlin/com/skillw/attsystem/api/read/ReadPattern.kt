@@ -5,6 +5,7 @@ import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
+import taboolib.module.chat.ComponentText
 import taboolib.module.chat.TellrawJson
 
 /**
@@ -26,6 +27,7 @@ abstract class ReadPattern<A : Any>(
 ) : Registrable<String> {
     /** 是否在重载时删除 */
     var release = false
+
 
     /**
      * Read
@@ -104,7 +106,7 @@ abstract class ReadPattern<A : Any>(
         attribute: Attribute,
         status: Status<*>,
         entity: LivingEntity?,
-    ): TellrawJson {
+    ): ComponentText {
         return TellrawJson()
     }
 
