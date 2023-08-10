@@ -4,7 +4,6 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.condition.ConditionData
 import com.skillw.attsystem.api.manager.ConditionManager
 import com.skillw.attsystem.util.MapUtils.clone
-import java.util.*
 
 object ConditionManagerImpl : ConditionManager() {
     override val key = "ConditionManager"
@@ -20,7 +19,7 @@ object ConditionManagerImpl : ConditionManager() {
     }
 
     override fun matchConditions(text: String, slot: String?): Collection<ConditionData> =
-        LinkedList<ConditionData>().apply {
+        ArrayList<ConditionData>().apply {
             values.forEach { condition ->
                 condition.parameters(text)?.let {
                     this += ConditionData(condition).push(HashMap(it).apply { put("slot", slot) })
@@ -29,7 +28,7 @@ object ConditionManagerImpl : ConditionManager() {
         }
 
     override fun matchConditions(conditions: List<Map<String, Any>>, slot: String?): Collection<ConditionData> =
-        LinkedList<ConditionData>().apply {
+        ArrayList<ConditionData>().apply {
             conditions.forEach { map ->
                 val key = map["key"].toString()
                 val condition = get(key) ?: return@forEach

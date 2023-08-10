@@ -1,0 +1,30 @@
+name: javadoc
+on:
+  push:
+    branches:
+      - main
+jobs:
+  javadoc:
+    name: javadoc
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v2
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk 8.0
+        uses: actions/setup-java@v2
+        with:
+          distribution: adopt
+          java-version: 8.0
+      - name: build
+        run: |-
+          chmod +x gradlew
+          ./gradlew dokkaJavadoc
+      - name: Deploy
+        uses: moodiest/push-to-branch-action@develop
+        env:
+          REPO: self
+          BRANCH: javadoc
+          FOLDER: build/dokka/javadoc
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

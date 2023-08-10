@@ -37,6 +37,15 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
             }
             slots.register(PlayerSlot(key, slot.uppercase()))
         }
+
+        setOf(
+            PlayerSlot("头盔", "HEAD"),
+            PlayerSlot("胸甲", "CHEST"),
+            PlayerSlot("护腿", "LEGS"),
+            PlayerSlot("靴子", "FEET"),
+            PlayerSlot("主手", "HAND"),
+            PlayerSlot("副手", "OFFHAND")
+        ).forEach(slots::register)
     }
 
 
@@ -65,28 +74,26 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
      *
      * @constructor Create empty Player slot
      * @property key 槽位键
-     * @property slotStr 槽位 ( BukkitEquipment 或 数字)
-     * @property requirements 槽位物品要求含有的字符串
+     * @property slot 槽位 ( BukkitEquipment 或 数字)
      */
-    data class PlayerSlot(override val key: String, val slotStr: String) :
+    data class PlayerSlot(override val key: String, val slot: String) :
         Registrable<String> {
         /** Bukkit equipment */
-        val bukkitEquipment: BukkitEquipment? =
-            if (!Coerce.asInteger(slotStr).isPresent)
-                BukkitEquipment.fromString(slotStr)
-                    ?: Coerce.toEnum(slotStr, BukkitEquipment::class.java)
+        val equipment: BukkitEquipment? =
+            if (!Coerce.asInteger(slot).isPresent)
+                BukkitEquipment.fromString(slot)
+                    ?: Coerce.toEnum(slot, BukkitEquipment::class.java)
             else null
 
         fun getSlot(player: Player): Int {
-            return if (slotStr == "held") player.inventory.heldItemSlot else slotStr.cint
+            return if (slot == "held") player.inventory.heldItemSlot else slot.cint
         }
 
         fun getItem(player: Player): ItemStack? {
-            val equipmentType = bukkitEquipment
-            return if (equipmentType != null) {
-                equipmentType.getItem(player)
-            } else {
+            return if (equipment == null) {
                 player.inventory.getItem(getSlot(player))
+            } else {
+                equipment.getItem(player)
             }
         }
 

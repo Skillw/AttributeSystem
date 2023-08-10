@@ -3,7 +3,6 @@ package com.skillw.attsystem.api.compiled.sub
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.compiled.CompiledData
 import org.bukkit.entity.LivingEntity
-import java.util.*
 
 /**
  * @className NBTCompiledData
@@ -14,7 +13,7 @@ import java.util.*
 class NBTCompiledData(
     attrDataMap: MutableMap<String, Any> = HashMap(),
 ) : CompiledData() {
-    private val condEntries = LinkedList<Entry>()
+    private val condEntries = ArrayList<Entry>()
     private val attrData = AttributeDataCompound.fromMap(attrDataMap)
 
     /**

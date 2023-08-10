@@ -24,4 +24,5 @@ abstract class AttributeManager : LowerKeyMap<Attribute>(), Manager {
     abstract fun addSubPouvoir(subPouvoir: SubPouvoir)
     abstract fun unregister(key: String)
 
+    abstract fun find(text: String): Attribute?
 }

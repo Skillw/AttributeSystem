@@ -16,7 +16,7 @@ ExampleAtt:
     - "示例属性2"
     - "示例属性3"
   #读取组 不填默认Default
-  read-pattern: ValueReader
+  read-pattern: default
   #属性映射
   mapping:
     type: strings

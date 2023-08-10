@@ -2,11 +2,12 @@ package com.skillw.attsystem.api.read
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
+import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.api.read.status.Status
+import com.skillw.pouvoir.api.plugin.map.LowerMap
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
 import taboolib.module.chat.ComponentText
-import taboolib.module.chat.TellrawJson
 
 /**
  * Read pattern
@@ -28,6 +29,12 @@ abstract class ReadPattern<A : Any>(
     /** 是否在重载时删除 */
     var release = false
 
+    /**
+     * Status中可能的键
+     *
+     * @return Set<String>
+     */
+    abstract fun operations(): LowerMap<Operation<A>>
 
     /**
      * Read
@@ -93,22 +100,30 @@ abstract class ReadPattern<A : Any>(
         entity: LivingEntity? = null,
     ): A?
 
-
     /**
      * 用于指令统计信息 可以直接返回 TellrawJson() 空对象
      *
      * @param attribute 属性
      * @param status 属性状态
      * @param entity 实体
-     * @return TellrawJson
+     * @return ComponentText
      */
     open fun stat(
         attribute: Attribute,
         status: Status<*>,
         entity: LivingEntity?,
     ): ComponentText {
-        return TellrawJson()
+        return ComponentText.empty()
     }
+
+    open fun getTotal(attribute: Attribute, status: Status<*>, entity: LivingEntity?): A? =
+        placeholder("total", attribute, status, entity)
+
+    open fun getMin(attribute: Attribute, status: Status<*>, entity: LivingEntity?): A? =
+        placeholder("min", attribute, status, entity)
+
+    open fun getMax(attribute: Attribute, status: Status<*>, entity: LivingEntity?): A? =
+        placeholder("max", attribute, status, entity)
 
     override fun register() {
         AttributeSystem.readPatternManager.register(this)

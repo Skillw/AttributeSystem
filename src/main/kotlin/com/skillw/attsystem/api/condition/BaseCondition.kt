@@ -34,9 +34,9 @@ abstract class BaseCondition(override val key: String) :
         var release = false
 
 
-        private val conditions = LinkedList<Condition>()
+        private val conditions = ArrayList<Condition>()
 
-        private val conditionReaders = LinkedList<ConditionReader>()
+        private val conditionReaders = ArrayList<ConditionReader>()
 
         /**
          * Condition

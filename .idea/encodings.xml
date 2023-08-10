@@ -2,6 +2,7 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/libs/Pouvoir-1.6.2-api.jar" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/libs/Pouvoir-1.6.4-api.jar" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/kotlin/com/skillw/attsystem/internal/feature/database/ASContainer.kt" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/kotlin/com/skillw/attsystem/internal/manager/ReadManagerImpl.kt" charset="GBK" />
   </component>

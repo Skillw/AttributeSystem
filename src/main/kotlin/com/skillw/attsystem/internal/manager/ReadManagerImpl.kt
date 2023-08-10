@@ -1,6 +1,7 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.AttributeSystem.compileManager
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.compiled.CompiledData
@@ -10,7 +11,6 @@ import com.skillw.attsystem.api.compiled.sub.StringsCompiledData
 import com.skillw.attsystem.api.event.ItemReadEvent
 import com.skillw.attsystem.api.event.StringsReadEvent
 import com.skillw.attsystem.api.manager.ReadManager
-import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.attsystem.util.MapUtils.toList
 import com.skillw.attsystem.util.MapUtils.toMutableMap
 import com.skillw.attsystem.util.Utils.mirrorIfDebug
@@ -22,7 +22,6 @@ import taboolib.module.chat.uncolored
 import taboolib.module.nms.getItemTag
 import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
-import java.util.*
 
 object ReadManagerImpl : ReadManager() {
     override val key = "ReadManager"
@@ -36,15 +35,10 @@ object ReadManagerImpl : ReadManager() {
         slot: String?,
     ): AttributeData {
         val attributeData = AttributeData()
-        for (attribute in AttributeSystem.attributeManager.attributes) {
-            val read = attribute.readPattern
-            if (read !is BaseReadGroup<*>) continue
-            val status = read.read(toRead, attribute, entity, slot)
-            if (status != null) {
-                attributeData.operation(attribute, status)
-                break
-            }
-        }
+        val attribute = attributeManager.find(toRead) ?: return attributeData
+        val read = attribute.readPattern
+        val status = read.read(toRead, attribute, entity, slot) ?: return attributeData
+        attributeData.operation(attribute, status)
         return attributeData
     }
 
@@ -54,7 +48,7 @@ object ReadManagerImpl : ReadManager() {
         slot: String?,
     ): CompiledData? {
         return mirrorIfDebug("read-strings") {
-            val restStrings = LinkedList<String>()
+            val restStrings = ArrayList<String>()
 
             val compiledData = ComplexCompiledData()
             //单行条件
@@ -92,7 +86,6 @@ object ReadManagerImpl : ReadManager() {
                 } ?: compiledData.addition.computeIfAbsent("STRINGS-ATTRIBUTE") { AttributeData() }
                     .combine(attributeData)
             }
-
             val event = StringsReadEvent(entity, strings, compiledData)
             event.call()
             if (!event.isCancelled) event.compiledData else null

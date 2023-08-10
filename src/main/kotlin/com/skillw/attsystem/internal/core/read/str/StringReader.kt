@@ -25,7 +25,6 @@ class StringReader(
 ) : BaseReadGroup<String>(key, matchers, patternStrings, placeholders) {
 
     override fun read(string: String, attribute: Attribute, entity: LivingEntity?, slot: String?): StringStatus? {
-        if ((attribute.names.none { string.contains(it) })) return null
         val attributeStatus = StringStatus(this)
         var temp = string
         attribute.names.forEach {
@@ -34,10 +33,10 @@ class StringReader(
         patternList@ for ((pattern, matchers) in patterns) {
             val matcher = pattern.matcher(temp)
             if (!matcher.find()) continue
-            matchers.forEach { nMatcher ->
-                val key = nMatcher.key
+            matchers.forEach { usedMatcher ->
+                val key = usedMatcher.key
                 val valueStr = matcher.group(key)
-                attributeStatus.operation(key, valueStr, nMatcher.operation)
+                attributeStatus.operation(key, valueStr, usedMatcher.operation)
             }
             break@patternList
         }
@@ -58,5 +57,4 @@ class StringReader(
     ): String? {
         return replacePlaceholder(key, status, entity)
     }
-
 }

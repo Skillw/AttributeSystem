@@ -47,8 +47,17 @@ internal object HealthScaleRealizer : BaseRealizer("health-scale"), Awakeable, S
         realize(event.player)
     }
 
+
     override fun onReload() {
         Bukkit.getServer().onlinePlayers.forEach(::realize)
+    }
+
+    override fun whenEnable() {
+        onReload()
+    }
+
+    override fun whenDisable() {
+        onDisable()
     }
 
     override fun onDisable() {

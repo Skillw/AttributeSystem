@@ -8,11 +8,11 @@ custom entity fight:
     print attack!
     if check &attacker !type LivingEntity || &defender !type LivingEntity then exit
     if check &attacker type Player then {
-        &attacker message '你在打东西!'
+        &attacker message '你在打东西! 爱来自 plugins/AttributeSystem/dispatchers/custom-trigger.yml'
     }
   post-handle:
     type: js
     content: |-
-      print(" entity damage by entity 处理完了!")
+      print(" entity damage by entity 处理完了!  爱来自 plugins/AttributeSystem/dispatchers/custom-trigger.yml")
   exception: |-
-    warning '触发器 custom entity fight 处理失败! 具体报错请看后台!'
+    warning '触发器 custom entity fight 处理失败! 具体报错请看后台!  爱来自 plugins/AttributeSystem/dispatchers/custom-trigger.yml'

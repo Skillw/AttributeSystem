@@ -3,7 +3,6 @@ package com.skillw.attsystem.api.condition
 import com.skillw.pouvoir.api.plugin.map.component.Keyable
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.entity.LivingEntity
-import java.util.*
 
 /**
  * @className ConditionData
@@ -12,7 +11,7 @@ import java.util.*
  * @date 2023/8/2 16:47 Copyright 2023 user. All rights reserved.
  */
 class ConditionData(override val key: Condition) : Keyable<Condition>, ConfigurationSerializable {
-    private val parameters = LinkedList<Map<String, Any>>()
+    private val parameters = ArrayList<Map<String, Any>>()
 
     fun push(map: Map<String, Any>): ConditionData {
         parameters.add(map)

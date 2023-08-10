@@ -7,6 +7,7 @@ command-info:
   - ' &9Command List:'
   - '  &6/as'
   - '    &d- &ehelp &5—— &aShow help.'
+  - '    &d- &edebug &5—— &aDebug mode.'
   - '    &d- &einfo &5—— &aShow info.'
   - '    &d- &estats (Player) &5—— &aShow the stats.'
   - '    &d- &eitemstats [Player] [key] [slot] &5—— &aShow the stats of a item&e.'

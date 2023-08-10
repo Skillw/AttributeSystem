@@ -23,11 +23,11 @@ object ReadPatternManagerImpl : ReadPatternManager() {
         this.entries.filter { it.value.release }.forEach { (key, _) ->
             this.remove(key)?.also {
                 debug {
-                    if (it is BaseReadGroup<*>)
-                        console().sendLang(
-                            "group-reader-unregister",
-                            key,
-                            it.matchers.map { matcher -> matcher.key })
+                    console().sendLang(
+                        "group-reader-unregister",
+                        key,
+                        it.operations().map { operation -> operation.key }
+                    )
                 }
             }
         }
@@ -38,8 +38,9 @@ object ReadPatternManagerImpl : ReadPatternManager() {
                 console().sendLang(
                     "group-reader-register",
                     it.key.key.lowercase(),
-                    it.key.matchers.map { matcher -> matcher.key })
+                    it.key.operations().map { operation -> operation.key })
             }
+            it.key.release = true
             it.key.register()
         }
     }

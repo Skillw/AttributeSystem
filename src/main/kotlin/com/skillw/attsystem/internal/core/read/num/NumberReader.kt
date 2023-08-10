@@ -4,10 +4,11 @@ import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.read.status.NumberStatus
 import com.skillw.attsystem.api.read.status.Status
 import com.skillw.attsystem.internal.core.read.BaseReadGroup
-import com.skillw.attsystem.internal.manager.ASConfig
+import com.skillw.attsystem.internal.manager.ASConfig.numberPattern
 import com.skillw.pouvoir.util.calculateDouble
 import org.bukkit.entity.LivingEntity
 import taboolib.common5.Coerce
+import taboolib.common5.cdouble
 
 
 /**
@@ -26,33 +27,33 @@ open class NumberReader(
     matchers: Map<String, String>,
     patternStrings: List<String>,
     placeholders: Map<String, String>,
-) : BaseReadGroup<Double>(key, matchers, patternStrings, placeholders, ASConfig.numberPattern) {
+) : BaseReadGroup<Double>(key, matchers, patternStrings, placeholders, numberPattern) {
 
     override fun read(string: String, attribute: Attribute, entity: LivingEntity?, slot: String?): NumberStatus? {
-        if ((attribute.names.none { string.contains(it) })) return null
-        val attributeStatus = NumberStatus(this)
+        
+        val status = NumberStatus(this)
         var temp = string
         attribute.names.forEach {
-            if (temp.contains(it)) temp = temp.replaceFirst(it, "{name}")
+            if (temp.contains(it)) temp = temp.replace(it, "{name}")
         }
         patternList@ for ((pattern, matchers) in patterns) {
             val matcher = pattern.matcher(temp)
             if (!matcher.find()) continue
-            matchers.forEach { nMatcher ->
-                val key = nMatcher.key
+            matchers.forEach { usedMatcher ->
+                val key = usedMatcher.key
                 val valueStr = matcher.group(key)
                 Coerce.asDouble(valueStr).ifPresent {
-                    attributeStatus.operation(key, it, nMatcher.operation)
+                    status.operation(key, it, usedMatcher.operation)
                 }
             }
             break@patternList
         }
-        return attributeStatus
+        return status
     }
 
     override fun readNBT(map: Map<String, Any>, attribute: Attribute): NumberStatus {
         return NumberStatus(this).apply {
-            putAll(map.mapValues { Coerce.toDouble(it.value) })
+            putAll(map.mapValues { it.value.cdouble })
         }
     }
 
@@ -64,5 +65,6 @@ open class NumberReader(
     ): Double? {
         return replacePlaceholder(key, status, entity)?.calculateDouble()
     }
+
 
 }

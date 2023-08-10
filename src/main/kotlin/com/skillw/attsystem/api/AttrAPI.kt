@@ -16,6 +16,8 @@ import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.fightsystem.FightSystem
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
+import taboolib.common.platform.function.isPrimaryThread
+import taboolib.common.util.sync
 import java.util.*
 
 /**
@@ -32,6 +34,8 @@ object AttrAPI {
      *
      * 更新实体(装备 属性 原版属性实现)
      *
+     * 原版属性不会立即生效
+     *
      * 建议异步调用
      *
      * @receiver LivingEntity 实体
@@ -44,6 +48,8 @@ object AttrAPI {
      * EntityUpdate
      *
      * 更新实体(装备 属性 原版属性实现)
+     *
+     * 原版属性不会立即生效
      *
      * 建议异步调用
      *
@@ -59,13 +65,13 @@ object AttrAPI {
      *
      * 更新实体(装备 属性 原版属性实现)
      *
-     * 建议异步调用
+     * 同步版本，原版属性会立即生效
      *
-     * @receiver UUID 实体UUID
+     * @receiver LivingEntity 实体
      */
     @JvmStatic
-    fun UUID.update() {
-        validEntity()?.let { attributeSystemAPI.update(it) }
+    fun LivingEntity.updateSync() {
+        if (isPrimaryThread) update() else sync { update() }
     }
 
     /**
@@ -615,7 +621,7 @@ object AttrAPI {
      * @return 预编译属性数据
      * @receiver entity 实体
      */
-
+    @JvmStatic
     fun LivingEntity.addCompiledData(
         source: String,
         attributes: Collection<String>,
@@ -629,7 +635,7 @@ object AttrAPI {
      * @return 预编译属性数据
      * @receiver entity 实体
      */
-
+    @JvmStatic
     fun LivingEntity.addCompiledData(
         source: String, compiledData: CompiledData,
     ): CompiledData? = uniqueId.addCompiledData(source, compiledData)
@@ -642,7 +648,7 @@ object AttrAPI {
      * @return 预编译属性数据
      * @receiver uuid UUID
      */
-
+    @JvmStatic
     fun UUID.addCompiledData(
         source: String, attributes: Collection<String>,
     ): CompiledData? {
@@ -657,7 +663,7 @@ object AttrAPI {
      * @return 预编译属性数据
      * @receiver uuid UUID
      */
-
+    @JvmStatic
     fun UUID.addCompiledData(
         source: String, compiledData: CompiledData,
     ): CompiledData? {
@@ -671,6 +677,7 @@ object AttrAPI {
      * @param source 键(源)
      * @receiver entity 实体
      */
+    @JvmStatic
     fun LivingEntity.removeCompiledData(source: String): CompiledData? {
         return uniqueId.removeCompiledData(source)
     }
@@ -681,6 +688,7 @@ object AttrAPI {
      * @param source 键(源)
      * @receiver uuid UUID
      */
+    @JvmStatic
     fun UUID.removeCompiledData(source: String): CompiledData? {
         return AttributeSystem.compiledAttrDataManager.removeCompiledData(this, source)
     }

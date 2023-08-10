@@ -1,11 +1,12 @@
 package com.skillw.attsystem.internal.feature.realizer.vanilla
 
 import com.skillw.attsystem.internal.manager.ASConfig
-import com.skillw.attsystem.util.AttributeUtils.clear
-import com.skillw.attsystem.util.AttributeUtils.getAttribute
-import com.skillw.attsystem.util.BukkitAttribute
+import com.skillw.pouvoir.util.attribute.BukkitAttribute
+import com.skillw.pouvoir.util.attribute.clear
+import com.skillw.pouvoir.util.attribute.getAttribute
 import com.sucy.skill.SkillAPI
 import com.sucy.skill.api.player.PlayerClass
+import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.common5.Coerce
@@ -65,5 +66,9 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
     override fun unrealize(entity: LivingEntity) {
         super.unrealize(entity)
         entity.maxHealth = default
+    }
+
+    override fun onDisable() {
+
     }
 }

@@ -7,7 +7,6 @@ import taboolib.module.nms.ItemTag
 import taboolib.module.nms.ItemTagData
 import taboolib.module.nms.ItemTagList
 import taboolib.module.nms.ItemTagType
-import java.util.*
 
 object MapUtils {
 
@@ -93,7 +92,7 @@ object MapUtils {
             }
 
             is List<*> -> {
-                val list = LinkedList<Any>()
+                val list = ArrayList<Any>()
                 mapNotNull { it }.forEach {
                     list.add(it.replaceThenCalc(replacement, entity))
                 }
@@ -120,7 +119,7 @@ object MapUtils {
             }
 
             is List<*> -> {
-                val list = LinkedList<Any>()
+                val list = ArrayList<Any>()
                 mapNotNull { it }.forEach {
                     list.add(it.clone())
                 }

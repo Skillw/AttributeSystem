@@ -4,6 +4,7 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.api.AttrAPI.attribute
 import com.skillw.attsystem.api.attribute.Attribute
+import com.skillw.attsystem.api.read.status.Status
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
@@ -88,7 +89,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attribute 属性
      * @return 属性状态
      */
-    fun getAttributeStatus(attribute: Attribute): GroupStatus<*>? = getStatus(attribute)
+    fun getAttributeStatus(attribute: Attribute): Status<*>? = getStatus(attribute)
 
     /**
      * Get attribute status
@@ -96,7 +97,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attributeKey 属性键
      * @return 属性状态
      */
-    fun getAttributeStatus(attributeKey: String): GroupStatus<*>? = getStatus(attributeKey)
+    fun getAttributeStatus(attributeKey: String): Status<*>? = getStatus(attributeKey)
 
     /**
      * Get status
@@ -104,8 +105,8 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attribute 属性
      * @return 状态
      */
-    fun getStatus(attribute: Attribute): GroupStatus<*>? {
-        var status: GroupStatus<*>? = null
+    fun getStatus(attribute: Attribute): Status<*>? {
+        var status: Status<*>? = null
         for (attributeData in this.values) {
             if (status == null)
                 status = attributeData[attribute]?.clone()
@@ -121,7 +122,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attributeKey 属性键
      * @return 属性状态
      */
-    fun getStatus(attributeKey: String): GroupStatus<*>? {
+    fun getStatus(attributeKey: String): Status<*>? {
         return attribute(attributeKey)?.let { getStatus(it) }
     }
 
@@ -173,7 +174,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attribute 属性
      * @return 属性数据
      */
-    operator fun get(key: String, attribute: String): GroupStatus<*>? {
+    operator fun get(key: String, attribute: String): Status<*>? {
         val attribute1: Attribute = attributeManager[attribute] as Attribute
         return this[key]?.get(attribute1)
     }
@@ -185,7 +186,7 @@ class AttributeDataCompound : LowerMap<AttributeData> {
      * @param attribute 属性
      * @return 属性数据
      */
-    operator fun get(key: String, attribute: Attribute): GroupStatus<*>? {
+    operator fun get(key: String, attribute: Attribute): Status<*>? {
         return this[key]?.get(attribute)
     }
 

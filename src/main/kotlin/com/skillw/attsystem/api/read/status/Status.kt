@@ -1,8 +1,10 @@
 package com.skillw.attsystem.api.read.status
 
+import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.pouvoir.api.plugin.map.LowerMap
+import org.bukkit.entity.LivingEntity
 
 /**
  * Status
@@ -16,7 +18,7 @@ abstract class Status<A : Any>(val readGroup: BaseReadGroup<A>) : LowerMap<A>() 
             if (this.containsKey(key)) {
                 this.register(
                     key,
-                    readGroup.matchers[key]?.operation?.operate(get(key) ?: continue, status[key] ?: continue)
+                    readGroup.operations()[key]?.operate(get(key) ?: continue, status[key] ?: continue)
                         ?: continue
                 )
             } else {
@@ -26,9 +28,9 @@ abstract class Status<A : Any>(val readGroup: BaseReadGroup<A>) : LowerMap<A>() 
         return this
     }
 
-    fun getTotal(): A {
-        return readGroup.getTotal()
-    }
+    open fun getTotal(attribute: Attribute, entity: LivingEntity): A? = readGroup.getTotal(attribute, this, entity)
+    open fun getMin(attribute: Attribute, entity: LivingEntity?): A? = readGroup.getMin(attribute, this, entity)
+    open fun getMax(attribute: Attribute, entity: LivingEntity?): A? = readGroup.getMax(attribute, this, entity)
 
     /**
      * NumberOperation
@@ -63,6 +65,6 @@ abstract class Status<A : Any>(val readGroup: BaseReadGroup<A>) : LowerMap<A>() 
      *
      * @return 复制结果
      */
-    abstract override fun clone(): Status<A>
+    public abstract override fun clone(): Status<A>
 
 }

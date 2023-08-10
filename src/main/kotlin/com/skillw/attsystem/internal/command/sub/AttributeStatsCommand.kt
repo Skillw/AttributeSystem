@@ -19,7 +19,7 @@ import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.adaptPlayer
 import taboolib.common.platform.function.onlinePlayers
 import taboolib.common.platform.function.submitAsync
-import taboolib.module.chat.TellrawJson
+import taboolib.module.chat.ComponentText
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.getI18nName
@@ -27,7 +27,6 @@ import taboolib.module.nms.getName
 import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
 import taboolib.platform.util.sendLang
-import java.util.*
 
 object AttributeStatsCommand {
     val stats = subCommand {
@@ -71,7 +70,7 @@ object AttributeStatsCommand {
                 dynamic {
                     suggestion<Player> { sender, _ ->
                         sender.soundClick()
-                        val list = LinkedList<String>()
+                        val list = ArrayList<String>()
                         AttributeSystem.equipmentDataManager[sender.uniqueId]?.values?.forEach { list.addAll(it.keys) }
                         list
                     }
@@ -126,12 +125,12 @@ object AttributeStatsCommand {
         data: AttributeDataCompound,
         entity: LivingEntity,
         item: Boolean = false,
-    ): LinkedList<TellrawJson> {
+    ): ArrayList<ComponentText> {
         val attributes = AttributeSystem.attributeManager.attributes
-        val list = LinkedList<TellrawJson>()
+        val list = ArrayList<ComponentText>()
         for (index in attributes.indices) {
             val attribute = attributes[index]
-            if (!attribute.entity && item) continue
+            if (!attribute.entity && !item) continue
             val status = data.getStatus(attribute) ?: continue
             val json = attribute.readPattern.stat(
                 attribute,

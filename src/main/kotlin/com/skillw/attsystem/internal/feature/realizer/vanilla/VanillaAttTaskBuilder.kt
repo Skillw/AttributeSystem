@@ -3,9 +3,9 @@ package com.skillw.attsystem.internal.feature.realizer.vanilla
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.realizer.BaseRealizer
 import com.skillw.attsystem.api.realizer.component.*
-import com.skillw.attsystem.util.AttributeUtils.clear
-import com.skillw.attsystem.util.AttributeUtils.getAttribute
-import com.skillw.attsystem.util.BukkitAttribute
+import com.skillw.pouvoir.util.attribute.BukkitAttribute
+import com.skillw.pouvoir.util.attribute.clear
+import com.skillw.pouvoir.util.attribute.getAttribute
 import org.bukkit.Bukkit
 import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.LivingEntity

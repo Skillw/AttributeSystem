@@ -1,6 +1,7 @@
 package com.skillw.attsystem.api.attribute
 
 import com.skillw.attsystem.api.compiled.CompiledData
+import com.skillw.attsystem.api.read.status.Status
 import org.bukkit.entity.LivingEntity
 
 /**
@@ -11,5 +12,5 @@ import org.bukkit.entity.LivingEntity
  */
 abstract class Mapping {
     var attribute: Attribute? = null
-    abstract fun mapping(status: GroupStatus<*>, entity: LivingEntity?): CompiledData?
+    abstract fun mapping(status: Status<*>, entity: LivingEntity?): CompiledData?
 }

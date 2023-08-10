@@ -9,7 +9,8 @@ import com.skillw.attsystem.internal.core.read.num.NumberReader
 import com.skillw.attsystem.internal.core.read.str.StringReader
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.api.PouvoirAPI.placeholder
-import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
+import com.skillw.pouvoir.api.plugin.map.LowerMap
+import com.skillw.pouvoir.util.format
 import com.skillw.pouvoir.util.replacement
 import com.skillw.pouvoir.util.toMap
 import com.skillw.pouvoir.util.toStringWithNext
@@ -32,13 +33,14 @@ import java.util.regex.Pattern
  */
 
 
+@Suppress("MemberVisibilityCanBePrivate")
 abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>(key),
     ConfigurationSerializable {
     val placeholderKeys by lazy {
         placeholders.keys
     }
     protected val placeholders = HashMap<String, String>()
-    val matchers = LowerKeyMap<Matcher<A>>()
+    protected val matchers = LowerMap<Matcher<A>>()
     protected val patterns = CopyOnWriteArrayList<PatternMatcher<A>>()
 
     constructor(
@@ -46,31 +48,53 @@ abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>
         matchers: Map<String, String>,
         patternStrings: List<String>,
         placeholders: Map<String, String>,
-        defaultPattern: String? = null,
+        pattern: String? = null,
     ) : this(key) {
-        this.placeholders.putAll(placeholders)
+        initMatchers(matchers)
+        initPlaceholders(placeholders)
+        initPatterns(patternStrings, pattern)
+    }
+
+    private fun initMatchers(matchers: Map<String, String>) {
         matchers.forEach { (key, operationStr) ->
             val operation = AttributeSystem.operationManager[operationStr] as? Operation<A>? ?: return@forEach
-            this.matchers.register(Matcher(key.lowercase(), operation))
+            val lower = key.lowercase()
+            this.matchers.register(lower, Matcher(lower, operation))
         }
-        patternStrings.forEach { str ->
-            var temp = str.replace("{name}", "\\{name\\}")
-            val nMatchers = HashSet<Matcher<A>>()
-            this@BaseReadGroup.matchers.forEach matcher@{ (key, matcher) ->
-                if (temp.contains("<$key>", true)) {
-                    defaultPattern?.let {
-                        temp = temp.replace("<$key>", it.replace("value", key.lowercase()), true)
-                    }
-                    nMatchers += matcher
-                }
+    }
+
+    private fun initPlaceholders(placeholders: Map<String, String>) {
+        placeholders.forEach {
+            var temp = it.value
+            placeholders.forEach { (key, value) ->
+                if (!temp.contains("<$key>", true) || matchers.containsKey(key)) return@forEach
+                temp = temp.replace("<$key>", "($value)", true)
             }
-            this.patterns.add(PatternMatcher(Pattern.compile(temp), nMatchers))
+            this.placeholders[it.key] = temp
+        }
+    }
+
+    private fun initPatterns(patternStrings: List<String>, pattern: String?) {
+        patternStrings.forEach { str ->
+            var temp = str.replaceFirst("{name}", "\\{name\\}")
+            val usedMatchers = HashSet<Matcher<A>>()
+            matchers.forEach a@{ (key, matcher) ->
+                if (!temp.contains("<$key>", true)) return@a
+                if (pattern != null)
+                    temp = temp.replace(
+                        "<$key>",
+                        pattern.replace("value", key.lowercase()),
+                        true
+                    )
+                usedMatchers += matcher
+            }
+            this.patterns.add(PatternMatcher(Pattern.compile(temp), usedMatchers))
         }
     }
 
     companion object {
         @JvmStatic
-        val keyPattern by unsafeLazy {
+        val keyPattern: Pattern by unsafeLazy {
             Pattern.compile("<(?<key>.*?)>")
         }
 
@@ -90,6 +114,8 @@ abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>
         }
     }
 
+    override fun operations() = matchers as LowerMap<Operation<A>>
+
     override fun serialize(): MutableMap<String, Any> {
         return linkedMapOf(
             "key" to key,
@@ -99,50 +125,51 @@ abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>
         )
     }
 
+    private fun Any?.formatStr(): String = if (this is Number) format("#.###") else toString()
+
     override fun stat(attribute: Attribute, status: Status<*>, entity: LivingEntity?): ComponentText {
         val json = Components.empty()
-        if (status !is Status<*>) return json
-        val statusStr = status.map {
-            ASConfig.statusValue.replacement(
-                mapOf(
-                    "{key}" to it.key,
-                    "{value}" to it.value
-                )
-            )
-        }.ifEmpty { listOf(ASConfig.statusNone) }.toStringWithNext()
+
+        val statusStr = status
+            .map { ASConfig.statusValue.replacement(mapOf("{key}" to it.key, "{value}" to it.value.formatStr())) }
+            .ifEmpty { listOf(ASConfig.statusNone) }
+            .toStringWithNext()
+
         val placeholderStr = placeholders.keys.map {
             ASConfig.statusPlaceholderValue.replacement(
                 mapOf(
                     "{key}" to it,
-                    "{value}" to placeholder(it, attribute, status, entity).toString()
+                    "{value}" to placeholder(it, attribute, status, entity).formatStr()
                 )
             )
         }.ifEmpty { listOf(ASConfig.statusNone) }.toStringWithNext()
+
         json.append(
             ASConfig.statusAttributeFormat.replacement(
                 mapOf(
                     "{name}" to attribute.display,
-                    "{value}" to placeholder("total", attribute, status, entity).toString()
+                    "{value}" to getTotal(attribute, status, entity).formatStr()
                 )
-            )
-                .colored()
+            ).colored()
         ).hoverText(
-            ("${ASConfig.statsStatus} \n" +
-                    statusStr
-                    + "\n \n"
-                    + "${ASConfig.statusPlaceholder} \n"
-                    + placeholderStr).colored()
+            "${ASConfig.statsStatus}\n$statusStr\n\n${ASConfig.statusPlaceholder}\n$placeholderStr".trimIndent()
+                .colored()
         )
         return json
     }
 
-    protected fun replacePlaceholder(key: String, status: Status<A>, entity: LivingEntity?): String? {
+    protected fun replacePlaceholder(
+        key: String,
+        status: Status<A>,
+        entity: LivingEntity?,
+    ): String? {
         val formula = placeholders[key] ?: return null
         val matcher = keyPattern.matcher(formula)
         val stringBuffer = StringBuffer()
         while (matcher.find()) {
             val matcherKey = matcher.group("key") ?: continue
-            matcher.appendReplacement(stringBuffer, status[matcherKey].toString())
+            val replaced = status[matcherKey] ?: 0.0
+            matcher.appendReplacement(stringBuffer, replaced.toString())
         }
         return matcher.appendTail(stringBuffer).toString().run { entity?.let { placeholder(it) } ?: this }
     }
@@ -159,5 +186,5 @@ abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>
         return onPlaceholder(key, attribute, status as? Status<A>? ?: return null, entity)
     }
 
-    abstract fun getTotal(status: Status<*>, entity: LivingEntity?): A
+
 }

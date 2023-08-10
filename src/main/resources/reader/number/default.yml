@@ -2,6 +2,7 @@ Default:
   type: number
   matchers:
     #左边是捕获组id 右边是运算操作
+    #捕获组id只能包含 a-z A-Z 0-9 
     #运算操作:
     #- plus 加
     #- max 取最大
@@ -14,33 +15,49 @@ Default:
     valueMax: plus
     percent: plus
     value: plus
-    scalar: scalar
+    valueAddition: plus
+    percentAddition: plus
+    mul: scalar
   #匹配模式(正则)
   #从上到下先后匹配
   #特殊字符要转义
+  #捕获组id只能包含 a-z A-Z 0-9 
   patterns:
-    # 攻击力: 11-23(%)
-    - '{name}(:|：)?\s?<percentMin>-<percentMax>\(%\)'
+    # 攻击力: 11-23 %
+    - "{name}.*?<percentMin>-<percentMax>.*?%"
     # 攻击力: 10-20
-    - "{name}(:|：)?\\s?<valueMin>-<valueMax>"
-    # 攻击力: 10(%)
-    - '{name}(:|：)?\s?<percent>\(%\)'
-    # 攻击力: 100  /  攻击力 100
-    - "{name}(:|：)?\\s?<value>"
+    - "{name}.*?<valueMin>-<valueMax>"
+    # 攻击力: 10 (+20) %
+    - "{name}.*?<percent>.*?\\(<percentAddition>\\).*?%"
+    # 攻击力: 10 %
+    - "{name}.*?<percent>.*?%"
     #  攻击力*10
-    - '{name}\*<scalar>'
+    - "{name}.*?\\*.*?<mul>"
+    # 攻击力: 100 (+50)
+    - "{name}.*?<value>.*?\\(<valueAddition>\\)"
+    # 攻击力: 100  /  攻击力 100
+    - "{name}.*?<value>"
+    #  100 攻击力 +100
+    - "<value>.*?{name}.*?<valueAddition>"
+    #  100 攻击力
+    - "<value>.*?{name}"
   #变量(PAPI / PouPAPI)
   #调用变量格式: %as_att:属性ID_下面的id%
   placeholders:
     #占位符id
-    #可带入捕获组的值
-    total: "( <value> + {random <valueMin> to <valueMax>})*(1+(<percent>/100 + {random <percentMin> to <percentMax>} /100)) * { if check <scalar> == 0 then 1 else <scalar> }"
-    scalar: <scalar>
-    value: <value>
-    percent: <percent>/100
-    valueMin: <valueMin>
-    valueMax: <valueMax>
-    percentMin: <percentMin>/100
-    percentMax: <percentMax>/100
-    valueRandom: <value> + {random <valueMin> to <valueMax>}
-    percentRandom: (<percent>/100 + {random <percentMin> to <percentMax>}/100)
+    # 可通过 %as_att:属性id_占位符id 调用%
+    #可带入捕获组 与 其他 占位符 的值
+    #优先带入捕获组的
+    # total min max 必须写
+    total: "( <valueRandom> )*( 1 + (<percentRandom>) ) * { if check <mul> == 0 then 1 else <mul> }"
+    min: "(<value> + <valueAddition> + <valueMin>)*( 1 + (<percentRandom>) ) "
+    max: "(<value> + <valueAddition> + <valueMax>)*( 1 + (<percentRandom>) )"
+    mul: <mul>
+    value: <value> + <valueAddition>
+    percent: (<percent> + <percentAddition>) /100
+    valueMin: <valueMin> + <valueAddition>
+    valueMax: <valueMax> + <valueAddition>
+    percentMin: (<percentMin> + <percentAddition>) /100
+    percentMax: (<percentMax> + <percentAddition>) /100
+    valueRandom: <value> + <valueAddition> + {random <valueMin> to <valueMax>}
+    percentRandom: ((<percent> + (<percentAddition>)/100) + {random <percentMin> to <percentMax>}/100)

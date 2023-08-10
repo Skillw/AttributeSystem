@@ -9,4 +9,4 @@ import com.skillw.pouvoir.api.plugin.map.component.Keyable
  * @author Glom
  * @date 2022/8/7 22:36 Copyright 2022 user. All rights reserved.
  */
-class Matcher<A>(override val key: String, val operation: Operation<A>) : Keyable<String>
+class Matcher<A>(override val key: String, val operation: Operation<A>) : Keyable<String>, Operation<A> by operation

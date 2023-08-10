@@ -7,29 +7,17 @@ plugins {
     id("io.izzel.taboolib") version "1.56"
     id("org.jetbrains.kotlin.jvm") version "1.7.20"
     id("org.jetbrains.dokka") version "1.7.20"
+    id("io.codearte.nexus-staging") version "0.30.0"
 }
-val api: String? by project
+
 val order: String? by project
 
-task("versionModify") {
-    project.version = project.version.toString() + (order?.let { "-$it" } ?: "")
-}
-
-task("versionAddAPI") {
-    if (api == null) return@task
-    val origin = project.version.toString()
-    project.version = "$origin-api"
-}
-
-
-task("releaseName") {
+task("info") {
     println(project.name + "-" + project.version)
-}
-
-task("version") {
     println(project.version.toString())
 }
 taboolib {
+    project.version = project.version.toString() + (order?.let { "-$it" } ?: "")
     if (project.version.toString().contains("-api")) {
         options("skip-kotlin-relocate", "keep-kotlin-module")
     }
@@ -43,10 +31,8 @@ taboolib {
         dependencies {
             name("Pouvoir")
             name("GermPlugin").optional(true)
-            name("SkillAPI").optional(true)
             name("DragonCore").optional(true)
             name("MythicMobs").optional(true)
-            name("Magic").optional(true)
 
 
         }
@@ -75,7 +61,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 
 tasks.dokkaJavadoc.configure {
-    outputDirectory.set(File("E:\\code\\git\\Javadoc\\attsystem\\new"))
     dokkaSourceSets {
         configureEach {
             externalDocumentationLink {
@@ -91,9 +76,24 @@ repositories {
 
     mavenCentral()
 }
+tasks.register<Jar>("buildAPIJar") {
+    dependsOn(tasks.compileJava, tasks.compileKotlin)
+    from(tasks.compileJava, tasks.compileKotlin)
+    includeEmptyDirs = false
+    include { it.isDirectory or it.name.endsWith(".class") or it.name.endsWith(".kotlin_module") }
+    archiveClassifier.set("api")
+}
 
-tasks.withType<Jar> {
-    destinationDir = file("E:/Minecraft/Server/1.12.2 paper/plugins")
+tasks.register<Jar>("buildJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+tasks.register<Jar>("buildSourcesJar") {
+    dependsOn(JavaPlugin.CLASSES_TASK_NAME)
+    archiveClassifier.set("sources")
+    from(sourceSets["main"].allSource)
 }
 dependencies {
     compileOnly("ink.ptms:nms-all:1.0.0")
@@ -132,6 +132,7 @@ configure<JavaPluginConvention> {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
+
 publishing {
     repositories {
         maven {
@@ -145,25 +146,28 @@ publishing {
                 password = project.findProperty("password").toString()
             }
             authentication {
-                create<BasicAuthentication>("base")
+                create<BasicAuthentication>("basic")
+
             }
         }
         mavenLocal()
     }
     publications {
         create<MavenPublication>("library") {
-            from(components["java"])
+            artifact(tasks["buildAPIJar"]) { classifier = classifier?.replace("-api", "") }
+            artifact(tasks["buildJavadocJar"])
+            artifact(tasks["buildSourcesJar"])
             version = project.version.toString()
             groupId = project.group.toString()
             pom {
                 name.set(project.name)
-                description.set("Bukkit Script Engine Plugin.")
-                url.set("https://github.com/Glom-c/Pouvoir/")
+                description.set("Bukkit Attribute Engine Plugin.")
+                url.set("https://github.com/Glom-c/AttributeSystem/")
 
                 licenses {
                     license {
                         name.set("MIT License")
-                        url.set("https://github.com/Glom-c/Asahi/blob/main/LICENSE")
+                        url.set("https://github.com/Glom-c/AttributeSystem/blob/main/LICENSE")
                     }
                 }
                 developers {
@@ -174,16 +178,21 @@ publishing {
                     }
                 }
                 scm {
-                    connection.set("...")
-                    developerConnection.set("...")
-                    url.set("...")
+                    connection.set("scm:git:git:https://github.com/Glom-c/AttributeSystem.git")
+                    developerConnection.set("scm:git:ssh:https://github.com/Glom-c/AttributeSystem.git")
+                    url.set("https://github.com/Glom-c/AttributeSystem.git")
                 }
             }
         }
     }
 }
 
-
+nexusStaging {
+    serverUrl = "https://s01.oss.sonatype.org/service/local/"
+    username = project.findProperty("username").toString()
+    password = project.findProperty("password").toString()
+    packageGroup = "com.skillw"
+}
 
 signing {
     sign(publishing.publications.getAt("library"))

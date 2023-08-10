@@ -32,6 +32,16 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
             type ?: continue
             slots.register(key, type)
         }
+        slots.putAll(
+            mapOf(
+                "头盔" to BukkitEquipment.HEAD,
+                "胸甲" to BukkitEquipment.CHEST,
+                "护腿" to BukkitEquipment.LEGS,
+                "靴子" to BukkitEquipment.FEET,
+                "主手" to BukkitEquipment.HAND,
+                "副手" to BukkitEquipment.OFF_HAND
+            )
+        )
     }
 
     @AutoRegister

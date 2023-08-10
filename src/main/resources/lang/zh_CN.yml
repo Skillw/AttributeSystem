@@ -7,6 +7,7 @@ command-info:
   - ' &9指令列表:'
   - '  &6/as'
   - '    &d- &ehelp &5—— &a插件帮助.'
+  - '    &d- &edebug &5—— &a开启调试模式.'
   - '    &d- &einfo &5—— &a显示插件信息.'
   - '    &d- &estats (玩家名) &5—— &a显示属性统计.'
   - '    &d- &eitemstats [玩家名] [key] [slot] &5—— &a显示物品的属性统计&e.'

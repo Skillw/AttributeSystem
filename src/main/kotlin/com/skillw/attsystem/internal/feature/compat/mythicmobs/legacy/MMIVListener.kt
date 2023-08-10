@@ -2,12 +2,13 @@ package com.skillw.attsystem.internal.feature.compat.mythicmobs.legacy
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
-import com.skillw.attsystem.api.AttrAPI.update
+import com.skillw.attsystem.api.AttrAPI.updateSync
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.xikage.mythicmobs.api.bukkit.events.MythicMobSpawnEvent
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.Ghost
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.submit
 
 internal object MMIVListener {
     @Ghost
@@ -34,7 +35,16 @@ internal object MMIVListener {
                 it
             )
         }
-        entity.update()
+        submit(delay = 5) {
+            attributes.read(entity)?.let {
+                AttributeSystem.compiledAttrDataManager[entity.uniqueId]?.register(
+                    "MYTHIC-BASE-ATTRIBUTE",
+                    it
+                )
+            }
+            entity.updateSync()
+            entity.health = entity.maxHealth
+        }
     }
 
 }

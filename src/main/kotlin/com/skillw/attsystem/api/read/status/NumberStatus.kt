@@ -19,10 +19,6 @@ class NumberStatus(numberReader: BaseReadGroup<Double>) : Status<Double>(numberR
         return attributeStatus
     }
 
-    override fun get(key: String): Double {
-        return super.get(key) ?: 0.0
-    }
-
 
     /**
      * NumberOperation
@@ -34,9 +30,9 @@ class NumberStatus(numberReader: BaseReadGroup<Double>) : Status<Double>(numberR
     fun operation(status: NumberStatus, operation: NumberOperation): NumberStatus {
         for (key in status.keys) {
             if (this.containsKey(key)) {
-                this.register(key, operation.operate(get(key), status[key]).toDouble())
+                this.register(key, operation.operate(get(key)!!, status[key]!!).toDouble())
             } else {
-                this.register(key, status[key])
+                this.register(key, status[key]!!)
             }
         }
         return this

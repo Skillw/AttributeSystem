@@ -8,8 +8,6 @@ import com.skillw.attsystem.api.AttrAPI.getAttrData
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
-import com.skillw.attsystem.api.read.status.Status
-import com.skillw.attsystem.internal.core.read.BaseReadGroup
 import com.skillw.pouvoir.api.feature.placeholder.PouPlaceHolder
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
@@ -31,9 +29,7 @@ object AttributePlaceHolder : PouPlaceHolder("as", AttributeSystem) {
             }
 
             2 -> {
-                val read = attribute.readPattern
-                if (read !is BaseReadGroup<*>) return "0.0"
-                (data.getStatus(attribute) as Status<*>).get(params[1])?.toString()
+                data.getStatus(attribute)?.get(params[1])?.toString()
             }
 
             else ->

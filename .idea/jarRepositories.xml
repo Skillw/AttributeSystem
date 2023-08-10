@@ -66,5 +66,10 @@
       <option name="name" value="maven2" />
       <option name="url" value="https://repo.spongepowered.org/maven" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="MavenRepo" />
+      <option name="name" value="MavenRepo" />
+      <option name="url" value="https://mirrors.tencent.com/nexus/repository/maven-public/" />
+    </remote-repository>
   </component>
 </project>

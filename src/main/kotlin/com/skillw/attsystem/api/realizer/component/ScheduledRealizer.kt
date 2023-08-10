@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.realizer.component
 
 import com.skillw.attsystem.api.realizer.BaseRealizer
-import taboolib.common.platform.function.submit
+import com.skillw.attsystem.util.Utils.adaptive
 import taboolib.common.platform.service.PlatformExecutor
 
 /**
@@ -23,7 +23,7 @@ abstract class ScheduledRealizer(key: String, val async: Boolean = false) : Base
 
     protected fun refreshTask() {
         cancelTask()
-        task = submit(period = period(), async = async) {
+        task = adaptive(period = period()) {
             task()
         }
     }

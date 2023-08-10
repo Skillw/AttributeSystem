@@ -7,6 +7,7 @@ import com.skillw.attsystem.AttributeSystem.realizerManager
 import com.skillw.attsystem.api.AttrAPI.update
 import com.skillw.attsystem.api.realizer.component.ScheduledRealizer
 import com.skillw.attsystem.internal.manager.AttributeSystemAPIImpl.remove
+import com.skillw.attsystem.util.Utils.adaptive
 import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
@@ -18,8 +19,8 @@ import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.OptionalEvent
 import taboolib.common.platform.event.SubscribeEvent
-import taboolib.common.platform.function.submitAsync
 import taboolib.common5.Baffle
+import taboolib.common5.clong
 import java.util.concurrent.TimeUnit
 
 @AutoRegister
@@ -59,20 +60,21 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
     }
 
 
-    private var baffle = Baffle.of(40, TimeUnit.MILLISECONDS)
-//
-//    override fun onEnable() {
-//        onReload()
-//    }
-//
-//    override fun onReload() {
-//        baffle.resetAll()
-//        baffle = Baffle.of(config.getOrDefault("baffle", 40).cint)
-//    }
+    private var baffle = Baffle.of(20, TimeUnit.MILLISECONDS)
+
+    override fun onEnable() {
+        onReload()
+    }
+
+    override fun onReload() {
+        super.onReload()
+        baffle.resetAll()
+        baffle = Baffle.of(config.getOrDefault("baffle", 20).clong, TimeUnit.MILLISECONDS)
+    }
 
     internal fun LivingEntity.updateAsync(delay: Long = 0) {
         if (baffle.hasNext(name)) {
-            submitAsync(delay = delay) {
+            adaptive(delay = delay) {
                 update()
             }
         }
@@ -80,9 +82,7 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
 
     @SubscribeEvent
     fun join(event: PlayerJoinEvent) {
-        event.player.run {
-            updateAsync(10)
-        }
+        event.player.updateAsync(2)
     }
 
     @SubscribeEvent

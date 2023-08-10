@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.feature.compat.mythicmobs.common
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
+import com.skillw.attsystem.api.AttrAPI.updateSync
 import io.lumine.mythic.bukkit.events.MythicMechanicLoadEvent
 import io.lumine.mythic.bukkit.events.MythicMobSpawnEvent
 import org.bukkit.entity.LivingEntity
@@ -33,7 +34,7 @@ internal object MMVListener {
                         it
                     )
                 }
-                AttributeSystem.attributeSystemAPI.update(entity)
+                entity.updateSync()
                 entity.health = entity.maxHealth
             }
     }

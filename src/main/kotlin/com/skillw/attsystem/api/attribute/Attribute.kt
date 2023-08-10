@@ -3,7 +3,6 @@ package com.skillw.attsystem.api.attribute
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.read.ReadPattern
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
-import java.util.*
 
 /**
  * Attribute
@@ -17,7 +16,7 @@ import java.util.*
 class Attribute private constructor(
     override val key: String,
     val display: String,
-    val names: List<String>,
+    val names: Collection<String>,
     val readPattern: ReadPattern<*>,
     val priority: Int = 0,
 ) : Registrable<String>, Comparable<Attribute> {
@@ -51,9 +50,7 @@ class Attribute private constructor(
     }
 
     override fun hashCode(): Int {
-        var result = key.hashCode()
-        result = 31 * result + readPattern.hashCode()
-        return result
+        return key.hashCode()
     }
 
     override fun toString(): String {
@@ -81,7 +78,7 @@ class Attribute private constructor(
         var priority: Int = 0
 
         /** Names */
-        val names = LinkedList<String>()
+        val names = ArrayList<String>()
 
         var mapping: Mapping? = null
 
@@ -96,7 +93,7 @@ class Attribute private constructor(
          * @return
          */
         fun build(): Attribute {
-            val att = Attribute(key, display ?: names.first, names, readPattern, priority)
+            val att = Attribute(key, display ?: names.first(), names, readPattern, priority)
             att.config = release
             att.entity = entity
             att.mapping = mapping

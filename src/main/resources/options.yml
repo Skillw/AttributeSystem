@@ -31,4 +31,4 @@ update:
   period: 10
   #由事件驱动的玩家更新最低间隔 (ms)
   #为了防止玩家高频更新属性
-  baffle: 40
+  baffle: 20

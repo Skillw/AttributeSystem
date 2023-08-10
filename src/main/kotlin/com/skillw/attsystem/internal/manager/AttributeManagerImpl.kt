@@ -12,6 +12,7 @@ import com.skillw.pouvoir.api.plugin.map.LowerMap
 import com.skillw.pouvoir.util.loadMultiply
 import com.skillw.pouvoir.util.loadYaml
 import com.skillw.pouvoir.util.put
+import com.skillw.pouvoir.util.read.StrTrie
 import com.skillw.pouvoir.util.safe
 import taboolib.common.platform.function.console
 import taboolib.common5.FileWatcher
@@ -27,6 +28,8 @@ object AttributeManagerImpl : AttributeManager() {
     private val dataFolders = HashSet<File>()
     private val fileToKeys = BaseMap<File, HashSet<String>>()
     private val folderToKeys = BaseMap<File, HashSet<String>>()
+    private val nameTrie = StrTrie<Attribute>()
+
 
     override val nameMap = LowerMap<Attribute>()
 
@@ -34,6 +37,9 @@ object AttributeManagerImpl : AttributeManager() {
         CopyOnWriteArrayList()
     }
 
+    override fun find(text: String): Attribute? {
+        return nameTrie.parse(text).result
+    }
 
     override fun addSubPouvoir(subPouvoir: SubPouvoir) {
         val folder = subPouvoir.plugin.dataFolder
@@ -58,11 +64,6 @@ object AttributeManagerImpl : AttributeManager() {
             safe { builder.register() }
             fileToKeys.put(file, builder.key)
             folderToKeys.put(folder, builder.key)
-            if (!fileWatcher.hasListener(file)) {
-                fileWatcher.addSimpleListener(file) {
-                    reloadFile(file)
-                }
-            }
         }
     }
 
@@ -109,8 +110,12 @@ object AttributeManagerImpl : AttributeManager() {
         attributes.removeIf { it.key == key }
         attributes.add(value)
         attributes.sort()
+
+        nameMap[key] = value
+        nameTrie.put(key, value)
         value.names.forEach {
             nameMap[it] = value
+            nameTrie.put(it, value)
         }
         debug {
             console().sendLang(
@@ -124,7 +129,6 @@ object AttributeManagerImpl : AttributeManager() {
     }
 
     override fun unregister(key: String) {
-
         remove(key)?.apply {
             names.forEach(nameMap::remove)
             debug {

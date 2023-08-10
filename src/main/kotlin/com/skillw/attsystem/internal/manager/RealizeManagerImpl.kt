@@ -6,12 +6,13 @@ import com.skillw.attsystem.api.realizer.component.Awakeable
 import com.skillw.attsystem.api.realizer.component.Realizable
 import com.skillw.attsystem.api.realizer.component.Switchable
 import com.skillw.attsystem.api.realizer.component.Sync
-import com.skillw.attsystem.util.AntiCheatUtils
+import com.skillw.pouvoir.Pouvoir.antiCheatManager
 import com.skillw.pouvoir.util.isAlive
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
+import taboolib.common.platform.function.isPrimaryThread
 import taboolib.common5.FileWatcher
 import taboolib.module.configuration.Configuration
 import taboolib.module.configuration.Type
@@ -24,9 +25,9 @@ object RealizeManagerImpl : RealizeManager() {
     override val priority: Int = 999
     override val subPouvoir = AttributeSystem
 
-    private val awakeables = LinkedList<Awakeable>()
-    private val realizables = LinkedList<Realizable>()
-    private val syncs = LinkedList<Sync>()
+    private val awakeables = ArrayList<Awakeable>()
+    private val realizables = ArrayList<Realizable>()
+    private val syncs = ArrayList<Sync>()
 
     override fun onLoad() {
         values.filterIsInstance<Realizable>().forEach(realizables::add)
@@ -55,8 +56,8 @@ object RealizeManagerImpl : RealizeManager() {
             previous[key] = realizer !is Switchable || realizer.isEnable()
             files.add(file)
         }
-        files.map {
-            Configuration.loadFromFile(it, Type.YAML)
+        files.mapNotNull {
+            runCatching { Configuration.loadFromFile(it, Type.YAML) }.getOrNull()
         }.forEach {
             watcher.removeListener(it.file)
             it.toMap().forEach inner@{ (key, data) ->
@@ -93,30 +94,42 @@ object RealizeManagerImpl : RealizeManager() {
             .forEach(func)
     }
 
-    private val tasks = newKeySet<() -> Unit>()
+    private val tasks = Collections.synchronizedList(ArrayList<() -> Unit>())
 
     private fun genSyncTasks(entity: LivingEntity) {
         syncs
             .filter { it !is Switchable || it.isEnable() }
             .forEach {
-                it.newTask(entity)?.let { task -> tasks += task }
+                it.newTask(entity)?.let { task ->
+                    if (isPrimaryThread)
+                        task.invoke()
+                    else tasks += task
+                }
             }
     }
 
+    private fun executeTasks() {
+        val iter = tasks.iterator()
+        while (iter.hasNext()) {
+            iter.next()()
+            iter.remove()
+        }
+    }
+
     override fun executeSyncTasks() {
-        taboolib.common.util.sync { tasks.forEach { it() } }
-        tasks.clear()
+        if (isPrimaryThread) executeTasks()
+        else taboolib.common.util.sync { executeTasks() }
     }
 
 
     override fun realize(entity: LivingEntity) {
         if (!entity.isAlive()) return
-        if (entity is Player) AntiCheatUtils.bypassAntiCheat(entity)
+        if (entity is Player) antiCheatManager.bypass(entity)
         realizable {
             it.realize(entity)
         }
         genSyncTasks(entity)
-        if (entity is Player) AntiCheatUtils.recoverAntiCheat(entity)
+        if (entity is Player) antiCheatManager.recover(entity)
     }
 
     override fun unrealize(entity: LivingEntity) {

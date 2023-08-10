@@ -3,7 +3,6 @@ package com.skillw.attsystem.api.compiled.sub
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.compiled.CompiledData
 import org.bukkit.entity.LivingEntity
-import java.util.*
 
 /**
  * @className ComplexCompiledData
@@ -12,7 +11,7 @@ import java.util.*
  * @date 2023/8/2 21:25 Copyright 2023 user. All rights reserved.
  */
 class ComplexCompiledData : CompiledData() {
-    private val children = LinkedList<CompiledData>()
+    private val children = ArrayList<CompiledData>()
     var base: CompiledData? = null
     val addition = AttributeDataCompound()
     fun add(compiled: CompiledData) {
@@ -71,6 +70,7 @@ class ComplexCompiledData : CompiledData() {
         return linkedMapOf(
             "ComplexCompiledData-${hashCode()}" to linkedMapOf(
                 "conditions" to total,
+                "base" to base?.serialize(),
                 "addition" to addition.serialize(),
                 "children" to children,
             )

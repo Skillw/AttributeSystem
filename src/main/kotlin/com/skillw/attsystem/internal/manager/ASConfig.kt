@@ -29,7 +29,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
     var lineConditionPattern: Pattern = Pattern.compile("options.condition.line-condition.format")
 
     private val lineConditionFormat: String
-        get() = this["config"].getString("options.condition.line-condition.format") ?: ".*\\/(?<requirement>.*)"
+        get() = this["config"].getString("options.condition.line-condition.format") ?: "\\/(?<requirement>.*)"
     val lineConditionSeparator: String
         get() = this["config"].getString("options.condition.line-condition.separator") ?: ","
 
@@ -155,9 +155,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     val debug: Boolean
         get() = debugMode || this["config"].getBoolean("options.debug")
-    val numberPattern: String
-        get() = this["config"].getString("options.read.number-pattern")
-            ?: "(?<value>(\\\\+|\\\\-)?(\\\\d+(?:(\\\\.\\\\d+))?))"
+    const val numberPattern: String = "(?<value>(\\+|\\-)?(\\d+(?:(\\.\\d+))?))"
 
     val statsTitle: String
         get() = console().asLangText("stats-title")

@@ -41,7 +41,7 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         return super.register(key, value.apply { entity = key.validEntity() })
     }
 
-    private val loaders = LinkedList<EquipmentLoader<in LivingEntity>>()
+    private val loaders = ArrayList<EquipmentLoader<in LivingEntity>>()
 
     override fun registerLoader(loader: EquipmentLoader<in LivingEntity>) {
         loaders += loader
@@ -59,7 +59,9 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
             return data
         }
         data = pre.data
+
         entity.loadEquipments(data)
+
         val postEvent = EquipmentUpdateEvent.Post(entity, data)
         postEvent.call()
         if (postEvent.isCancelled) {
@@ -72,7 +74,9 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
 
     private fun LivingEntity.loadEquipments(data: EquipmentDataCompound) {
         val equipments =
-            (loaders.firstOrNull { it.filter(this) } ?: EntitySlotRealizer.NormalEquipmentLoader).loadEquipment(this)
+            (loaders.firstOrNull { it.filter(this) }
+                ?: EntitySlotRealizer.NormalEquipmentLoader).loadEquipment(this)
+
         for ((slot, item) in equipments) {
             data.addEquipment(this, BASE_EQUIPMENT_KEY, slot, item)
         }
@@ -111,9 +115,10 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
             val compiledSource = getSource(source, slot)
             if (!hasChanged(eventItem, source, slot) && compiledAttrDataManager.hasCompiledData(
                     entity,
-                    source
+                    compiledSource
                 )
             ) return@run null
+
             compiledAttrDataManager.addCompiledData(
                 entity.uniqueId,
                 compiledSource,

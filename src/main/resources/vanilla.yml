@@ -1,6 +1,10 @@
 #支持 PAPI/PPAPI 字符串内联函数
 #会影响实体的原版属性 / 其它属性
-#
+#支持任何原版属性，例如飞行速度FlySpeed
+#fly-speed:
+# enable: true
+# vanilla: true
+# value: %as_att:FlySpeed%
 max-health:
   enable: true
   vanilla: true

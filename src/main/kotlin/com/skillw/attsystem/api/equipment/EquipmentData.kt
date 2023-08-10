@@ -21,6 +21,14 @@ class EquipmentData(var compound: EquipmentDataCompound? = null, var source: Str
         }
     }
 
+    fun getHead() = get("头盔") ?: get("Head")
+    fun getChest() = get("胸甲") ?: get("Chest")
+    fun getLegs() = get("护腿") ?: get("Legs")
+    fun getFeet() = get("靴子") ?: get("Feet")
+    fun getHand() = get("主手") ?: get("Hand")
+    fun getOffHand() = get("副手") ?: get("OffHand")
+
+
     private fun assertValid() {
         if (compound == null || source == null) {
             error("Operating owner-less EquipmentData! Please register the EquipmentData first!")
