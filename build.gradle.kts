@@ -66,6 +66,15 @@ tasks.dokkaJavadoc.configure {
             externalDocumentationLink {
                 url.set(URL("https://doc.skillw.com/pouvoir/"))
             }
+            externalDocumentationLink {
+                url.set(URL("https://docs.oracle.com/javase/8/docs/api/"))
+            }
+            externalDocumentationLink {
+                url.set(URL("https://docs.oracle.com/javase/8/docs/api/"))
+            }
+            externalDocumentationLink {
+                url.set(URL("https://doc.skillw.com/bukkit/"))
+            }
         }
     }
 
@@ -119,11 +128,6 @@ tasks.javadoc {
     this.options {
         encoding = "UTF-8"
     }
-}
-
-java {
-//    withJavadocJar()
-//    withSourcesJar()
 }
 
 
