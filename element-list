@@ -1,0 +1,60 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:com.skillw.attsystem.api.attribute.compound/AttributeData.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/compound/AttributeData.Companion.html
+$dokka.location:com.skillw.attsystem.api.attribute.compound/AttributeDataCompound.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/compound/AttributeDataCompound.Companion.html
+$dokka.location:com.skillw.attsystem.api.attribute/Attribute.Builder///PointingToDeclaration/com/skillw/attsystem/api/attribute/Attribute.Builder.html
+$dokka.location:com.skillw.attsystem.api.attribute/Attribute.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/Attribute.Companion.html
+$dokka.location:com.skillw.attsystem.api.compiled.sub/NBTCompiledData.Entry///PointingToDeclaration/com/skillw/attsystem/api/compiled/sub/NBTCompiledData.Entry.html
+$dokka.location:com.skillw.attsystem.api.condition/BaseCondition.Builder///PointingToDeclaration/com/skillw/attsystem/api/condition/BaseCondition.Builder.html
+$dokka.location:com.skillw.attsystem.api.condition/BaseCondition.Companion///PointingToDeclaration/com/skillw/attsystem/api/condition/BaseCondition.Companion.html
+$dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Post///PointingToDeclaration/com/skillw/attsystem/api/event/AttributeUpdateEvent.Post.html
+$dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Pre///PointingToDeclaration/com/skillw/attsystem/api/event/AttributeUpdateEvent.Pre.html
+$dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Process///PointingToDeclaration/com/skillw/attsystem/api/event/AttributeUpdateEvent.Process.html
+$dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Post///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Post.html
+$dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Pre///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Pre.html
+$dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Process///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Process.html
+$dokka.location:com.skillw.attsystem.api.realizer.component/ScheduledRealizer.Companion///PointingToDeclaration/com/skillw/attsystem/api/realizer/component/ScheduledRealizer.Companion.html
+$dokka.location:com.skillw.attsystem.internal.core.attribute/ConfigAttributeBuilder.Companion///PointingToDeclaration/com/skillw/attsystem/internal/core/attribute/ConfigAttributeBuilder.Companion.html
+$dokka.location:com.skillw.attsystem.internal.core.read/BaseReadGroup.Companion///PointingToDeclaration/com/skillw/attsystem/internal/core/read/BaseReadGroup.Companion.html
+$dokka.location:com.skillw.attsystem.internal.feature.personal/InitialAttrData.Companion///PointingToDeclaration/com/skillw/attsystem/internal/feature/personal/InitialAttrData.Companion.html
+$dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/EntitySlotRealizer.NormalEquipmentLoader///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/EntitySlotRealizer.NormalEquipmentLoader.html
+$dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/PlayerSlotRealizer.PlayerEquipmentLoader///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/PlayerSlotRealizer.PlayerEquipmentLoader.html
+$dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/PlayerSlotRealizer.PlayerSlot///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/PlayerSlotRealizer.PlayerSlot.html
+$dokka.location:com.skillw.attsystem.util/LoreMap.LoreChar///PointingToDeclaration/com/skillw/attsystem/util/LoreMap.LoreChar.html
+$dokka.location:com.skillw.attsystem.util/LoreMap.TrieNode///PointingToDeclaration/com/skillw/attsystem/util/LoreMap.TrieNode.html
+com.skillw.attsystem
+com.skillw.attsystem.api
+com.skillw.attsystem.api.attribute
+com.skillw.attsystem.api.attribute.compound
+com.skillw.attsystem.api.compiled
+com.skillw.attsystem.api.compiled.sub
+com.skillw.attsystem.api.condition
+com.skillw.attsystem.api.equipment
+com.skillw.attsystem.api.event
+com.skillw.attsystem.api.manager
+com.skillw.attsystem.api.read
+com.skillw.attsystem.api.read.operation
+com.skillw.attsystem.api.read.status
+com.skillw.attsystem.api.realizer
+com.skillw.attsystem.api.realizer.component
+com.skillw.attsystem.internal.command
+com.skillw.attsystem.internal.command.sub
+com.skillw.attsystem.internal.core.asahi
+com.skillw.attsystem.internal.core.attribute
+com.skillw.attsystem.internal.core.attribute.mapping
+com.skillw.attsystem.internal.core.operation.num
+com.skillw.attsystem.internal.core.operation.str
+com.skillw.attsystem.internal.core.read
+com.skillw.attsystem.internal.core.read.num
+com.skillw.attsystem.internal.core.read.str
+com.skillw.attsystem.internal.feature.compat.dragoncore
+com.skillw.attsystem.internal.feature.compat.germ
+com.skillw.attsystem.internal.feature.compat.placeholder
+com.skillw.attsystem.internal.feature.compat.pouvoir
+com.skillw.attsystem.internal.feature.compat.pouvoir.annotation
+com.skillw.attsystem.internal.feature.personal
+com.skillw.attsystem.internal.feature.realizer.attribute
+com.skillw.attsystem.internal.feature.realizer.slot
+com.skillw.attsystem.internal.manager
+com.skillw.attsystem.util
+
