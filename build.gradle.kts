@@ -111,6 +111,7 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
     compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
     compileOnly("ink.ptms:nms-all:1.0.0")
+    compileOnly("com.skillw.pouvoir:Pouvoir:1.6.4-8")
     compileOnly(fileTree("libs"))
     compileOnly(kotlin("stdlib-jdk8"))
 }
@@ -167,6 +168,10 @@ publishing {
                 name.set(project.name)
                 description.set("Bukkit Attribute Engine Plugin.")
                 url.set("https://github.com/Glom-c/AttributeSystem/")
+
+                dependencies {
+                    compileOnly("com.skillw.pouvoir:Pouvoir:1.6.4-8")
+                }
 
                 licenses {
                     license {
