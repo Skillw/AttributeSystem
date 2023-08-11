@@ -80,10 +80,9 @@ tasks.dokkaJavadoc.configure {
 
 }
 repositories {
+    mavenCentral()
     maven { url = uri("https://mvn.lumine.io/repository/maven-public/") }
     maven { url = uri("https://jitpack.io") }
-
-    mavenCentral()
 }
 tasks.register<Jar>("buildAPIJar") {
     dependsOn(tasks.compileJava, tasks.compileKotlin)
@@ -111,7 +110,6 @@ dependencies {
     compileOnly("io.lumine:Mythic-Dist:5.0.3")
     compileOnly("ink.ptms.core:v11901:11901-minimize:mapped")
     compileOnly("ink.ptms:nms-all:1.0.0")
-    compileOnly("com.skillw.pouvoir:Pouvoir:1.6.4-8")
     compileOnly(fileTree("libs"))
     compileOnly(kotlin("stdlib-jdk8"))
 }
@@ -170,7 +168,7 @@ publishing {
                 url.set("https://github.com/Glom-c/AttributeSystem/")
 
                 dependencies {
-                    compileOnly("com.skillw.pouvoir:Pouvoir:1.6.4-8")
+//                    compileOnly("com.skillw.pouvoir:Pouvoir:1.6.4-8")
                 }
 
                 licenses {
