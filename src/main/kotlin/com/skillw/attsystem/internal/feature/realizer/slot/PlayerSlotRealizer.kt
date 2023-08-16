@@ -2,16 +2,19 @@ package com.skillw.attsystem.internal.feature.realizer.slot
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.equipment.EquipmentLoader
-import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.Awakeable
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.Awakeable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.plugin.map.LowerKeyMap
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import taboolib.common.util.unsafeLazy
 import taboolib.common5.Coerce
 import taboolib.common5.cint
+import taboolib.platform.util.hasLore
 import taboolib.type.BukkitEquipment
 
 @AutoRegister
@@ -19,6 +22,9 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
     private val slots = LowerKeyMap<PlayerSlot>()
     override val file by lazy {
         AttributeSystem.slot.file!!
+    }
+    override val manager: BaseRealizerManager by unsafeLazy {
+        AttributeSystem.realizerManager
     }
 
     override fun onEnable() {
@@ -29,13 +35,16 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
         slots.clear()
         for (key in config.keys) {
             val value = config[key]
-            val slot = if (value is Map<*, *>) {
+            val slot: String
+            var require: String? = null
+            if (value is Map<*, *>) {
                 val section = value as Map<String, Any>
-                section["slot"].toString()
+                slot = section["slot"].toString()
+                require = section["require"]?.toString()
             } else {
-                value.toString()
+                slot = value.toString()
             }
-            slots.register(PlayerSlot(key, slot.uppercase()))
+            slots.register(PlayerSlot(key, slot.uppercase(), require))
         }
 
         setOf(
@@ -76,7 +85,7 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
      * @property key 槽位键
      * @property slot 槽位 ( BukkitEquipment 或 数字)
      */
-    data class PlayerSlot(override val key: String, val slot: String) :
+    data class PlayerSlot(override val key: String, val slot: String, val require: String? = null) :
         Registrable<String> {
         /** Bukkit equipment */
         val equipment: BukkitEquipment? =
@@ -90,10 +99,12 @@ object PlayerSlotRealizer : BaseRealizer("player"), Awakeable {
         }
 
         fun getItem(player: Player): ItemStack? {
-            return if (equipment == null) {
+            return (if (equipment == null) {
                 player.inventory.getItem(getSlot(player))
             } else {
                 equipment.getItem(player)
+            }).let {
+                if (require != null && it?.hasLore(require) != true) null else it
             }
         }
 

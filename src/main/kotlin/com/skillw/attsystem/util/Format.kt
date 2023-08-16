@@ -13,7 +13,6 @@ object Format {
 
     @JvmStatic
     fun format(number: Number): String {
-
         return format.format(number)
     }
 

@@ -1,5 +1,7 @@
 database:
   type: sqlite
+  # sqlite的path
+  path: plugins/AttributeSystem/database.db
   enable: false
   host: localhost
   port: 3306
@@ -7,8 +9,8 @@ database:
   password: root
   database: root
   table: my_database
-  #每10分钟同步一次
-  user-container-sync-time: 360000
+  #每10分钟同步一次 （tick）
+  user-container-sync-time: 12000
 options:
   debug: false
   read:
@@ -26,6 +28,7 @@ options:
       format: '\/(?<requirement>.*)'
       #每个单行条件间的分隔符
       separator: ","
-  operation:
-    string-append-separator: ", "
+#  移至Pouvoir
+#  operation:
+#    string-append-separator: ", "
 

@@ -2,8 +2,8 @@ package com.skillw.attsystem.api.read
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
-import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.api.read.status.Status
+import com.skillw.pouvoir.api.feature.operation.Operation
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import com.skillw.pouvoir.api.plugin.map.component.Registrable
 import org.bukkit.entity.LivingEntity

@@ -1,10 +1,11 @@
 package com.skillw.attsystem.internal.feature.realizer
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.Awakeable
-import com.skillw.attsystem.api.realizer.component.Switchable
-import com.skillw.attsystem.api.realizer.component.Valuable
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.Awakeable
+import com.skillw.pouvoir.api.feature.realizer.component.Switchable
+import com.skillw.pouvoir.api.feature.realizer.component.Valuable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
@@ -12,12 +13,16 @@ import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import taboolib.common.platform.Ghost
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.util.unsafeLazy
 
 @AutoRegister
 internal object HealthScaleRealizer : BaseRealizer("health-scale"), Awakeable, Switchable, Valuable {
 
     override val file by lazy {
         AttributeSystem.options.file!!
+    }
+    override val manager: BaseRealizerManager by unsafeLazy {
+        AttributeSystem.realizerManager
     }
     override val defaultEnable: Boolean
         get() = true

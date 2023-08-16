@@ -106,27 +106,4 @@ object MapUtils {
     }
 
 
-    internal fun <T : Any> T.clone(): Any {
-        return when (this) {
-            is Map<*, *> -> {
-                val map = HashMap<String, Any>()
-                forEach { (key, value) ->
-                    key ?: return@forEach
-                    value ?: return@forEach
-                    map[key.toString()] = value.clone()
-                }
-                map
-            }
-
-            is List<*> -> {
-                val list = ArrayList<Any>()
-                mapNotNull { it }.forEach {
-                    list.add(it.clone())
-                }
-                list
-            }
-
-            else -> this
-        }
-    }
 }

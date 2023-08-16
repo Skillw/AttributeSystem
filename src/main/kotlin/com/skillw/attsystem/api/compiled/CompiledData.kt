@@ -1,7 +1,7 @@
 package com.skillw.attsystem.api.compiled
 
-import com.skillw.attsystem.api.condition.Condition
-import com.skillw.attsystem.api.condition.ConditionData
+import com.skillw.pouvoir.api.feature.condition.Condition
+import com.skillw.pouvoir.api.feature.condition.ConditionData
 import com.skillw.pouvoir.api.plugin.map.KeyMap
 import org.bukkit.configuration.serialization.ConfigurationSerializable
 import org.bukkit.entity.LivingEntity

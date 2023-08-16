@@ -3,17 +3,17 @@ package com.skillw.attsystem.api
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeManager
 import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
-import com.skillw.attsystem.AttributeSystem.operationManager
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.api.compiled.CompiledData
 import com.skillw.attsystem.api.equipment.EquipmentData
 import com.skillw.attsystem.api.equipment.EquipmentDataCompound
-import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
 import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.fightsystem.FightSystem
+import com.skillw.pouvoir.Pouvoir
+import com.skillw.pouvoir.api.feature.operation.Operation
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.isPrimaryThread
@@ -82,7 +82,7 @@ object AttrAPI {
      */
     @JvmStatic
     fun operation(key: String): Operation<*>? {
-        return operationManager[key]
+        return Pouvoir.operationManager[key]
     }
 
 

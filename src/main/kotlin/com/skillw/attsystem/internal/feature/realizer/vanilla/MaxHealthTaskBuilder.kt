@@ -6,7 +6,6 @@ import com.skillw.pouvoir.util.attribute.clear
 import com.skillw.pouvoir.util.attribute.getAttribute
 import com.sucy.skill.SkillAPI
 import com.sucy.skill.api.player.PlayerClass
-import org.bukkit.Bukkit
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
 import taboolib.common5.Coerce
@@ -50,6 +49,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
         } else {
             if (value <= 0.0) {
                 taboolib.common.platform.function.warning("Max Health value must bigger than 0.0!")
+                Throwable().printStackTrace()
                 return null
             }
             {

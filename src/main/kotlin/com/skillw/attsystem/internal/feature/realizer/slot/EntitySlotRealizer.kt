@@ -2,13 +2,15 @@ package com.skillw.attsystem.internal.feature.realizer.slot
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.equipment.EquipmentLoader
-import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.Awakeable
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.Awakeable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import org.bukkit.entity.LivingEntity
 import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.function.console
+import taboolib.common.util.unsafeLazy
 import taboolib.module.lang.sendLang
 import taboolib.type.BukkitEquipment
 
@@ -17,6 +19,9 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
     private val slots = LowerMap<BukkitEquipment>()
     override val file by lazy {
         AttributeSystem.slot.file!!
+    }
+    override val manager: BaseRealizerManager by unsafeLazy {
+        AttributeSystem.realizerManager
     }
 
     override fun onEnable() {

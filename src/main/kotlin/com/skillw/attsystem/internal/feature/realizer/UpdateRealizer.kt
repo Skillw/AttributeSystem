@@ -5,10 +5,10 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.AttributeSystem.realizerManager
 import com.skillw.attsystem.api.AttrAPI.update
-import com.skillw.attsystem.api.realizer.component.ScheduledRealizer
 import com.skillw.attsystem.internal.manager.AttributeSystemAPIImpl.remove
-import com.skillw.attsystem.util.Utils.adaptive
 import com.skillw.attsystem.util.Utils.validEntity
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.ScheduledRealizer
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
 import org.bukkit.entity.Player
@@ -19,6 +19,8 @@ import org.bukkit.event.player.*
 import org.spigotmc.event.player.PlayerSpawnLocationEvent
 import taboolib.common.platform.event.OptionalEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.platform.function.submit
+import taboolib.common.util.unsafeLazy
 import taboolib.common5.Baffle
 import taboolib.common5.clong
 import java.util.concurrent.TimeUnit
@@ -28,14 +30,17 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
     override val file by lazy {
         AttributeSystem.options.file!!
     }
-
+    override val manager: BaseRealizerManager by unsafeLazy {
+        realizerManager
+    }
     override val defaultPeriod: Long = 10
 
     override fun task() {
         for (uuid in attributeDataManager.keys) {
             val entity = uuid.validEntity()
             if (entity == null || !entity.isValid || entity.isDead) {
-                remove(uuid)
+                if (entity !is Player)
+                    remove(uuid)
                 continue
             }
             entity.update()
@@ -72,9 +77,9 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
         baffle = Baffle.of(config.getOrDefault("baffle", 20).clong, TimeUnit.MILLISECONDS)
     }
 
-    internal fun LivingEntity.updateAsync(delay: Long = 0) {
+    internal fun LivingEntity.updateSync(delay: Long = 0) {
         if (baffle.hasNext(name)) {
-            adaptive(delay = delay) {
+            submit(delay = delay) {
                 update()
             }
         }
@@ -82,50 +87,51 @@ internal object UpdateRealizer : ScheduledRealizer("update", true) {
 
     @SubscribeEvent
     fun join(event: PlayerJoinEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent
     fun respawn(event: PlayerRespawnEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent
     fun spawnLocation(event: PlayerSpawnLocationEvent) {
-        event.player.updateAsync(2)
+
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun pickupItem(event: PlayerPickupItemEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun itemHeld(event: PlayerItemHeldEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun dropItem(event: PlayerDropItemEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun swapHandItems(event: PlayerSwapHandItemsEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(1)
     }
 
 
     @SubscribeEvent(ignoreCancelled = true)
     fun click(event: InventoryClickEvent) {
         val player = event.whoClicked as Player
-        player.updateAsync(2)
+        player.updateSync(1)
     }
 
     @SubscribeEvent(ignoreCancelled = true)
     fun close(event: InventoryCloseEvent) {
         val player = event.player as Player
-        player.updateAsync(2)
+        player.updateSync(1)
     }
 
     @SubscribeEvent

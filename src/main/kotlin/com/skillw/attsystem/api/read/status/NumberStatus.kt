@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.read.status
 
-import com.skillw.attsystem.api.read.operation.NumberOperation
+import com.skillw.pouvoir.api.feature.operation.NumberOperation
 import com.skillw.attsystem.internal.core.read.BaseReadGroup
 
 /**

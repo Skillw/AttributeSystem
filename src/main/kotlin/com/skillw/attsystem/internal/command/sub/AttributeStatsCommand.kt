@@ -159,6 +159,6 @@ object AttributeStatsCommand {
             it.sendTo(sender)
         }
         sender.sendMessage(" ")
-        sender.sendLang("stats-end")
+        sender.sendMessage(ASConfig.statsEnd)
     }
 }

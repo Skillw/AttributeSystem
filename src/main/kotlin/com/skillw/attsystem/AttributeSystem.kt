@@ -69,15 +69,7 @@ object AttributeSystem : Plugin(), SubPouvoir {
 
     @JvmStatic
     @PouManager
-    lateinit var conditionManager: ConditionManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var realizerManager: RealizeManager
-
-    @JvmStatic
-    @PouManager
-    lateinit var operationManager: OperationManager
+    lateinit var realizerManager: RealizerManager
 
     @JvmStatic
     @PouManager

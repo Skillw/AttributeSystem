@@ -1,12 +1,12 @@
 package com.skillw.attsystem.internal.manager
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.AttributeSystem.conditionManager
 import com.skillw.attsystem.api.attribute.compound.AttributeData
 import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
 import com.skillw.attsystem.api.compiled.sub.NBTCompiledData
 import com.skillw.attsystem.api.compiled.sub.StringsCompiledData
 import com.skillw.attsystem.api.manager.CompileManager
+import com.skillw.pouvoir.Pouvoir.conditionManager
 import org.bukkit.entity.LivingEntity
 
 object CompileManagerImpl : CompileManager() {

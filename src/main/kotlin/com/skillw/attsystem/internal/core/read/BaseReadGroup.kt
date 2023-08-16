@@ -1,14 +1,14 @@
 package com.skillw.attsystem.internal.core.read
 
-import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.attribute.Attribute
 import com.skillw.attsystem.api.read.ReadPattern
-import com.skillw.attsystem.api.read.operation.Operation
 import com.skillw.attsystem.api.read.status.Status
 import com.skillw.attsystem.internal.core.read.num.NumberReader
 import com.skillw.attsystem.internal.core.read.str.StringReader
 import com.skillw.attsystem.internal.manager.ASConfig
+import com.skillw.pouvoir.Pouvoir.operationManager
 import com.skillw.pouvoir.api.PouvoirAPI.placeholder
+import com.skillw.pouvoir.api.feature.operation.Operation
 import com.skillw.pouvoir.api.plugin.map.LowerMap
 import com.skillw.pouvoir.util.format
 import com.skillw.pouvoir.util.replacement
@@ -57,7 +57,7 @@ abstract class BaseReadGroup<A : Any>(override val key: String) : ReadPattern<A>
 
     private fun initMatchers(matchers: Map<String, String>) {
         matchers.forEach { (key, operationStr) ->
-            val operation = AttributeSystem.operationManager[operationStr] as? Operation<A>? ?: return@forEach
+            val operation = operationManager[operationStr] as? Operation<A>? ?: return@forEach
             val lower = key.lowercase()
             this.matchers.register(lower, Matcher(lower, operation))
         }

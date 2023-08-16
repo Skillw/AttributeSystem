@@ -4,17 +4,19 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.attributeDataManager
 import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
 import com.skillw.attsystem.api.event.HealthRegainEvent
-import com.skillw.attsystem.api.realizer.component.ScheduledRealizer
-import com.skillw.attsystem.api.realizer.component.Switchable
-import com.skillw.attsystem.api.realizer.component.Valuable
-import com.skillw.attsystem.api.realizer.component.Vanillable
 import com.skillw.attsystem.internal.manager.ASConfig.fightSystem
 import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.fightsystem.api.FightAPI.isFighting
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.ScheduledRealizer
+import com.skillw.pouvoir.api.feature.realizer.component.Switchable
+import com.skillw.pouvoir.api.feature.realizer.component.Valuable
+import com.skillw.pouvoir.api.feature.realizer.component.Vanillable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import org.bukkit.entity.LivingEntity
 import org.bukkit.event.entity.EntityRegainHealthEvent
 import taboolib.common.platform.event.SubscribeEvent
+import taboolib.common.util.unsafeLazy
 import taboolib.common5.cbool
 import kotlin.math.min
 
@@ -23,7 +25,9 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
     override val file by lazy {
         AttributeSystem.options.file!!
     }
-
+    override val manager: BaseRealizerManager by unsafeLazy {
+        AttributeSystem.realizerManager
+    }
     override val defaultPeriod: Long = 10
     override val defaultEnable: Boolean
         get() = false
@@ -32,11 +36,7 @@ internal object HealthRegainRealizer : ScheduledRealizer("health-regain"), Switc
     override val defaultVanilla: Boolean
         get() = true
     private val disableInFight: Boolean
-        get() = defaultConfig["disable-in-fighting"].cbool
-
-    init {
-        defaultConfig["disable-in-fighting"] = false
-    }
+        get() = config["disable-in-fighting"].cbool
 
     @SubscribeEvent
     fun onVanillaRegain(event: EntityRegainHealthEvent) {

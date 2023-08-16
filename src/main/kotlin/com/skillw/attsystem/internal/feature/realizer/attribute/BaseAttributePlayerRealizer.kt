@@ -4,10 +4,12 @@ import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.read
 import com.skillw.attsystem.api.compiled.CompiledAttrDataCompound
 import com.skillw.attsystem.api.compiled.sub.ComplexCompiledData
-import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.Awakeable
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.Awakeable
 import com.skillw.pouvoir.api.plugin.annotation.AutoRegister
 import taboolib.common.util.asList
+import taboolib.common.util.unsafeLazy
 import taboolib.module.configuration.util.asMap
 
 /**
@@ -23,6 +25,9 @@ object BaseAttributePlayerRealizer : BaseRealizer("base-attribute-player"), Awak
 
     override val file by lazy {
         AttributeSystem.options.file!!
+    }
+    override val manager: BaseRealizerManager by unsafeLazy {
+        AttributeSystem.realizerManager
     }
     val type
         get() = config["type"]?.toString()?.lowercase() ?: "strings"

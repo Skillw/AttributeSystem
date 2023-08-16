@@ -37,16 +37,11 @@ group-reader-unregister: '&d[&9属性系统&d] &c读取组 &6{0} &7[&f{1}&7] &c�
 attribute-register: '&d[&9属性系统&d] &a属性 &6{0} &7[&f{1}&7] &a注册成功!'
 attribute-unregister: '&d[&9属性系统&d] &c属性 &6{0} &7[&f{1}&7] &c注销成功!'
 
-annotation-condition-register: '&d[&9属性系统&d] &a条件 &6{0} &a注册成功!'
-annotation-condition-unregister: '&d[&9属性系统&d] &c条件 &6{0} &c注销成功!'
-annotation-string-operation-register: '&d[&9属性系统&d] &a字符串运算操作 &6{0} &a注册成功!'
-annotation-string-operation-unregister: '&d[&9属性系统&d] &c字符串运算操作 &6{0} &c注销成功!'
-annotation-number-operation-register: '&d[&9属性系统&d] &a字符串运算操作 &6{0} &a注册成功!'
-annotation-number-operation-unregister: '&d[&9属性系统&d] &c字符串运算操作 &6{0} &c注销成功!'
-annotation-read-pattern-register: '&d[&9属性系统&d] &a读取模式 &6{0} &a注册成功!'
-annotation-read-pattern-unregister: '&d[&9属性系统&d] &c读取模式 &6{0} &c注销成功!'
-annotation-message-type-register: '&d[&9属性系统&d] &a消息类型 &6{0} &a注册成功!'
-annotation-message-type-unregister: '&d[&9属性系统&d] &c消息类型 &6{0} &c注销成功!'
+
+#annotation-read-pattern-register: '&d[&9属性系统&d] &a读取模式 &6{0} &a注册成功!'
+#annotation-read-pattern-unregister: '&d[&9属性系统&d] &c读取模式 &6{0} &c注销成功!'
+#annotation-message-type-register: '&d[&9属性系统&d] &a消息类型 &6{0} &a注册成功!'
+#annotation-message-type-unregister: '&d[&9属性系统&d] &c消息类型 &6{0} &c注销成功!'
 
 stats-title: '  &f&m─&7&m─────────&f&m─&f属性统计&f&m─&7&m─────────&f&m─'
 stats-attribute-format: '&7        &7{name} &f>&7>&8> &c{value} &7点'

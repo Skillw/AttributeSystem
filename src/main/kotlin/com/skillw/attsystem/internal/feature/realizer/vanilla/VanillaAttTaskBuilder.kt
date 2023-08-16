@@ -1,8 +1,10 @@
 package com.skillw.attsystem.internal.feature.realizer.vanilla
 
 import com.skillw.attsystem.AttributeSystem
-import com.skillw.attsystem.api.realizer.BaseRealizer
-import com.skillw.attsystem.api.realizer.component.*
+import com.skillw.attsystem.AttributeSystem.realizerManager
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
+import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
+import com.skillw.pouvoir.api.feature.realizer.component.*
 import com.skillw.pouvoir.util.attribute.BukkitAttribute
 import com.skillw.pouvoir.util.attribute.clear
 import com.skillw.pouvoir.util.attribute.getAttribute
@@ -11,12 +13,16 @@ import org.bukkit.attribute.AttributeModifier
 import org.bukkit.entity.LivingEntity
 import taboolib.common.LifeCycle
 import taboolib.common.platform.Awake
+import taboolib.common.util.unsafeLazy
 import java.util.*
 
 internal open class VanillaAttTaskBuilder(key: String, val attribute: BukkitAttribute) : BaseRealizer(key), Switchable,
     Vanillable, Valuable, Sync, Awakeable {
     override val file by lazy {
         AttributeSystem.vanilla.file!!
+    }
+    override val manager: BaseRealizerManager by unsafeLazy {
+        realizerManager
     }
     protected val realizeKey = "realizer-vanilla-$key"
 

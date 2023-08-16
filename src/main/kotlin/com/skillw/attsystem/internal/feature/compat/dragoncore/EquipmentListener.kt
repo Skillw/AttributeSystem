@@ -2,7 +2,7 @@ package com.skillw.attsystem.internal.feature.compat.dragoncore
 
 import com.skillw.attsystem.AttributeSystem.equipmentDataManager
 import com.skillw.attsystem.api.event.EquipmentUpdateEvent
-import com.skillw.attsystem.internal.feature.realizer.UpdateRealizer.updateAsync
+import com.skillw.attsystem.internal.feature.realizer.UpdateRealizer.updateSync
 import com.skillw.attsystem.internal.manager.ASConfig.dragonCore
 import eos.moe.dragoncore.api.SlotAPI
 import eos.moe.dragoncore.api.event.PlayerSlotUpdateEvent
@@ -44,6 +44,6 @@ object EquipmentListener {
     @Ghost
     @SubscribeEvent
     fun e(event: PlayerSlotUpdateEvent) {
-        event.player.updateAsync(2)
+        event.player.updateSync(0)
     }
 }

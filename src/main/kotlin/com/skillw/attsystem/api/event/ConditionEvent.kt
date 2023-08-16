@@ -1,6 +1,6 @@
 package com.skillw.attsystem.api.event
 
-import com.skillw.attsystem.api.condition.BaseCondition
+import com.skillw.pouvoir.api.feature.condition.BaseCondition
 import org.bukkit.entity.LivingEntity
 import taboolib.platform.type.BukkitProxyEvent
 import java.util.regex.Matcher
