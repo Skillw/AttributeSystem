@@ -17,7 +17,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
         get() = Coerce.toDouble(config["default"])
 
     private val isLegacy by lazy {
-        MinecraftVersion.minor <= 11300
+        MinecraftVersion.majorLegacy <= 11300
     }
 
 
@@ -30,15 +30,16 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
     override fun newTask(entity: LivingEntity): (() -> Unit)? {
         val uuid = entity.uniqueId
         var value = value(entity)
+        val vanilla = isEnableVanilla()
         if (isLegacy) {
             value += default
         }
-        if (entity is Player && (isLegacy || isEnableVanilla())) {
+        if (entity is Player && (isLegacy || vanilla)) {
             value += getSkillAPIHealth(entity).toDouble()
         }
         if (!changed(uuid, value)) return null
         val modifier = genModifier(value)
-        return if (entity !is Player || (!isLegacy && isEnableVanilla())) {
+        return if (entity !is Player || (!isLegacy && vanilla)) {
             {
                 entity.getAttribute(attribute)?.run {
                     if (!isEnableVanilla()) clear()
@@ -49,7 +50,6 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
         } else {
             if (value <= 0.0) {
                 taboolib.common.platform.function.warning("Max Health value must bigger than 0.0! $entity $value")
-                Throwable().printStackTrace()
                 return null
             }
             {
