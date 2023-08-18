@@ -48,7 +48,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
             }
         } else {
             if (value <= 0.0) {
-                taboolib.common.platform.function.warning("Max Health value must bigger than 0.0!")
+                taboolib.common.platform.function.warning("Max Health value must bigger than 0.0! $entity $value")
                 Throwable().printStackTrace()
                 return null
             }
