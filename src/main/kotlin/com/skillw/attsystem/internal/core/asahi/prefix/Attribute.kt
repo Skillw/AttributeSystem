@@ -21,7 +21,7 @@ import taboolib.module.nms.getItemTag
 
 
 @AsahiPrefix(["attr"])
-private fun attr() = prefixParser {
+private fun attr() = prefixParser<Any?> {
     when (val type = next()) {
         "data" -> {
             val entity = if (expect("of")) quest<LivingEntity>() else quester { selector() }

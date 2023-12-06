@@ -5,8 +5,8 @@ plugins {
     `maven-publish`
     signing
     id("io.izzel.taboolib") version "1.56"
-    id("org.jetbrains.kotlin.jvm") version "1.7.20"
-    id("org.jetbrains.dokka") version "1.7.20"
+    id("org.jetbrains.kotlin.jvm") version "1.5.31"
+    id("org.jetbrains.dokka") version "1.5.31"
     id("io.codearte.nexus-staging") version "0.30.0"
 }
 
@@ -52,7 +52,7 @@ taboolib {
 
     install("module-metrics")
     classifier = null
-    version = "6.0.12-14"
+    version = "6.0.12-35"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
