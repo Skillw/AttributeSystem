@@ -131,7 +131,7 @@ function level(slot, entity, matcher, text) {
 
 ## Links
 
-WIKI [http://blog.skillw.com/#sort=attsystem&doc=README.md](http://blog.skillw.com/#sort=attsystem&doc=README.md)
+WIKI [www.skillw.com/docs/attsystem/intro](www.skillw.com/docs/attsystem/intro)
 
 JavaDoc [http://doc.skillw.com/attsystem/](http://doc.skillw.com/attsystem/)
 
