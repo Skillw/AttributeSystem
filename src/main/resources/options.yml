@@ -8,6 +8,8 @@ base-attribute-player:
     - "攻击距离: 2.7"
     - "暴击伤害: 150(%)"
 base-attribute-entity:
+  #当实体生成的时候，是否自动添加这些属性
+  on-spawn: true
   # strings / nbt
   type: strings
   attributes:
