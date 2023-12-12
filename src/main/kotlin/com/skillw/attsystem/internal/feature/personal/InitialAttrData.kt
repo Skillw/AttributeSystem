@@ -40,8 +40,7 @@ class InitialAttrData(override val key: UUID, val compound: AttributeDataCompoun
 
         @JvmStatic
         internal fun pushAttrData(player: Player) {
-            val name = player.name
-            ASContainer[name, "initial-attr-data"] = fromPlayer(player).serialize()
+            ASContainer[player.uniqueId.toString(), "initial-attr-data"] = fromPlayer(player).serialize()
         }
 
         @JvmStatic
