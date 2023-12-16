@@ -96,44 +96,45 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
         item: ItemStack?,
         condition: (ItemStack) -> Boolean = { true },
     ): EquipmentData? {
-        return item.run {
-            if (item == null || isAir() || !condition(this)) {
-                removeItem(source, slot)
-                return@run null
-            }
-            val event = ItemLoadEvent(entity, this)
-            event.call()
-            if (event.isCancelled) {
-                removeItem(source, slot)
-                return@run null
-            }
-            val eventItem = event.itemStack
-            if (getItemTag().containsKey(IGNORE_KEY)) {
-                removeItem(source, slot)
-                return@run null
-            }
-            val compiledSource = getSource(source, slot)
-            if (!hasChanged(eventItem, source, slot) && compiledAttrDataManager.hasCompiledData(
-                    entity,
-                    compiledSource
-                )
-            ) return@run null
-
-            compiledAttrDataManager.addCompiledData(
-                entity.uniqueId,
-                compiledSource,
-                eventItem.readItem(entity, slot) ?: ComplexCompiledData()
+        if (item == null || item.isAir() || !condition(item)) {
+            removeItem(source, slot)
+            return null
+        }
+        val event = ItemLoadEvent(entity, item)
+        event.call()
+        if (event.isCancelled) {
+            removeItem(source, slot)
+            return null
+        }
+        val eventItem = event.itemStack
+        if (eventItem.isAir() || !condition(eventItem)) {
+            removeItem(source, slot)
+            return null
+        }
+        val compiledSource = getSource(source, slot)
+        if (!hasChanged(eventItem, source, slot) && compiledAttrDataManager.hasCompiledData(
+                entity,
+                compiledSource
             )
-            if (eventItem.isAir()) {
-                removeItem(source, slot)
-                return@run null
-            }
-            return computeIfAbsent(source) { EquipmentData(this@addEquipment, source) }.apply {
-                uncheckedPut(
-                    slot,
-                    eventItem
-                )
-            }
+        ) return null
+        if (eventItem.hasItemMeta() && eventItem.getItemTag().containsKey(IGNORE_KEY)) {
+            removeItem(source, slot)
+            return null
+        }
+        compiledAttrDataManager.addCompiledData(
+            entity.uniqueId,
+            compiledSource,
+            eventItem.readItem(entity, slot) ?: ComplexCompiledData()
+        )
+        if (eventItem.isAir()) {
+            removeItem(source, slot)
+            return null
+        }
+        return computeIfAbsent(source) { EquipmentData(this@addEquipment, source) }.apply {
+            uncheckedPut(
+                slot,
+                eventItem
+            )
         }
     }
 
