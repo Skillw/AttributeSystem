@@ -1,6 +1,7 @@
 package com.skillw.attsystem.internal.command.sub
 
 import com.skillw.attsystem.AttributeSystem
+import com.skillw.attsystem.api.AttrAPI.getAttrData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.internal.command.ASCommand.soundClick
 import com.skillw.attsystem.internal.command.ASCommand.soundFail
@@ -52,6 +53,32 @@ object AttributeStatsCommand {
             submitAsync {
                 sender.soundSuccess()
                 sendStatText(sender, sender.cast())
+            }
+        }
+    }
+    val data = subCommand {
+        dynamic(optional = true) {
+            suggestion<ProxyCommandSender> { sender, _ ->
+                sender.soundClick()
+                onlinePlayers().map { it.name }
+            }
+            execute<ProxyCommandSender> { sender, _, argument ->
+                Bukkit.getPlayer(argument)?.let {
+                    sender.soundSuccess()
+                    submitAsync {
+                        sender.sendMessage(it.getAttrData()?.serialize().toString())
+                    }
+                } ?: run {
+                    sender.soundFail()
+                    sender.sendLang("command-valid-player", argument)
+                    return@execute
+                }
+            }
+        }
+        execute<ProxyPlayer> { sender, _, _ ->
+            submitAsync {
+                sender.soundSuccess()
+                sender.sendMessage(sender.cast<Player>().getAttrData()?.serialize().toString())
             }
         }
     }

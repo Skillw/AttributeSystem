@@ -107,6 +107,8 @@ object ASCommand {
 
     @CommandBody(permission = "as.command.stats")
     val stats = AttributeStatsCommand.stats
+    @CommandBody(permission = "as.command.data")
+    val data = AttributeStatsCommand.data
 
     @CommandBody(permission = "as.command.stats")
     val itemstats = AttributeStatsCommand.itemstats

@@ -18,12 +18,12 @@ object EquipmentListener {
         runCatching {
             val method = SlotAPI::class.java.getDeclaredMethod("getCacheAllSlotItem", Player::class.java)
             return@lazy { player ->
-                method.invoke(null, player) as? Map<String, ItemStack>?
+                (method.invoke(null, player) as? Map<String?, ItemStack?>?)?.filter { it.key != null && it.value != null } as Map<String, ItemStack>?
             }
         }.getOrElse {
             val method = SlotAPI::class.java.getDeclaredMethod("getCacheAllSlot", String::class.java)
             return@lazy { player ->
-                method.invoke(null, player.name) as? Map<String, ItemStack>?
+                ( method.invoke(null, player.name) as? Map<String?, ItemStack?>?)?.filter { it.key != null && it.value != null } as Map<String, ItemStack>?
             }
         }
     }
