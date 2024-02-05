@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.command.sub
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.api.AttrAPI.getAttrData
+import com.skillw.attsystem.api.AttrAPI.getEquipData
 import com.skillw.attsystem.api.attribute.compound.AttributeDataCompound
 import com.skillw.attsystem.internal.command.ASCommand.soundClick
 import com.skillw.attsystem.internal.command.ASCommand.soundFail

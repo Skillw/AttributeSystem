@@ -31,7 +31,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
         val uuid = entity.uniqueId
         var value = value(entity)
         val vanilla = isEnableVanilla()
-        if (isLegacy) {
+        if (entity is Player && isLegacy) {
             value += default
         }
         if (entity is Player && (isLegacy || vanilla)) {
