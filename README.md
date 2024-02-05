@@ -12,6 +12,9 @@
 | 硬依赖  | Pouvoir                            |
 | 软依赖  | PlaceholderAPI Mythicmobs SkillAPI |
 
+![GitHub Release](https://img.shields.io/github/v/release/Skillw/AttributeSystem)
+
+
 ## 介绍
 
 **AttributeSystem** 是基于 **TabooLib VI** & **Pouvoir** 编写的一款属性引擎插件  
