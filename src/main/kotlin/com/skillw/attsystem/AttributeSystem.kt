@@ -25,18 +25,17 @@ object AttributeSystem : Plugin(), SubPouvoir {
 
     /** Configs */
 
-    @Config("config.yml", migrate = true, autoReload = true)
+    @Config("config.yml", autoReload = true)
     lateinit var config: ConfigFile
 
-    @Config("slot.yml", migrate = true, autoReload = true)
+    @Config("slot.yml", autoReload = true)
     lateinit var slot: ConfigFile
 
-    @Config("options.yml", migrate = true, autoReload = true)
+    @Config("options.yml", autoReload = true)
     lateinit var options: ConfigFile
 
-    @Config("vanilla.yml", migrate = true, autoReload = true)
+    @Config("vanilla.yml", autoReload = true)
     lateinit var vanilla: ConfigFile
-
     /** Managers */
 
     @JvmStatic

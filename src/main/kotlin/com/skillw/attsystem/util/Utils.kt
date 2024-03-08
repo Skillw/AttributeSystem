@@ -2,16 +2,18 @@ package com.skillw.attsystem.util
 
 import com.skillw.attsystem.AttributeSystem.attributeSystemAPI
 import com.skillw.attsystem.internal.manager.ASConfig
+import com.skillw.attsystem.util.legacy.mirrorNow
+import com.skillw.pouvoir.taboolib.module.nms.MinecraftVersion
 import com.skillw.pouvoir.util.livingEntity
 import org.bukkit.entity.LivingEntity
 import taboolib.common.platform.function.submit
 import taboolib.common.platform.service.PlatformExecutor
-import taboolib.common5.mirrorNow
 import java.util.*
 
 object Utils {
     @JvmStatic
     fun UUID.validEntity(): LivingEntity? {
+
         return livingEntity() ?: run {
             attributeSystemAPI.remove(this)
             null
@@ -36,6 +38,7 @@ object Utils {
         comment: String? = null,
         executor: PlatformExecutor.PlatformTask.() -> Unit,
     ): PlatformExecutor.PlatformTask {
+        MinecraftVersion
         return submit(now, true, delay, period, comment, executor)
     }
 

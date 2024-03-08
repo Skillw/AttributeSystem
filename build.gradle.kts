@@ -1,12 +1,12 @@
 import java.net.URL
-
+import io.izzel.taboolib.gradle.*
 plugins {
     `java-library`
     `maven-publish`
     signing
-    id("io.izzel.taboolib") version "1.56"
-    id("org.jetbrains.kotlin.jvm") version "1.5.31"
-    id("org.jetbrains.dokka") version "1.5.31"
+    id("io.izzel.taboolib") version "2.0.7"
+    id("org.jetbrains.kotlin.jvm") version "1.9.22"
+    id("org.jetbrains.dokka") version "1.9.20"
     id("io.codearte.nexus-staging") version "0.30.0"
 }
 
@@ -18,15 +18,13 @@ task("api-add") {
         version = "$version-api"
     project.version = version
 }
+
 task("info") {
     println(project.name + "-" + project.version)
     println(project.version.toString())
 }
 taboolib {
-    if (api != null) {
-        println("api!")
-        taboolib.options("skip-kotlin-relocate", "keep-kotlin-module")
-    }
+
     description {
         contributors {
             name("Glom_")
@@ -34,25 +32,31 @@ taboolib {
         dependencies {
             name("Pouvoir")
             name("GermPlugin").optional(true)
-            name("DragonCore").optional(true)
             name("MythicMobs").optional(true)
-
-
+            name("DragonCore").optional(true)
         }
     }
 
-    install("common")
-    install("common-5")
-    install("module-chat")
-    install("module-nms-util")
-    install("module-nms")
-    install("module-configuration")
-    install("module-lang")
-    install("platform-bukkit")
+    env {
+        // basic
+        install(UNIVERSAL,BUKKIT, BUKKIT_ALL)
+        // util
+        install( NMS_UTIL, NMS,
+            METRICS,
+            EXPANSION_COMMAND_HELPER,
+            EXPANSION_PLAYER_FAKE_OP,
+            NAVIGATION)
+    }
 
-    install("module-metrics")
-    classifier = null
-    version = "6.0.12-69"
+
+    version {
+        if(project.gradle.startParameter.taskNames.getOrNull(0) == "taboolibBuildApi" || api != null){
+            println("api!")
+            isSkipKotlinRelocate =true
+            isSkipKotlin = true
+        }
+        taboolib = "6.1.0"
+    }
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

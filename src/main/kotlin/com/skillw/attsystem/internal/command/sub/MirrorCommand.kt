@@ -1,10 +1,10 @@
 package com.skillw.attsystem.internal.command.sub
 
 import com.skillw.attsystem.internal.command.ASCommand.soundSuccess
+import com.skillw.attsystem.util.legacy.Mirror
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.subCommand
 import taboolib.common.platform.function.submitAsync
-import taboolib.common5.Mirror
 import taboolib.module.lang.sendLang
 
 object MirrorCommand {
