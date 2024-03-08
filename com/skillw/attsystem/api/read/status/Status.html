@@ -1,14 +1,14 @@
 <!DOCTYPE HTML>
 <!-- NewPage -->
 <html lang="en"><head>
-    <title>Status 2.1.1-gamma API </title>
+    <title>Status 2.1.2-alpha API </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="dc.created" content="2020-03-25">
     <link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../../dokka-javadoc-stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../../jquery/jquery-ui.css" title="Style">
-    <script type="text/javascript" src="../../../../../../jquery/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.0.1.js"></script>
+    <script type="text/javascript" src="../../../../../../jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../../jquery/jquery-migrate-3.4.0.min.js"></script>
     <script type="text/javascript" src="../../../../../../jquery/jquery-ui.js"></script>
 
     <script type="text/javascript" src="../../../../../../search.js"></script>
@@ -88,7 +88,7 @@ var pathtoroot = "../../../../../../";
 
 <main role="main">
     <div class="header">
-        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html"></a></div>
+        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.skillw.attsystem.api.read.status</a></div>
         <h2 title="Class Status" class="title">Class Status</h2>
     </div>
     <div class="contentContainer">
@@ -141,6 +141,14 @@ public abstract class <span class="typeNameLabel"><a href=Status.html>Status</a>
 extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map/LowerMap.html>LowerMap</a>&lt;<a href=Status.html>A</a>&gt;
                     </pre>
                     <div class="block"><p>Status</p></div>
+
+                    <dl>
+
+                    
+
+                    
+
+                    </dl>
                 </li>
             </ul>
         </div>
@@ -212,12 +220,6 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         </tr>
                                         
                                         <tr class="altColor">
-                                            <td class="colFirst"><code>private final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.Node.html>ConcurrentHashMap.Node</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=Status.html>A</a>&gt;&gt;</code></td>
-                                            <th class="colSecond" scope="row"><code><a href=../../../internal/manager/RealizerManagerImpl.html#table>table</a></code></th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr class="rowColor">
                                             <td class="colFirst"><code>private final <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=Status.html>A</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=../../../internal/manager/RealizerManagerImpl.html#values>values</a></code></th>
                                             <td class="colLast"></td>
@@ -249,7 +251,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#Status(BaseReadGroup)">Status</a></span>(<a href=../../../internal/core/read/BaseReadGroup.html>BaseReadGroup</a>&lt;<a href=Status.html>A</a>&gt; readGroup)</code></th>
+                                                        href="#Status(com.skillw.attsystem.internal.core.read.BaseReadGroup)">Status</a></span>(<a href=../../../internal/core/read/BaseReadGroup.html>BaseReadGroup</a>&lt;<a href=Status.html>A</a>&gt; readGroup)</code></th>
                                                 <td class="colLast">Create empty Status</td>
                                             </tr>
                                         
@@ -305,92 +307,60 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <tr id="i0" class="altColor">
                                             <td class="colFirst"><code>final <a href=../../../internal/core/read/BaseReadGroup.html>BaseReadGroup</a>&lt;<a href=Status.html>A</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getReadGroup()>getReadGroup</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#getReadGroup()>getReadGroup</a>() </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i1" class="rowColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/Set.html>Set</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Entry.Map.html>Entry.Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=Status.html>A</a>&gt;&gt;</code>
+                                            <td class="colFirst"><code><a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getEntries()>getEntries</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#operation(com.skillw.attsystem.api.read.status.Status)>operation</a>(<a href=Status.html>Status</a>&lt;?&gt; status) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i2" class="altColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.KeySetView.html>ConcurrentHashMap.KeySetView</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=Status.html>A</a>&gt;</code>
+                                            <td class="colFirst"><code><a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getKeys()>getKeys</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=Status.html#operation(java.lang.String,A,com.skillw.pouvoir.api.feature.operation.Operation)>operation</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=Status.html>A</a> value, <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/feature/operation/Operation.html>Operation</a>&lt;<a href=Status.html>A</a>&gt; operation) </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">NumberOperation做运算</td>
                                         </tr>
                                         
                                         <tr id="i3" class="rowColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a></code>
+                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getSize()>getSize</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#getTotal(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getTotal</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i4" class="altColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=Status.html>A</a>&gt;</code>
+                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getValues()>getValues</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#getMin(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getMin</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i5" class="rowColor">
-                                            <td class="colFirst"><code><a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt;</code>
+                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#operation(Status)>operation</a>(<a href=Status.html>Status</a>&lt;?&gt; status) </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#getMax(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getMax</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i6" class="altColor">
-                                            <td class="colFirst"><code><a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt;</code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#operation(String,A,Operation)>operation</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=Status.html>A</a> value, <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/feature/operation/Operation.html>Operation</a>&lt;<a href=Status.html>A</a>&gt; operation) </code>
-                                            </th>
-                                            <td class="colLast">NumberOperation做运算</td>
-                                        </tr>
-                                        
-                                        <tr id="i7" class="rowColor">
-                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getTotal(Attribute,LivingEntity)>getTotal</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i8" class="altColor">
-                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getMin(Attribute,LivingEntity)>getMin</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i9" class="rowColor">
-                                            <td class="colFirst"><code><a href=Status.html>A</a></code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#getMax(Attribute,LivingEntity)>getMax</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity) </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt;</code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=Status.html#serialize()>serialize</a>() </code>
+                                            <th class="colSecond" scope="row"><code><a href=StringStatus.html#serialize()>serialize</a>() </code>
                                             </th>
                                             <td class="colLast">Serialize</td>
                                         </tr>
                                         
-                                        <tr id="i11" class="rowColor">
+                                        <tr id="i7" class="rowColor">
                                             <td class="colFirst"><code>abstract <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt;</code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=Status.html#clone()>clone</a>() </code>
@@ -403,22 +373,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                 </div>
                                 <ul class="blockList">
                                 
-                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.BaseMap">
+                                    <li class="blockList"><a id="methods.inherited.from.class.java.util.concurrent.ConcurrentHashMap">
                                             <!--   -->
                                         </a>
-                                            <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.BaseMap</h3>
-                                            <code>batchFor, clear, computeIfPresent, contains, containsValue, elements, forEach, forEach, forEach, forEachEntry, forEachEntry, forEachKey, forEachKey, forEachValue, forEachValue, getOrDefault, helpTransfer, isEmpty, keySet, keys, mappingCount, putVal, reduce, reduceEntries, reduceEntries, reduceEntriesToDouble, reduceEntriesToInt, reduceEntriesToLong, reduceKeys, reduceKeys, reduceKeysToDouble, reduceKeysToInt, reduceKeysToLong, reduceToDouble, reduceToInt, reduceToLong, reduceValues, reduceValues, reduceValuesToDouble, reduceValuesToInt, reduceValuesToLong, replace, replace, replaceAll, replaceNode, search, searchEntries, searchKeys, searchValues, sumCount, toString</code></li>
-                                 
-                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.attsystem.api.read.status.Status">
-                                            <!--   -->
-                                        </a>
-                                            <h3>Methods inherited from class&nbsp;com.skillw.attsystem.api.read.status.Status</h3>
-                                            <code>compute, computeIfAbsent, containsKey, get, merge, put, putAll, putIfAbsent, remove</code></li>
+                                            <h3>Methods inherited from class&nbsp;java.util.concurrent.ConcurrentHashMap</h3>
+                                            <code>clear, computeIfPresent, contains, containsValue, elements, forEach, forEach, forEach, forEachEntry, forEachEntry, forEachKey, forEachKey, forEachValue, forEachValue, getEntries, getKeys, getOrDefault, getSize, getValues, isEmpty, keySet, keys, mappingCount, reduce, reduceEntries, reduceEntries, reduceEntriesToDouble, reduceEntriesToInt, reduceEntriesToLong, reduceKeys, reduceKeys, reduceKeysToDouble, reduceKeysToInt, reduceKeysToLong, reduceToDouble, reduceToInt, reduceToLong, reduceValues, reduceValues, reduceValuesToDouble, reduceValuesToInt, reduceValuesToLong, replace, replace, replaceAll, search, searchEntries, searchKeys, searchValues, toString</code></li>
                                  
                                     <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.LowerMap">
                                             <!--   -->
                                         </a>
                                             <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.LowerMap</h3>
+                                            <code>compute, computeIfAbsent, containsKey, get, merge, put, putAll, putIfAbsent, remove</code></li>
+                                 
+                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.BaseMap">
+                                            <!--   -->
+                                        </a>
+                                            <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.BaseMap</h3>
                                             <code>equals, hashCode, register, remove</code></li>
                                  
                                     <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -447,7 +417,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="Status(BaseReadGroup)"></a>
+                                <a name="Status(com.skillw.attsystem.internal.core.read.BaseReadGroup)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>Status</h4>
@@ -478,100 +448,58 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>getReadGroup</h4>
-                                        <pre class="methodSignature"> final <a href=../../../internal/core/read/BaseReadGroup.html>BaseReadGroup</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#getReadGroup()>getReadGroup</a>()</pre>
+                                        <pre class="methodSignature"> final <a href=../../../internal/core/read/BaseReadGroup.html>BaseReadGroup</a>&lt;<a href=Status.html>A</a>&gt; <a href=StringStatus.html#getReadGroup()>getReadGroup</a>()</pre>
                                         <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getEntries()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getEntries</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Set.html>Set</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Entry.Map.html>Entry.Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=Status.html>A</a>&gt;&gt; <a href=Status.html#getEntries()>getEntries</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getKeys()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getKeys</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.KeySetView.html>ConcurrentHashMap.KeySetView</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=Status.html>A</a>&gt; <a href=Status.html#getKeys()>getKeys</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getSize()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getSize</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> <a href=Status.html#getSize()>getSize</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getValues()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getValues</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#getValues()>getValues</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="operation(Status)">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>operation</h4>
-                                        <pre class="methodSignature"> <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#operation(Status)>operation</a>(<a href=Status.html>Status</a>&lt;?&gt; status)</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="operation(String,A,Operation)">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>operation</h4>
-                                        <pre class="methodSignature"> <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#operation(String,A,Operation)>operation</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=Status.html>A</a> value, <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/feature/operation/Operation.html>Operation</a>&lt;<a href=Status.html>A</a>&gt; operation)</pre>
-                                        <div class="block"><p>NumberOperation</p><p>做运算</p></div>
-                                        
+
                                         <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="operation(com.skillw.attsystem.api.read.status.Status)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>operation</h4>
+                                        <pre class="methodSignature"> <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt; <a href=StringStatus.html#operation(com.skillw.attsystem.api.read.status.Status)>operation</a>(<a href=Status.html>Status</a>&lt;?&gt; status)</pre>
+                                        <div class="block"></div>
+
+                                        <dl>
+
+                                        
+
+                                        
+
+                                        
+
+                                        </dl>
+                                    </li>
+                                </ul>
+                                
+                                <a id="operation(java.lang.String,A,com.skillw.pouvoir.api.feature.operation.Operation)">
+                                    <!--   -->
+                                </a>
+                                <ul class=
+                                              "blockList"
+                                          >
+                                    <li class="blockList">
+                                        <h4>operation</h4>
+                                        <pre class="methodSignature"> <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#operation(java.lang.String,A,com.skillw.pouvoir.api.feature.operation.Operation)>operation</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=Status.html>A</a> value, <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/feature/operation/Operation.html>Operation</a>&lt;<a href=Status.html>A</a>&gt; operation)</pre>
+                                        <div class="block"><p>NumberOperation</p><p>做运算</p></div>
+
+                                        <dl>
+
+                                        
                                             <dt><span class="paramLabel">Parameters:</span></dt>
                                             
                                             
@@ -586,13 +514,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <dd><code>operation</code> - 运算操作</dd>
                                             
                                             
-                                        </dl>
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+                                            <dt><span class="returnLabel">Returns:</span></dt>
+                                            <dd><p>运算结果(自身)</p></dd>
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="getTotal(Attribute,LivingEntity)">
+                                <a id="getTotal(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -600,14 +535,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>getTotal</h4>
-                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=Status.html#getTotal(Attribute,LivingEntity)>getTotal</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
+                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=StringStatus.html#getTotal(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getTotal</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="getMin(Attribute,LivingEntity)">
+                                <a id="getMin(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -615,14 +558,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>getMin</h4>
-                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=Status.html#getMin(Attribute,LivingEntity)>getMin</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
+                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=StringStatus.html#getMin(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getMin</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="getMax(Attribute,LivingEntity)">
+                                <a id="getMax(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -630,10 +581,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>getMax</h4>
-                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=Status.html#getMax(Attribute,LivingEntity)>getMax</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
+                                        <pre class="methodSignature"> <a href=Status.html>A</a> <a href=StringStatus.html#getMax(com.skillw.attsystem.api.attribute.Attribute,org.bukkit.entity.LivingEntity)>getMax</a>(<a href=../../attribute/Attribute.html>Attribute</a> attribute, <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/LivingEntity.html>LivingEntity</a> entity)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -645,10 +604,21 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>serialize</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; <a href=Status.html#serialize()>serialize</a>()</pre>
+                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Object.html>Object</a>&gt; <a href=StringStatus.html#serialize()>serialize</a>()</pre>
                                         <div class="block"><p>Serialize</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+                                            <dt><span class="returnLabel">Returns:</span></dt>
+                                            <dd><p>序列化结果</p></dd>
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -662,8 +632,19 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>clone</h4>
                                         <pre class="methodSignature"> abstract <a href=Status.html>Status</a>&lt;<a href=Status.html>A</a>&gt; <a href=Status.html#clone()>clone</a>()</pre>
                                         <div class="block"><p>Clone</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+                                            <dt><span class="returnLabel">Returns:</span></dt>
+                                            <dd><p>复制结果</p></dd>
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 

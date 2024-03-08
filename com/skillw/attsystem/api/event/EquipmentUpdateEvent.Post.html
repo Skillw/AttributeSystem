@@ -1,14 +1,14 @@
 <!DOCTYPE HTML>
 <!-- NewPage -->
 <html lang="en"><head>
-    <title>Post 2.1.1-gamma API </title>
+    <title>Post 2.1.2-alpha API </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="dc.created" content="2020-03-25">
     <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../dokka-javadoc-stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../jquery/jquery-ui.css" title="Style">
-    <script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
+    <script type="text/javascript" src="../../../../../jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.4.0.min.js"></script>
     <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 
     <script type="text/javascript" src="../../../../../search.js"></script>
@@ -88,7 +88,7 @@ var pathtoroot = "../../../../../";
 
 <main role="main">
     <div class="header">
-        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html"></a></div>
+        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.skillw.attsystem.api.event</a></div>
         <h2 title="Class EquipmentUpdateEvent.Post" class="title">Class EquipmentUpdateEvent.Post</h2>
     </div>
     <div class="contentContainer">
@@ -121,6 +121,14 @@ public final class <span class="typeNameLabel"><a href=EquipmentUpdateEvent.Post
 extends BukkitProxyEvent
                     </pre>
                     <div class="block"><p>装备更新后事件</p></div>
+
+                    <dl>
+
+                    
+
+                    
+
+                    </dl>
                 </li>
             </ul>
         </div>
@@ -185,12 +193,6 @@ extends BukkitProxyEvent
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr class="rowColor">
-                                            <td class="colFirst"><code>private final ProxyEvent</code></td>
-                                            <th class="colSecond" scope="row"><code><a href=StringsReadEvent.html#proxyEvent>proxyEvent</a></code></th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
                                     </table>
                                 </div>
                             </li>
@@ -217,7 +219,7 @@ extends BukkitProxyEvent
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#EquipmentUpdateEvent.Post(Entity,EquipmentDataCompound)">EquipmentUpdateEvent.Post</a></span>(<a href=https://doc.skillw.com/bukkit/org/bukkit/entity/Entity.html>Entity</a> entity, <a href=../equipment/EquipmentDataCompound.html>EquipmentDataCompound</a> data)</code></th>
+                                                        href="#EquipmentUpdateEvent.Post(org.bukkit.entity.Entity,com.skillw.attsystem.api.equipment.EquipmentDataCompound)">EquipmentUpdateEvent.Post</a></span>(<a href=https://doc.skillw.com/bukkit/org/bukkit/entity/Entity.html>Entity</a> entity, <a href=../equipment/EquipmentDataCompound.html>EquipmentDataCompound</a> data)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
@@ -283,7 +285,7 @@ extends BukkitProxyEvent
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentUpdateEvent.Post.html#getEntity()>getEntity</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">实体</td>
                                         </tr>
                                         
                                         <tr id="i2" class="altColor">
@@ -291,15 +293,7 @@ extends BukkitProxyEvent
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentUpdateEvent.Post.html#getData()>getData</a>() </code>
                                             </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i3" class="rowColor">
-                                            <td class="colFirst"><code>final ProxyEvent</code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentUpdateEvent.Post.html#getProxyEvent()>getProxyEvent</a>() </code>
-                                            </th>
-                                            <td class="colLast"></td>
+                                            <td class="colLast">装备数据集</td>
                                         </tr>
                                         
                                         </tbody>
@@ -307,16 +301,16 @@ extends BukkitProxyEvent
                                 </div>
                                 <ul class="blockList">
                                 
-                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.attsystem.api.event.EquipmentUpdateEvent.Post">
-                                            <!--   -->
-                                        </a>
-                                            <h3>Methods inherited from class&nbsp;com.skillw.attsystem.api.event.EquipmentUpdateEvent.Post</h3>
-                                            <code>call, getHandlers, isCancelled, setCancelled</code></li>
-                                 
                                     <li class="blockList"><a id="methods.inherited.from.class.taboolib.platform.type.BukkitProxyEvent">
                                             <!--   -->
                                         </a>
                                             <h3>Methods inherited from class&nbsp;taboolib.platform.type.BukkitProxyEvent</h3>
+                                            <code>call, getHandlers, isCancelled, setCancelled</code></li>
+                                 
+                                    <li class="blockList"><a id="methods.inherited.from.class.org.bukkit.event.Event">
+                                            <!--   -->
+                                        </a>
+                                            <h3>Methods inherited from class&nbsp;org.bukkit.event.Event</h3>
                                             <code>callEvent, getEventName, isAsynchronous</code></li>
                                  
                                     <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -345,7 +339,7 @@ extends BukkitProxyEvent
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="EquipmentUpdateEvent.Post(Entity,EquipmentDataCompound)"></a>
+                                <a name="EquipmentUpdateEvent.Post(org.bukkit.entity.Entity,com.skillw.attsystem.api.equipment.EquipmentDataCompound)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>EquipmentUpdateEvent.Post</h4>
@@ -378,8 +372,16 @@ extends BukkitProxyEvent
                                         <h4>getAllowCancelled</h4>
                                         <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=EquipmentUpdateEvent.Post.html#getAllowCancelled()>getAllowCancelled</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -392,9 +394,17 @@ extends BukkitProxyEvent
                                     <li class="blockList">
                                         <h4>getEntity</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/entity/Entity.html>Entity</a> <a href=EquipmentUpdateEvent.Post.html#getEntity()>getEntity</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>实体</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -402,29 +412,22 @@ extends BukkitProxyEvent
                                     <!--   -->
                                 </a>
                                 <ul class=
-                                              "blockList"
+                                              "blockListLast"
                                           >
                                     <li class="blockList">
                                         <h4>getData</h4>
                                         <pre class="methodSignature"> final <a href=../equipment/EquipmentDataCompound.html>EquipmentDataCompound</a> <a href=EquipmentUpdateEvent.Post.html#getData()>getData</a>()</pre>
-                                        <div class="block"></div>
+                                        <div class="block"><p>装备数据集</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getProxyEvent()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockListLast"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getProxyEvent</h4>
-                                        <pre class="methodSignature"> final ProxyEvent <a href=EquipmentUpdateEvent.Post.html#getProxyEvent()>getProxyEvent</a>()</pre>
-                                        <div class="block"></div>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 

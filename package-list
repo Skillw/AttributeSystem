@@ -1,9 +1,7 @@
 $dokka.format:javadoc-v1
 $dokka.linkExtension:html
-$dokka.location:com.skillw.attsystem.api.attribute.compound/AttributeData.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/compound/AttributeData.Companion.html
 $dokka.location:com.skillw.attsystem.api.attribute.compound/AttributeDataCompound.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/compound/AttributeDataCompound.Companion.html
 $dokka.location:com.skillw.attsystem.api.attribute/Attribute.Builder///PointingToDeclaration/com/skillw/attsystem/api/attribute/Attribute.Builder.html
-$dokka.location:com.skillw.attsystem.api.attribute/Attribute.Companion///PointingToDeclaration/com/skillw/attsystem/api/attribute/Attribute.Companion.html
 $dokka.location:com.skillw.attsystem.api.compiled.sub/NBTCompiledData.Entry///PointingToDeclaration/com/skillw/attsystem/api/compiled/sub/NBTCompiledData.Entry.html
 $dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Post///PointingToDeclaration/com/skillw/attsystem/api/event/AttributeUpdateEvent.Post.html
 $dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Pre///PointingToDeclaration/com/skillw/attsystem/api/event/AttributeUpdateEvent.Pre.html
@@ -11,12 +9,14 @@ $dokka.location:com.skillw.attsystem.api.event/AttributeUpdateEvent.Process///Po
 $dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Post///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Post.html
 $dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Pre///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Pre.html
 $dokka.location:com.skillw.attsystem.api.event/EquipmentUpdateEvent.Process///PointingToDeclaration/com/skillw/attsystem/api/event/EquipmentUpdateEvent.Process.html
-$dokka.location:com.skillw.attsystem.internal.core.attribute/ConfigAttributeBuilder.Companion///PointingToDeclaration/com/skillw/attsystem/internal/core/attribute/ConfigAttributeBuilder.Companion.html
 $dokka.location:com.skillw.attsystem.internal.core.read/BaseReadGroup.Companion///PointingToDeclaration/com/skillw/attsystem/internal/core/read/BaseReadGroup.Companion.html
-$dokka.location:com.skillw.attsystem.internal.feature.personal/InitialAttrData.Companion///PointingToDeclaration/com/skillw/attsystem/internal/feature/personal/InitialAttrData.Companion.html
 $dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/EntitySlotRealizer.NormalEquipmentLoader///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/EntitySlotRealizer.NormalEquipmentLoader.html
 $dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/PlayerSlotRealizer.PlayerEquipmentLoader///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/PlayerSlotRealizer.PlayerEquipmentLoader.html
 $dokka.location:com.skillw.attsystem.internal.feature.realizer.slot/PlayerSlotRealizer.PlayerSlot///PointingToDeclaration/com/skillw/attsystem/internal/feature/realizer/slot/PlayerSlotRealizer.PlayerSlot.html
+$dokka.location:com.skillw.attsystem.util.legacy/Mirror.MirrorCollect///PointingToDeclaration/com/skillw/attsystem/util/legacy/Mirror.MirrorCollect.html
+$dokka.location:com.skillw.attsystem.util.legacy/Mirror.MirrorData///PointingToDeclaration/com/skillw/attsystem/util/legacy/Mirror.MirrorData.html
+$dokka.location:com.skillw.attsystem.util.legacy/Mirror.MirrorFuture///PointingToDeclaration/com/skillw/attsystem/util/legacy/Mirror.MirrorFuture.html
+$dokka.location:com.skillw.attsystem.util.legacy/Mirror.MirrorSettings///PointingToDeclaration/com/skillw/attsystem/util/legacy/Mirror.MirrorSettings.html
 $dokka.location:com.skillw.attsystem.util/LoreMap.LoreChar///PointingToDeclaration/com/skillw/attsystem/util/LoreMap.LoreChar.html
 $dokka.location:com.skillw.attsystem.util/LoreMap.TrieNode///PointingToDeclaration/com/skillw/attsystem/util/LoreMap.TrieNode.html
 com.skillw.attsystem
@@ -47,4 +47,5 @@ com.skillw.attsystem.internal.feature.realizer.attribute
 com.skillw.attsystem.internal.feature.realizer.slot
 com.skillw.attsystem.internal.manager
 com.skillw.attsystem.util
+com.skillw.attsystem.util.legacy
 

@@ -1,14 +1,14 @@
 <!DOCTYPE HTML>
 <!-- NewPage -->
 <html lang="en"><head>
-    <title>EquipmentData 2.1.1-gamma API </title>
+    <title>EquipmentData 2.1.2-alpha API </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="dc.created" content="2020-03-25">
     <link rel="stylesheet" type="text/css" href="../../../../../stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../dokka-javadoc-stylesheet.css" title="Style">
     <link rel="stylesheet" type="text/css" href="../../../../../jquery/jquery-ui.css" title="Style">
-    <script type="text/javascript" src="../../../../../jquery/jquery-3.3.1.js"></script>
-    <script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.0.1.js"></script>
+    <script type="text/javascript" src="../../../../../jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="../../../../../jquery/jquery-migrate-3.4.0.min.js"></script>
     <script type="text/javascript" src="../../../../../jquery/jquery-ui.js"></script>
 
     <script type="text/javascript" src="../../../../../search.js"></script>
@@ -88,7 +88,7 @@ var pathtoroot = "../../../../../";
 
 <main role="main">
     <div class="header">
-        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html"></a></div>
+        <div class="subTitle"><span class="packageLabelInType">Package</span>&nbsp;<a href="package-summary.html">com.skillw.attsystem.api.equipment</a></div>
         <h2 title="Class EquipmentData" class="title">Class EquipmentData</h2>
     </div>
     <div class="contentContainer">
@@ -141,6 +141,14 @@ public final class <span class="typeNameLabel"><a href=EquipmentData.html>Equipm
 extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map/LowerMap.html>LowerMap</a>&lt;<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;
                     </pre>
                     <div class="block"><p>Equipment data</p></div>
+
+                    <dl>
+
+                    
+
+                    
+
+                    </dl>
                 </li>
             </ul>
         </div>
@@ -224,12 +232,6 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         </tr>
                                         
                                         <tr class="altColor">
-                                            <td class="colFirst"><code>private final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html>Array</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.Node.html>ConcurrentHashMap.Node</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;&gt;</code></td>
-                                            <th class="colSecond" scope="row"><code><a href=../../internal/manager/RealizerManagerImpl.html#table>table</a></code></th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr class="rowColor">
                                             <td class="colFirst"><code>private final <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;</code></td>
                                             <th class="colSecond" scope="row"><code><a href=../../internal/manager/RealizerManagerImpl.html#values>values</a></code></th>
                                             <td class="colLast"></td>
@@ -261,13 +263,13 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         
                                             <tr class="altColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#EquipmentData(EquipmentData,Boolean)">EquipmentData</a></span>(<a href=EquipmentData.html>EquipmentData</a> other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release)</code></th>
+                                                        href="#EquipmentData(com.skillw.attsystem.api.equipment.EquipmentData,java.lang.Boolean)">EquipmentData</a></span>(<a href=EquipmentData.html>EquipmentData</a> other, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release)</code></th>
                                                 <td class="colLast"></td>
                                             </tr>
                                         
                                             <tr class="rowColor">
                                                 <th class="colConstructorName" scope="row"><code><span class="memberNameLink"><a
-                                                        href="#EquipmentData(EquipmentDataCompound,String)">EquipmentData</a></span>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</code></th>
+                                                        href="#EquipmentData(com.skillw.attsystem.api.equipment.EquipmentDataCompound,java.lang.String)">EquipmentData</a></span>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</code></th>
                                                 <td class="colLast">Create empty Equipment data</td>
                                             </tr>
                                         
@@ -331,7 +333,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <tr id="i1" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setRelease(Boolean)>setRelease</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setRelease(java.lang.Boolean)>setRelease</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release) </code>
                                             </th>
                                             <td class="colLast">Release</td>
                                         </tr>
@@ -347,7 +349,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <tr id="i3" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setCompound(EquipmentDataCompound)>setCompound</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setCompound(com.skillw.attsystem.api.equipment.EquipmentDataCompound)>setCompound</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -363,44 +365,12 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <tr id="i5" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setSource(String)>setSource</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#setSource(java.lang.String)>setSource</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
                                         <tr id="i6" class="altColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/Set.html>Set</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Entry.Map.html>Entry.Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;&gt;</code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getEntries()>getEntries</a>() </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i7" class="rowColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.KeySetView.html>ConcurrentHashMap.KeySetView</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;</code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getKeys()>getKeys</a>() </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i8" class="altColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a></code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getSize()>getSize</a>() </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i9" class="rowColor">
-                                            <td class="colFirst"><code><a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;</code>
-                                            </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getValues()>getValues</a>() </code>
-                                            </th>
-                                            <td class="colLast"></td>
-                                        </tr>
-                                        
-                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getHead()>getHead</a>() </code>
@@ -408,7 +378,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i11" class="rowColor">
+                                        <tr id="i7" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getChest()>getChest</a>() </code>
@@ -416,7 +386,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i12" class="altColor">
+                                        <tr id="i8" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getLegs()>getLegs</a>() </code>
@@ -424,7 +394,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i13" class="rowColor">
+                                        <tr id="i9" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getFeet()>getFeet</a>() </code>
@@ -432,7 +402,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i14" class="altColor">
+                                        <tr id="i10" class="altColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getHand()>getHand</a>() </code>
@@ -440,7 +410,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i15" class="rowColor">
+                                        <tr id="i11" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#getOffHand()>getOffHand</a>() </code>
@@ -448,31 +418,31 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i16" class="altColor">
+                                        <tr id="i12" class="altColor">
                                             <td class="colFirst"><code><a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#put(String,ItemStack)>put</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#put(java.lang.String,org.bukkit.inventory.ItemStack)>put</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i17" class="rowColor">
+                                        <tr id="i13" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#uncheckedPut(String,ItemStack)>uncheckedPut</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#uncheckedPut(java.lang.String,org.bukkit.inventory.ItemStack)>uncheckedPut</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i18" class="altColor">
+                                        <tr id="i14" class="altColor">
                                             <td class="colFirst"><code><a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#remove(String)>remove</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#remove(java.lang.String)>remove</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i19" class="rowColor">
+                                        <tr id="i15" class="rowColor">
                                             <td class="colFirst"><code><a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#clear()>clear</a>() </code>
@@ -480,23 +450,23 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i20" class="altColor">
+                                        <tr id="i16" class="altColor">
                                             <td class="colFirst"><code><a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#putAll(Map)>putAll</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;out <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; from) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#putAll(java.util.Map)>putAll</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;out <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; from) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i21" class="rowColor">
+                                        <tr id="i17" class="rowColor">
                                             <td class="colFirst"><code>final <a href=EquipmentData.html>EquipmentData</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#clone(EquipmentDataCompound,String)>clone</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#clone(com.skillw.attsystem.api.equipment.EquipmentDataCompound,java.lang.String)>clone</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source) </code>
                                             </th>
                                             <td class="colLast">Clone</td>
                                         </tr>
                                         
-                                        <tr id="i22" class="altColor">
+                                        <tr id="i18" class="altColor">
                                             <td class="colFirst"><code>final <a href=EquipmentData.html>EquipmentData</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#release()>release</a>() </code>
@@ -504,7 +474,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast">Release设置为在下次更新时释放装备数据</td>
                                         </tr>
                                         
-                                        <tr id="i23" class="rowColor">
+                                        <tr id="i19" class="rowColor">
                                             <td class="colFirst"><code>final <a href=EquipmentData.html>EquipmentData</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#unRelease()>unRelease</a>() </code>
@@ -512,7 +482,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast">Un release设置为不在下次更新时释放装备数据</td>
                                         </tr>
                                         
-                                        <tr id="i24" class="altColor">
+                                        <tr id="i20" class="altColor">
                                             <td class="colFirst"><code>final <a href=EquipmentData.html>EquipmentData</a></code>
                                             </td>
                                             <th class="colSecond" scope="row"><code><a href=EquipmentData.html#free()>free</a>() </code>
@@ -520,10 +490,10 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                             <td class="colLast"></td>
                                         </tr>
                                         
-                                        <tr id="i25" class="rowColor">
+                                        <tr id="i21" class="rowColor">
                                             <td class="colFirst"><code>final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a></code>
                                             </td>
-                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#hasChanged(ItemStack,String)>hasChanged</a>(<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> item, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> slot) </code>
+                                            <th class="colSecond" scope="row"><code><a href=EquipmentData.html#hasChanged(org.bukkit.inventory.ItemStack,java.lang.String)>hasChanged</a>(<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> item, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> slot) </code>
                                             </th>
                                             <td class="colLast"></td>
                                         </tr>
@@ -533,28 +503,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                 </div>
                                 <ul class="blockList">
                                 
-                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.LowerMap">
-                                            <!--   -->
-                                        </a>
-                                            <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.LowerMap</h3>
-                                            <code>equals, hashCode, register, remove</code></li>
-                                 
                                     <li class="blockList"><a id="methods.inherited.from.class.java.util.concurrent.ConcurrentHashMap">
                                             <!--   -->
                                         </a>
                                             <h3>Methods inherited from class&nbsp;java.util.concurrent.ConcurrentHashMap</h3>
-                                            <code>clone</code></li>
+                                            <code>computeIfPresent, contains, containsValue, elements, forEach, forEach, forEach, forEachEntry, forEachEntry, forEachKey, forEachKey, forEachValue, forEachValue, getEntries, getKeys, getOrDefault, getSize, getValues, isEmpty, keySet, keys, mappingCount, reduce, reduceEntries, reduceEntries, reduceEntriesToDouble, reduceEntriesToInt, reduceEntriesToLong, reduceKeys, reduceKeys, reduceKeysToDouble, reduceKeysToInt, reduceKeysToLong, reduceToDouble, reduceToInt, reduceToLong, reduceValues, reduceValues, reduceValuesToDouble, reduceValuesToInt, reduceValuesToLong, replace, replace, replaceAll, search, searchEntries, searchKeys, searchValues, toString</code></li>
                                  
                                     <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.BaseMap">
                                             <!--   -->
                                         </a>
                                             <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.BaseMap</h3>
-                                            <code>batchFor, computeIfPresent, contains, containsValue, elements, forEach, forEach, forEach, forEachEntry, forEachEntry, forEachKey, forEachKey, forEachValue, forEachValue, getOrDefault, helpTransfer, isEmpty, keySet, keys, mappingCount, putVal, reduce, reduceEntries, reduceEntries, reduceEntriesToDouble, reduceEntriesToInt, reduceEntriesToLong, reduceKeys, reduceKeys, reduceKeysToDouble, reduceKeysToInt, reduceKeysToLong, reduceToDouble, reduceToInt, reduceToLong, reduceValues, reduceValues, reduceValuesToDouble, reduceValuesToInt, reduceValuesToLong, replace, replace, replaceAll, replaceNode, search, searchEntries, searchKeys, searchValues, sumCount, toString</code></li>
+                                            <code>equals, hashCode, register, remove</code></li>
                                  
-                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.attsystem.api.equipment.EquipmentData">
+                                    <li class="blockList"><a id="methods.inherited.from.class.com.skillw.pouvoir.api.plugin.map.LowerMap">
                                             <!--   -->
                                         </a>
-                                            <h3>Methods inherited from class&nbsp;com.skillw.attsystem.api.equipment.EquipmentData</h3>
+                                            <h3>Methods inherited from class&nbsp;com.skillw.pouvoir.api.plugin.map.LowerMap</h3>
                                             <code>compute, computeIfAbsent, containsKey, get, merge, putIfAbsent</code></li>
                                  
                                     <li class="blockList"><a id="methods.inherited.from.class.java.lang.Object">
@@ -583,7 +547,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                             </a>
                                 <h3>Constructor Detail</h3>
                                 
-                                <a name="EquipmentData(EquipmentData,Boolean)"></a>
+                                <a name="EquipmentData(com.skillw.attsystem.api.equipment.EquipmentData,java.lang.Boolean)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>EquipmentData</h4>
@@ -593,7 +557,7 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                     </li>
                                 </ul>
                                 
-                                <a name="EquipmentData(EquipmentDataCompound,String)"></a>
+                                <a name="EquipmentData(com.skillw.attsystem.api.equipment.EquipmentDataCompound,java.lang.String)"></a>
                                 <ul class="blockList">
                                     <li class="blockList">
                                         <h4>EquipmentData</h4>
@@ -626,12 +590,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getRelease</h4>
                                         <pre class="methodSignature"> final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=EquipmentData.html#getRelease()>getRelease</a>()</pre>
                                         <div class="block"><p>Release</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="setRelease(Boolean)">
+                                <a id="setRelease(java.lang.Boolean)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -639,10 +611,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>setRelease</h4>
-                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setRelease(Boolean)>setRelease</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release)</pre>
+                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setRelease(java.lang.Boolean)>setRelease</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> release)</pre>
                                         <div class="block"><p>Release</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -656,12 +636,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getCompound</h4>
                                         <pre class="methodSignature"> final <a href=EquipmentDataCompound.html>EquipmentDataCompound</a> <a href=EquipmentData.html#getCompound()>getCompound</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="setCompound(EquipmentDataCompound)">
+                                <a id="setCompound(com.skillw.attsystem.api.equipment.EquipmentDataCompound)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -669,10 +657,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>setCompound</h4>
-                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setCompound(EquipmentDataCompound)>setCompound</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound)</pre>
+                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setCompound(com.skillw.attsystem.api.equipment.EquipmentDataCompound)>setCompound</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -686,12 +682,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getSource</h4>
                                         <pre class="methodSignature"> final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> <a href=EquipmentData.html#getSource()>getSource</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="setSource(String)">
+                                <a id="setSource(java.lang.String)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -699,70 +703,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>setSource</h4>
-                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setSource(String)>setSource</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</pre>
+                                        <pre class="methodSignature"> final <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#setSource(java.lang.String)>setSource</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getEntries()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getEntries</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Set.html>Set</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Entry.Map.html>Entry.Map</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt;&gt; <a href=EquipmentData.html#getEntries()>getEntries</a>()</pre>
-                                        <div class="block"></div>
+
                                         
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getKeys()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getKeys</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ConcurrentHashMap.KeySetView.html>ConcurrentHashMap.KeySetView</a>&lt;<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; <a href=EquipmentData.html#getKeys()>getKeys</a>()</pre>
-                                        <div class="block"></div>
+
                                         
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getSize()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getSize</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Integer.html>Integer</a> <a href=EquipmentData.html#getSize()>getSize</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
-                                    </li>
-                                </ul>
-                                
-                                <a id="getValues()">
-                                    <!--   -->
-                                </a>
-                                <ul class=
-                                              "blockList"
-                                          >
-                                    <li class="blockList">
-                                        <h4>getValues</h4>
-                                        <pre class="methodSignature"> <a href=https://docs.oracle.com/javase/8/docs/api/java/util/Collection.html>Collection</a>&lt;<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; <a href=EquipmentData.html#getValues()>getValues</a>()</pre>
-                                        <div class="block"></div>
-                                        
-                                        <!-- TODO missing return annotation -->
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -776,8 +728,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getHead</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getHead()>getHead</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -791,8 +751,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getChest</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getChest()>getChest</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -806,8 +774,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getLegs</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getLegs()>getLegs</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -821,8 +797,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getFeet</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getFeet()>getFeet</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -836,8 +820,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getHand</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getHand()>getHand</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -851,12 +843,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>getOffHand</h4>
                                         <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#getOffHand()>getOffHand</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="put(String,ItemStack)">
+                                <a id="put(java.lang.String,org.bukkit.inventory.ItemStack)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -864,14 +864,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>put</h4>
-                                        <pre class="methodSignature"> <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#put(String,ItemStack)>put</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value)</pre>
+                                        <pre class="methodSignature"> <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#put(java.lang.String,org.bukkit.inventory.ItemStack)>put</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="uncheckedPut(String,ItemStack)">
+                                <a id="uncheckedPut(java.lang.String,org.bukkit.inventory.ItemStack)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -879,14 +887,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>uncheckedPut</h4>
-                                        <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#uncheckedPut(String,ItemStack)>uncheckedPut</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value)</pre>
+                                        <pre class="methodSignature"> final <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#uncheckedPut(java.lang.String,org.bukkit.inventory.ItemStack)>uncheckedPut</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> value)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="remove(String)">
+                                <a id="remove(java.lang.String)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -894,10 +910,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>remove</h4>
-                                        <pre class="methodSignature"> <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#remove(String)>remove</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key)</pre>
+                                        <pre class="methodSignature"> <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> <a href=EquipmentData.html#remove(java.lang.String)>remove</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> key)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -911,12 +935,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>clear</h4>
                                         <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#clear()>clear</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="putAll(Map)">
+                                <a id="putAll(java.util.Map)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -924,14 +956,22 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>putAll</h4>
-                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#putAll(Map)>putAll</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;out <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; from)</pre>
+                                        <pre class="methodSignature"> <a href=https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html>Unit</a> <a href=EquipmentData.html#putAll(java.util.Map)>putAll</a>(<a href=https://docs.oracle.com/javase/8/docs/api/java/util/Map.html>Map</a>&lt;out <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a>, <a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a>&gt; from)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="clone(EquipmentDataCompound,String)">
+                                <a id="clone(com.skillw.attsystem.api.equipment.EquipmentDataCompound,java.lang.String)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -939,10 +979,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>clone</h4>
-                                        <pre class="methodSignature"> final <a href=EquipmentData.html>EquipmentData</a> <a href=EquipmentData.html#clone(EquipmentDataCompound,String)>clone</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</pre>
+                                        <pre class="methodSignature"> final <a href=EquipmentData.html>EquipmentData</a> <a href=EquipmentData.html#clone(com.skillw.attsystem.api.equipment.EquipmentDataCompound,java.lang.String)>clone</a>(<a href=EquipmentDataCompound.html>EquipmentDataCompound</a> compound, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> source)</pre>
                                         <div class="block"><p>Clone</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -956,8 +1004,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>release</h4>
                                         <pre class="methodSignature"> final <a href=EquipmentData.html>EquipmentData</a> <a href=EquipmentData.html#release()>release</a>()</pre>
                                         <div class="block"><p>Release</p><p>设置为在下次更新时释放装备数据</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -971,8 +1027,16 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>unRelease</h4>
                                         <pre class="methodSignature"> final <a href=EquipmentData.html>EquipmentData</a> <a href=EquipmentData.html#unRelease()>unRelease</a>()</pre>
                                         <div class="block"><p>Un release</p><p>设置为不在下次更新时释放装备数据</p></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
@@ -986,12 +1050,20 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                         <h4>free</h4>
                                         <pre class="methodSignature"> final <a href=EquipmentData.html>EquipmentData</a> <a href=EquipmentData.html#free()>free</a>()</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
-                                <a id="hasChanged(ItemStack,String)">
+                                <a id="hasChanged(org.bukkit.inventory.ItemStack,java.lang.String)">
                                     <!--   -->
                                 </a>
                                 <ul class=
@@ -999,10 +1071,18 @@ extends <a href=https://doc.skillw.com/pouvoir/com/skillw/pouvoir/api/plugin/map
                                           >
                                     <li class="blockList">
                                         <h4>hasChanged</h4>
-                                        <pre class="methodSignature"> final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=EquipmentData.html#hasChanged(ItemStack,String)>hasChanged</a>(<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> item, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> slot)</pre>
+                                        <pre class="methodSignature"> final <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/Boolean.html>Boolean</a> <a href=EquipmentData.html#hasChanged(org.bukkit.inventory.ItemStack,java.lang.String)>hasChanged</a>(<a href=https://doc.skillw.com/bukkit/org/bukkit/inventory/ItemStack.html>ItemStack</a> item, <a href=https://docs.oracle.com/javase/8/docs/api/java/lang/String.html>String</a> slot)</pre>
                                         <div class="block"></div>
+
+                                        <dl>
+
                                         
-                                        <!-- TODO missing return annotation -->
+
+                                        
+
+                                        
+
+                                        </dl>
                                     </li>
                                 </ul>
                                 
