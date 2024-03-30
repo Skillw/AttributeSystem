@@ -35,11 +35,10 @@ object Utils {
         now: Boolean = false,
         delay: Long = 0,
         period: Long = 0,
-        comment: String? = null,
         executor: PlatformExecutor.PlatformTask.() -> Unit,
     ): PlatformExecutor.PlatformTask {
         MinecraftVersion
-        return submit(now, true, delay, period, comment, executor)
+        return submit(now, true, delay, period, executor)
     }
 
 
