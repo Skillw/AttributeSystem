@@ -4,7 +4,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    id("io.izzel.taboolib") version "2.0.7"
+    id("io.izzel.taboolib") version "2.0.11"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
     id("org.jetbrains.dokka") version "1.9.20"
     id("io.codearte.nexus-staging") version "0.30.0"
@@ -55,7 +55,7 @@ taboolib {
             isSkipKotlinRelocate =true
             isSkipKotlin = true
         }
-        taboolib = "6.1.0"
+        taboolib = "6.1.1-beta17"
     }
 }
 
