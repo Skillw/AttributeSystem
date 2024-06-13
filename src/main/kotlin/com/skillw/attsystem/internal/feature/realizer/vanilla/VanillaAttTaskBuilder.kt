@@ -2,6 +2,7 @@ package com.skillw.attsystem.internal.feature.realizer.vanilla
 
 import com.skillw.attsystem.AttributeSystem
 import com.skillw.attsystem.AttributeSystem.realizerManager
+import com.skillw.attsystem.api.event.VanillaAttributeUpdateEvent
 import com.skillw.pouvoir.api.feature.realizer.BaseRealizer
 import com.skillw.pouvoir.api.feature.realizer.BaseRealizerManager
 import com.skillw.pouvoir.api.feature.realizer.component.*
@@ -55,6 +56,7 @@ internal open class VanillaAttTaskBuilder(key: String, val attribute: BukkitAttr
                 if (!isEnableVanilla()) clear()
                 else removeModifier(modifier)
                 addModifier(modifier)
+                VanillaAttributeUpdateEvent(entity,this@VanillaAttTaskBuilder.attribute, if(isEnableVanilla()) value + 20 else value).call()
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.skillw.attsystem.internal.feature.realizer.vanilla
 
+import com.skillw.attsystem.api.event.VanillaAttributeUpdateEvent
 import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.util.attribute.BukkitAttribute
 import com.skillw.pouvoir.util.attribute.clear
@@ -45,6 +46,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
                     if (!isEnableVanilla()) clear()
                     else removeModifier(modifier)
                     addModifier(modifier)
+                    VanillaAttributeUpdateEvent(entity, BukkitAttribute.MAX_HEALTH, if(isEnableVanilla()) value + 20 else value).call()
                 }
             }
         } else {
@@ -57,6 +59,7 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
                     getAttribute(BukkitAttribute.MAX_HEALTH)?.apply {
                         clear()
                     }
+                    VanillaAttributeUpdateEvent(entity, BukkitAttribute.MAX_HEALTH, value).call()
                     maxHealth = value
                 }
             }
