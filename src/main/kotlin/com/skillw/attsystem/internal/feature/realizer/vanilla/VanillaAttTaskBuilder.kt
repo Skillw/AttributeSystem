@@ -38,11 +38,14 @@ internal open class VanillaAttTaskBuilder(key: String, val attribute: BukkitAttr
     private val valuesCache = WeakHashMap<UUID, Double>()
 
     protected fun changed(uuid: UUID, value: Double): Boolean =
-        valuesCache.run {
-            return if (get(uuid) != value) {
-                put(uuid, value)
+        synchronized(valuesCache) {
+            val current = valuesCache[uuid]
+            return if (current != value) {
+                valuesCache[uuid] = value
                 true
-            } else false
+            } else {
+                false
+            }
         }
 
 
