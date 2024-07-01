@@ -55,7 +55,7 @@ taboolib {
             isSkipKotlinRelocate =true
             isSkipKotlin = true
         }
-        taboolib = "6.1.1-beta17"
+        taboolib = "6.1.1"
     }
 }
 
