@@ -49,15 +49,26 @@ Default:
     #可带入捕获组 与 其他 占位符 的值
     #优先带入捕获组的
     # total min max 必须写
-    total: "( <valueRandom> )*( 1 + (<percentRandom>) ) * { if check <mul> == 0 then 1 else <mul> }"
-    min: "(<value> + <valueAddition> + <valueMin>)*( 1 + (<percentRandom>) ) "
-    max: "(<value> + <valueAddition> + <valueMax>)*( 1 + (<percentRandom>) )"
-    mul: <mul>
-    value: <value> + <valueAddition>
-    percent: (<percent> + <percentAddition>) /100
-    valueMin: <valueMin> + <valueAddition>
-    valueMax: <valueMax> + <valueAddition>
-    percentMin: (<percentMin> + <percentAddition>) /100
-    percentMax: (<percentMax> + <percentAddition>) /100
-    valueRandom: <value> + <valueAddition> + {random <valueMin> to <valueMax>}
-    percentRandom: ((<percent> + (<percentAddition>)/100) + {random <percentMin> to <percentMax>}/100)
+    total: "( <value> + <valueAddition> + {random <valueMin> to <valueMax>}) * {calculate '(1+(<percent> + <percentAddition>/100 + {random <percentMin> to <percentMax>} /100))'} * { if check <scalar> == 0 then 1 else <scalar> }"
+    scalar: <scalar>
+    value: <value>
+    percent: <percent> + <percentAddition>/100
+    valueMin: <valueMin>
+    valueMax: <valueMax>
+    percentMin: <percentMin>/100
+    percentMax: <percentMax>/100
+    valueRandom: <value> + {random <valueMin> to <valueMax>}
+    percentRandom: (<percent>/100 + {random <percentMin> to <percentMax>}/100)
+    original: <percent>
+    #total: "( <valueRandom> )*( 1 + (<percentRandom>) ) * { if check <mul> == 0 then 1 else <mul> }"
+    #min: "(<value> + <valueAddition> + <valueMin>)*( 1 + (<percentRandom>) ) "
+    #max: "(<value> + <valueAddition> + <valueMax>)*( 1 + (<percentRandom>) )"
+    #mul: <mul>
+    #value: <value> + <valueAddition>
+    #percent: (<percent> + <percentAddition>) /100
+    #valueMin: <valueMin> + <valueAddition>
+    #valueMax: <valueMax> + <valueAddition>
+    #percentMin: (<percentMin> + <percentAddition>) /100
+    #percentMax: (<percentMax> + <percentAddition>) /100
+    #valueRandom: <value> + <valueAddition> + {random <valueMin> to <valueMax>}
+    #percentRandom: ((<percent> + (<percentAddition>)/100) + {random <percentMin> to <percentMax>}/100)
