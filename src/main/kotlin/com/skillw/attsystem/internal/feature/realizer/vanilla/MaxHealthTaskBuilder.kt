@@ -59,8 +59,8 @@ internal object MaxHealthTaskBuilder : VanillaAttTaskBuilder("max-health", Bukki
                     getAttribute(BukkitAttribute.MAX_HEALTH)?.apply {
                         clear()
                     }
-                    VanillaAttributeUpdateEvent(entity, BukkitAttribute.MAX_HEALTH, value).call()
                     maxHealth = value
+                    VanillaAttributeUpdateEvent(entity, BukkitAttribute.MAX_HEALTH, value).call()
                 }
             }
         }
