@@ -6,6 +6,7 @@ import com.skillw.attsystem.internal.manager.ASConfig
 import com.skillw.pouvoir.api.manager.ManagerData
 import com.skillw.pouvoir.api.plugin.SubPouvoir
 import com.skillw.pouvoir.api.plugin.annotation.PouManager
+import org.bukkit.inventory.ItemStack
 import taboolib.common.platform.Plugin
 import taboolib.common.platform.function.console
 import taboolib.common.platform.function.info
@@ -13,6 +14,8 @@ import taboolib.module.chat.colored
 import taboolib.module.configuration.Config
 import taboolib.module.configuration.ConfigFile
 import taboolib.module.lang.sendLang
+import taboolib.module.nms.ItemTag
+import taboolib.module.nms.getItemTag
 import taboolib.platform.BukkitPlugin
 
 object AttributeSystem : Plugin(), SubPouvoir {
@@ -99,6 +102,8 @@ object AttributeSystem : Plugin(), SubPouvoir {
             info(string.colored())
         }
     }
+
+
 
     fun debugLang(path: String, vararg args: String) {
         if (configManager.debug) {

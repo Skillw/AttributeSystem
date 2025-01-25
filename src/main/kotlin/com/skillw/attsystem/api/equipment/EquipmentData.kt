@@ -45,7 +45,7 @@ class EquipmentData(var compound: EquipmentDataCompound? = null, var source: Str
     }
 
     fun uncheckedPut(key: String, value: ItemStack): ItemStack? {
-        cache[key] = value.getItemTag().toString().hashCode()
+        cache[key] = value.getItemTag(false).toString().hashCode()
         return super.put(key, value)
     }
 
@@ -138,7 +138,7 @@ class EquipmentData(var compound: EquipmentDataCompound? = null, var source: Str
     }
 
     fun hasChanged(item: ItemStack, slot: String): Boolean {
-        return item.getItemTag().toString().hashCode() != cache[slot]
+        return item.getItemTag(false).toString().hashCode() != cache[slot]
     }
 
 }

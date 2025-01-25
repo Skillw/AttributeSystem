@@ -4,7 +4,7 @@ plugins {
     `java-library`
     `maven-publish`
     signing
-    id("io.izzel.taboolib") version "2.0.11"
+    id("io.izzel.taboolib") version "2.0.22"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
     id("org.jetbrains.dokka") version "1.9.20"
     id("io.codearte.nexus-staging") version "0.30.0"
@@ -38,14 +38,12 @@ taboolib {
     }
 
     env {
-        // basic
-        install(UNIVERSAL,BUKKIT, BUKKIT_ALL)
+        install(Bukkit, BukkitHook, XSeries)
+
+        // NMS
+        install(BukkitNMS, BukkitNMSDataSerializer,BukkitNMSItemTag,BukkitNMSUtil)
         // util
-        install( NMS_UTIL, NMS,
-            METRICS,
-            EXPANSION_COMMAND_HELPER,
-            EXPANSION_PLAYER_FAKE_OP,
-            NAVIGATION)
+        install(CommandHelper,BukkitFakeOp,Metrics, BukkitUtil,BukkitNavigation)
     }
 
 
@@ -55,7 +53,7 @@ taboolib {
             isSkipKotlinRelocate =true
             isSkipKotlin = true
         }
-        taboolib = "6.1.1"
+        taboolib = "6.2.2"
     }
 }
 

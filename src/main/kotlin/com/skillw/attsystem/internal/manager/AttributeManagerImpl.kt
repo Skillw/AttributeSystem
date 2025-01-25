@@ -24,7 +24,7 @@ object AttributeManagerImpl : AttributeManager() {
     override val key = "AttributeManager"
     override val priority: Int = 2
     override val subPouvoir = AttributeSystem
-    private val fileWatcher = FileWatcher()
+    private val fileWatcher = FileWatcher(20)
     private val dataFolders = HashSet<File>()
     private val fileToKeys = BaseMap<File, HashSet<String>>()
     private val folderToKeys = BaseMap<File, HashSet<String>>()
