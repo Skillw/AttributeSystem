@@ -15,8 +15,10 @@ import com.skillw.attsystem.internal.feature.realizer.slot.EntitySlotRealizer
 import com.skillw.attsystem.util.Utils.validEntity
 import com.skillw.pouvoir.util.isAlive
 import org.bukkit.entity.LivingEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import taboolib.module.nms.getItemTag
+import taboolib.platform.util.hasLore
 import taboolib.platform.util.isAir
 import java.util.*
 
@@ -112,11 +114,16 @@ object EquipmentDataManagerImpl : EquipmentDataManager() {
             return null
         }
         val compiledSource = getSource(source, slot)
+
+
         if (!hasChanged(eventItem, source, slot) && compiledAttrDataManager.hasCompiledData(
                 entity,
                 compiledSource
             )
-        ) return null
+        ) {
+            return null
+        }
+
         if (eventItem.hasItemMeta() && eventItem.getItemTag().containsKey(IGNORE_KEY)) {
             removeItem(source, slot)
             return null

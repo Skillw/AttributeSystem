@@ -39,12 +39,12 @@ object EntitySlotRealizer : BaseRealizer("entity"), Awakeable {
         }
         slots.putAll(
             mapOf(
-                "头盔" to BukkitEquipment.HEAD,
-                "胸甲" to BukkitEquipment.CHEST,
-                "护腿" to BukkitEquipment.LEGS,
-                "靴子" to BukkitEquipment.FEET,
-                "主手" to BukkitEquipment.HAND,
-                "副手" to BukkitEquipment.OFF_HAND
+                "澶寸洈" to BukkitEquipment.HEAD,
+                "鑳哥敳" to BukkitEquipment.CHEST,
+                "鎶よ吙" to BukkitEquipment.LEGS,
+                "闈村瓙" to BukkitEquipment.FEET,
+                "涓绘墜" to BukkitEquipment.HAND,
+                "鍓墜" to BukkitEquipment.OFF_HAND
             )
         )
     }

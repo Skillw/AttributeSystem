@@ -15,7 +15,7 @@ import taboolib.module.configuration.util.asMap
 /**
  * @className BaseAttributePlayerRealizer
  *
- * Ó¦¸Ã½Ð×ö basic attributeµÄ¡£¡£
+ * Ó¦ï¿½Ã½ï¿½ï¿½ï¿½ basic attributeï¿½Ä¡ï¿½ï¿½ï¿½
  *
  * @author Glom
  * @date 2023/1/6 7:05 Copyright 2022 user. All rights reserved.

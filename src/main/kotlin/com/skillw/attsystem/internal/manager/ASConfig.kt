@@ -113,7 +113,7 @@ object ASConfig : ConfigManager(AttributeSystem) {
 
     val debug: Boolean
         get() = debugMode || this["config"].getBoolean("options.debug")
-    const val numberPattern: String = "(?<value>(\\+|\\-)?(\\d+(?:(\\.\\d+))?))"
+    const val numberPattern: String = "(?<value>((?<=\\()(\\+|\\-)?(\\d+(?:(\\.\\d+))?)(?=\\)))|((\\+|\\-)?(\\d+(?:(\\.\\d+))?)))"
 
     val statsTitle: String
         get() = console().asLangText("stats-title")
